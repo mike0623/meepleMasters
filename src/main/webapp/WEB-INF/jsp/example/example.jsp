@@ -3,10 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!-- 以上自行取用 -->
+<%@ include file="../include/common_link.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
-<jsp:include page="../include/common_link.jsp"></jsp:include>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -22,10 +22,30 @@
     <a href="#" class="btn btn-primary">Go somewhere</a>
   </div>
 </div>
-
-
+<input type="button" value="測試ajax回到此頁" onclick="testAjax()">
 
 
 <jsp:include page="../include/footer.jsp"></jsp:include>
+<script type="text/javascript">
+	function testAjax(){
+		axios.get("${root}/michael/index").then(function(response){
+			console.log("有成功");
+			bootbox.alert({
+				title:"<h1 class='text-success'>新增成功</h1>",
+				message:"新增成功",
+				buttons:{
+					ok:{
+						label:"關閉",
+						className:"btn-success"
+					}
+				}
+			})
+		}).catch(function(error){
+			
+		}).finally(function(){
+			
+		});
+	}
+</script>
 </body>
 </html>

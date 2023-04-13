@@ -5,12 +5,18 @@
 
 <!-- bootstrap 5.2.3 -->
 <link href="${root}/css/bootstrap.min.css" rel="stylesheet">
-<link href="${root}/js/bootstrap.bundle.min.js" rel="stylesheet">
-
-
+<script src="${root}/js/bootstrap.bundle.min.js"></script>
 
 <!-- jQuery 3.6.4 -->
-<link href="${root}/js/jquery-3.6.4.min.js" rel="stylesheet">
+<script src="${root}/js/jquery-3.6.4.min.js"></script>
+
+<!-- axios 1.3.5 -->
+<script src="${root}/js/axios.min.js"></script>
+
+<!-- bootbox 6.0.0 -->
+<script src="${root}/js/bootbox.all.min.js"></script>
+
+
 
 
 <!-- font-awesome 6.4.0 -->
