@@ -10,6 +10,7 @@
 <!-- jQuery 3.6.4 -->
 <script src="${root}/js/jquery-3.6.4.min.js"></script>
 
+
 <!-- axios 1.3.5 -->
 <script src="${root}/js/axios.min.js"></script>
 
