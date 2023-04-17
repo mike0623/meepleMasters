@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
@@ -19,13 +20,19 @@ public class ProductController {
 
 	@GetMapping("/mall/findAllProduct")
 	@ResponseBody
-	public List<Product> findAllProduct() {
-		return pService.findAllProduct();
+	public List<Product> findAllProduct(@RequestParam(defaultValue = "1") Integer page,
+			@RequestParam(defaultValue = "2") Integer count) {
+		return pService.findAllProduct(page, count);
 	}
 
-	@GetMapping("/mall/findProductById/{id}")
+	@GetMapping("/mall/findProductById/")
 	@ResponseBody
-	public Product findProductById(@PathVariable(name = "id") Integer id) {
+	public Product findProductById(@RequestParam Integer id) {
 		return pService.findProductById(id);
+	}
+
+	@PutMapping("/mall/insertProduct/")
+	public void insertProduct(@RequestParam Product product) {
+		pService.insertProduct(product);
 	}
 }
