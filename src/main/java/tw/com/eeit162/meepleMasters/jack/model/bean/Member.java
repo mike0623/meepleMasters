@@ -34,7 +34,7 @@ public class Member {
 	@Column(name = "memberLevel")
 	private String memberLevel;
 	
-	@Column(name = "active")
+	@Column(name = "memberActive") //原本寫"active"
 	private Integer active;
 	
 	@Column(name = "memberName")
