@@ -1,7 +1,10 @@
 package tw.com.eeit162.meepleMasters.lyh.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +32,17 @@ public class CardListController {
 		return "抽卡失敗";
 	}
 	
-	
+	@GetMapping("/list/{memberId}")
+	public String listOwnedCard(@PathVariable(name = "memberId") Integer memberId) {
+		
+		List<CardOwned> list = cListService.listOwnedCard(memberId);
+		
+		if (list != null && !list.isEmpty()) {
+			return list.toString();
+		}
+		
+		return "沒有卡片";
+		
+	}
 
 }
