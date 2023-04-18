@@ -60,6 +60,7 @@ public class WebsocketUtil {
 				offlineFriend.put(jsonArray.getJSONObject(i).get("memberEmail").toString(), jsonArray.getJSONObject(i).get("memberName").toString());
 			}
 		}
+		jsonObject.put("action","onOfflineFriend");
 		jsonObject.put("onlineFriend", onlineFriend);
 		jsonObject.put("offlineFriend", offlineFriend);
 		

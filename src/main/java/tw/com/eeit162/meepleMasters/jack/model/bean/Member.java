@@ -34,7 +34,11 @@ public class Member {
 	@Column(name = "memberLevel")
 	private String memberLevel;
 	
+<<<<<<< HEAD
 	@Column(name = "memberActive") //原本寫"active"
+=======
+	@Column(name = "memberActive")
+>>>>>>> 01c9e402c30c3be678a1e059fd80e166292e5aff
 	private Integer active;
 	
 	@Column(name = "memberName")

@@ -3,7 +3,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!-- 以上自行取用 -->
-<%@ include file="../common_link.jsp" %>
+<!--通常給別人include，自己不需要這個，不然會有兩次  <趴小老鼠include file="../common_link.jsp"趴>  -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,11 +28,8 @@
 	
 	<script>
 		var ws = new WebSocket("ws://localhost:8080${root}/michael/websocket/${userEmail}");
-		ws.onopen = function(){
-			let message = {
-					"action":"login"
-					
-			}
+		ws.onmessage = function(){
+			console.log("有收到訊息");
 		}
 	
 	

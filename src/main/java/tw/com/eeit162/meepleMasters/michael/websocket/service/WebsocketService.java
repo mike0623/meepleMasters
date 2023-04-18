@@ -31,30 +31,41 @@ public class WebsocketService {
 		WebsocketUtil.putOnlineClient(session.getId(),this);
 		System.out.print("用戶"+userEmail+"已連線");
 		System.out.println("目前在線用戶數:"+WebsocketUtil.getOnlineClient().size());
+		//以上為確認有啟動，不動他
+		String onlineOfflineFriend = WebsocketUtil.getOnlineFriend(2); //取得在線好友與非在線好友
+		WebsocketUtil.sendMessageByUserEmail(this.userEmail, onlineOfflineFriend); //跟自己的前端說目前在線跟離線好友有誰，用來渲染頁面
+		//以下為上線時告訴其他在線好友我上線了
+		JSONObject onOfflineJsonObject = new JSONObject(onlineOfflineFriend);
+		
+		System.out.println(onOfflineJsonObject.getJSONObject("onlineFriend").getString("AAA@gmail.com"));
 		
 		
 		//以下測試程式
-		WebsocketUtil.getOnlineFriend(2);
 		
 	}
 	
 	@OnMessage
     public void onMessage(String message,Session session) {
 		System.out.println("用戶" + userEmail + "收到訊息: "+message);
-		try {
-			JSONObject jsonObject = new JSONObject(message);
-			if("sendMessageByUserEmail".equals(jsonObject.get("action"))) {
-				WebsocketUtil.sendMessageByUserEmail("Mike", jsonObject.getString("text"));
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-//		JSONObject jsonObject = new JSONObject(message);
-//		System.out.println(jsonObject.get("action"));
-//		WebsocketUtil.sendMessageByUserEmail(message, message);
 		
 		
-//		return this.userEmail + ": " + message;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//		try {
+//			JSONObject jsonObject = new JSONObject(message);
+//			if("sendMessageByUserEmail".equals(jsonObject.get("action"))) {
+//				WebsocketUtil.sendMessageByUserEmail("Mike", jsonObject.getString("text"));
+//			}
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	
