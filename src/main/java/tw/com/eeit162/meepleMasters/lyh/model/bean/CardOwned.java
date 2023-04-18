@@ -8,6 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "cardOwned")
@@ -24,6 +30,9 @@ public class CardOwned {
 	@Column(name = "fk_memberId")
 	private Integer fkMemberId;
 	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "ownedTime")
 	private Date ownedTime;
 	
@@ -72,6 +81,13 @@ public class CardOwned {
 	public void setCardStatus(Integer cardStatus) {
 		this.cardStatus = cardStatus;
 	}
+
+	@Override
+	public String toString() {
+		return "CardOwned [ownedId=" + ownedId + ", fkCardId=" + fkCardId + ", fkMemberId=" + fkMemberId
+				+ ", ownedTime=" + ownedTime + ", cardStatus=" + cardStatus + "]";
+	}
+	
 	
 
 }
