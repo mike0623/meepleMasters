@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,5 +35,15 @@ public class ProductController {
 	@PutMapping("/mall/insertProduct/")
 	public void insertProduct(@RequestParam Product product) {
 		pService.insertProduct(product);
+	}
+
+	@DeleteMapping("/mall/deleteProductById/")
+	public void deleteProductById(@RequestParam Integer id) {
+		pService.deleteProductById(id);
+	}
+
+	@PutMapping("/mall/updateProductById/")
+	public void updateProductById(Product product) {
+		pService.updateProductById(product);
 	}
 }
