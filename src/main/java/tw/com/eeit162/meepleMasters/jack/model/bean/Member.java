@@ -34,12 +34,8 @@ public class Member {
 	@Column(name = "memberLevel")
 	private String memberLevel;
 	
-<<<<<<< HEAD
-	@Column(name = "memberActive") //原本寫"active"
-=======
 	@Column(name = "memberActive")
->>>>>>> 01c9e402c30c3be678a1e059fd80e166292e5aff
-	private Integer active;
+	private Integer memberActive;
 	
 	@Column(name = "memberName")
 	private String memberName;
@@ -104,11 +100,11 @@ public class Member {
 	}
 
 	public Integer getActive() {
-		return active;
+		return memberActive;
 	}
 
 	public void setActive(Integer active) {
-		this.active = active;
+		this.memberActive = active;
 	}
 
 	public String getMemberName() {
@@ -178,7 +174,7 @@ public class Member {
 	@Override
 	public String toString() {
 		return "Member [memberId=" + memberId + ", memberEmail=" + memberEmail + ", memberPwd=" + memberPwd
-				+ ", memberLevel=" + memberLevel + ", active=" + active + ", memberName=" + memberName + ", memberImg="
+				+ ", memberLevel=" + memberLevel + ", active=" + memberActive + ", memberName=" + memberName + ", memberImg="
 				+ Arrays.toString(memberImg) + ", memberAge=" + memberAge + ", memberGender=" + memberGender
 				+ ", memberTel=" + memberTel + ", memberAddress=" + memberAddress + ", memberCoin=" + memberCoin
 				+ ", createTime=" + createTime + "]";
