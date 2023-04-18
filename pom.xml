@@ -60,8 +60,16 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
+    		<groupId>org.json</groupId>
+    		<artifactId>json</artifactId>
+    		<version>20230227</version>
+		</dependency>
+
+		
+		<dependency>
+    		<groupId>com.sun.mail</groupId>
+    		<artifactId>javax.mail</artifactId>
+   			<version>1.6.2</version>
 		</dependency>
 
 
