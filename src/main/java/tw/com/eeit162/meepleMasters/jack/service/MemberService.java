@@ -95,28 +95,21 @@ public class MemberService {
 
 	}
 	
-	public Member modify(String json, HttpSession session) {
-//		JSONObject jObject = new JSONObject();
-//		
-////		Integer id = jObject.getInt("memberId");
-//		String password = jObject.getString("memberPwd");
-//		String name = jObject.getString("memberName");
-//		Integer age = jObject.isNull("memberAge")?null:jObject.getInt("memberAge");
-//		String gender = jObject.isNull("memberGender")?null:jObject.getString("memberGender");
-//		Integer tel = jObject.isNull("memberTel")?null:jObject.getInt("memberTel");
-//		String address	= jObject.isNull("memberAddress")?null:jObject.getString("memberAddress");
-//		 
-////		Optional<Member> memberData = memberDao.findById(id);
-//		Member member = (Member) session.getAttribute("member");
-//		member = memberDao.findById(member.getMemberId()).get();
-//		member.setMemberPwd(password);
-//		member.setMemberName(name);
-//		member.setMemberAge(age);
-//		member.setMemberGender(gender);
-//		member.setMemberTel(tel);
-//		member.setMemberAddress(address);
-//		
-		return null;
+	public Integer updateMember(Integer id, String json) {
+		JSONObject jObject = new JSONObject(json);
+		
+		Optional<Member> memberData = memberDao.findById(id);
+		Member member = memberData.get();
+		
+		String name = jObject.isNull("memberName")?member.getMemberName():jObject.getString("memberName");
+		Integer age = jObject.isNull("memberAge")?member.getMemberAge():jObject.getInt("memberAge");
+		String gender = jObject.isNull("memberGender")?member.getMemberGender():jObject.getString("memberGender");
+		Integer tel = jObject.isNull("memberTel")?member.getMemberTel():jObject.getInt("memberTel");
+		String address	= jObject.isNull("memberAddress")?member.getMemberAddress():jObject.getString("memberAddress");
+		
+		System.out.println(member);
+		
+		return memberDao.updateMemberById(id, name, age, gender, tel, address);
 		
 	}
 	
