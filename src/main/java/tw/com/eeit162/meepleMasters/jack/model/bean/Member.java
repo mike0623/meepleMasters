@@ -99,12 +99,13 @@ public class Member {
 		this.memberLevel = memberLevel;
 	}
 
-	public Integer getActive() {
+
+	public Integer getMemberActive() {
 		return memberActive;
 	}
 
-	public void setActive(Integer active) {
-		this.memberActive = active;
+	public void setMemberActive(Integer memberActive) {
+		this.memberActive = memberActive;
 	}
 
 	public String getMemberName() {
