@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -47,6 +48,10 @@ public class MemberController {
 		return "";
 	}
 	
+	@RequestMapping("/loginPageTest")
+	public String loginPageTest() {
+		return "jack/loginPage";
+	}
 	
 	/**
 	 * 會員登入
@@ -56,7 +61,7 @@ public class MemberController {
 	 */
 	@ResponseBody
 	@PostMapping("/login")
-	public Member login(@RequestBody Member member, HttpSession session) {
+	public String login(@RequestBody Member member, HttpSession session) {
 		
 		Optional<Member> optional = mService.login(member);
 		
@@ -64,19 +69,13 @@ public class MemberController {
 			// No Member
 			return null;
 		}
-		
+		session.setAttribute("member", optional.get());
 		if(optional.get().getMemberLevel().contentEquals("管理員")) {
-			Member adminLogin = optional.get();
-			session.setAttribute("admin", adminLogin);
 			System.out.println("管理員");
-			return adminLogin; 
+			return ""; 
 		}
 			
-			Member memberLogin = optional.get();
-			session.setAttribute("member", memberLogin);
-			System.out.println("會員");
-			return memberLogin; 
-		
+		return "";
 	}
 	
 	/**
