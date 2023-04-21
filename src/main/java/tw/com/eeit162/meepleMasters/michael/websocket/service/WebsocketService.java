@@ -1,5 +1,7 @@
 package tw.com.eeit162.meepleMasters.michael.websocket.service;
 
+import java.util.Iterator;
+
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -32,13 +34,20 @@ public class WebsocketService {
 		System.out.print("用戶"+userEmail+"已連線");
 		System.out.println("目前在線用戶數:"+WebsocketUtil.getOnlineClient().size());
 		//以上為確認有啟動，不動他
-		String onlineOfflineFriend = WebsocketUtil.getOnlineFriend(2); //取得在線好友與非在線好友
-		WebsocketUtil.sendMessageByUserEmail(this.userEmail, onlineOfflineFriend); //跟自己的前端說目前在線跟離線好友有誰，用來渲染頁面
+		//-------------------------------------------------------------------------------------
+		String onlineOfflineFriend = WebsocketUtil.getOnlineFriend(this.userEmail); //取得在線好友與非在線好友
 		//以下為上線時告訴其他在線好友我上線了
 		JSONObject onOfflineJsonObject = new JSONObject(onlineOfflineFriend);
-		
-		System.out.println(onOfflineJsonObject.getJSONObject("onlineFriend").getString("AAA@gmail.com"));
-		
+		Iterator<String> onlineFriendEmail = onOfflineJsonObject.getJSONObject("onlineFriend").keys();
+		JSONObject dataJson = new JSONObject();
+		dataJson.put("action", "someoneLogin");
+		dataJson.put("loginer", this.userEmail);
+		while(onlineFriendEmail.hasNext()) {
+			WebsocketUtil.sendMessageByUserEmail(onlineFriendEmail.next(),dataJson.toString());
+		}
+		//跟自己的前端說目前在線跟離線好友有誰，用來渲染頁面
+		WebsocketUtil.sendMessageByUserEmail(this.userEmail, onOfflineJsonObject.toString()); 
+		//-------------------------------------------------------------------------------------
 		
 		//以下測試程式
 		
@@ -47,25 +56,7 @@ public class WebsocketService {
 	@OnMessage
     public void onMessage(String message,Session session) {
 		System.out.println("用戶" + userEmail + "收到訊息: "+message);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-//		try {
-//			JSONObject jsonObject = new JSONObject(message);
-//			if("sendMessageByUserEmail".equals(jsonObject.get("action"))) {
-//				WebsocketUtil.sendMessageByUserEmail("Mike", jsonObject.getString("text"));
-//			}
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
+
 	}
 	
 	
@@ -80,6 +71,21 @@ public class WebsocketService {
 		WebsocketUtil.moveOnlineClient(session.getId());
 		System.out.print("用戶"+userEmail+"已離開");
 		System.out.println("目前在線用戶:"+WebsocketUtil.getOnlineClient().size());
+		//-------------------------------------------------------------------------------------
+		//離線時跟線上好友說我下線了
+		String onlineOfflineFriend = WebsocketUtil.getOnlineFriend(this.userEmail); //取得在線好友與非在線好友
+		if(!WebsocketUtil.isOnline(this.userEmail)) {  //判斷是否有多開網頁導致其中一個下線但其實還是在線
+			JSONObject onOfflineJsonObject = new JSONObject(onlineOfflineFriend);
+			Iterator<String> onlineFriendEmail = onOfflineJsonObject.getJSONObject("onlineFriend").keys();
+			JSONObject dataJson = new JSONObject();
+			dataJson.put("action", "someoneLogout");
+			dataJson.put("logouter", this.userEmail);
+			while(onlineFriendEmail.hasNext()) {
+				WebsocketUtil.sendMessageByUserEmail(onlineFriendEmail.next(),dataJson.toString());
+			}			
+		}
+		//-------------------------------------------------------------------------------------
+		
 	}
 
 	public Session getSession() {
