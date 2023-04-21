@@ -1,6 +1,5 @@
 package tw.com.eeit162.meepleMasters.michael.friend.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
-import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
 import tw.com.eeit162.meepleMasters.michael.friend.model.Friend;
 import tw.com.eeit162.meepleMasters.michael.friend.model.FriendInvite;
 import tw.com.eeit162.meepleMasters.michael.friend.service.FriendInviteService;
@@ -27,8 +24,7 @@ public class FriendController {
 	private FriendService friendService;
 	@Autowired
 	private FriendInviteService inviteService;
-	@Autowired
-	private MemberDao memberDao;
+
 
 //	@GetMapping("/friend/")
 //	public void processAction() {
@@ -81,24 +77,8 @@ public class FriendController {
 	//查詢所有好友
 	@ResponseBody
 	@GetMapping("/friend/selectByMemberId/{memberId}")
-	public String selectFriendByMemberId(@PathVariable("memberId") Integer memberId){
-//		return friendService.findFriendByMemberId(memberId);
-		//暫時自己用memberDao，若不用則直接上面一行就好
-		List<Friend> list = friendService.findFriendByMemberId(memberId);
-		JSONObject jsonObject = new JSONObject();
-		ArrayList<Member> arrayList = new ArrayList<Member>();
-		for(int i = 0;i<list.size();i++) {
-			if(list.get(i).getFkMemberAId()!=memberId) {
-				arrayList.add(memberDao.findById(list.get(i).getFkMemberAId()).get());
-			}
-			if(list.get(i).getFkMemberBId()!=memberId) {
-				arrayList.add(memberDao.findById(list.get(i).getFkMemberBId()).get());
-			}
-		}
-		jsonObject.put("friendName", arrayList);
-		
-		
-		return jsonObject.toString();
+	public List<Friend> selectFriendByMemberId(@PathVariable("memberId") Integer memberId){
+		return friendService.findFriendByMemberId(memberId);
 	}
 	
 	
