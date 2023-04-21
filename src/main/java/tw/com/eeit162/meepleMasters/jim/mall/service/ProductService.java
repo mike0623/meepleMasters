@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,8 +40,36 @@ public class ProductService {
 		return null;
 	}
 
-	public void insertProduct(Product product) {
-		pDAO.save(product);
+	public Product insertProduct(String json) {
+		try {
+			JSONObject object = new JSONObject(json);
+
+			String name = object.isNull("productName") ? null : object.getString("productName");
+			Integer price = object.isNull("productPrice") ? null : object.getInt("productPrice");
+			String description = object.isNull("productDescription") ? null : object.getString("productDescription");
+			String playTime = object.isNull("productPlayTime") ? null : object.getString("productPlayTime");
+			Integer maxPlayer = object.isNull("productMaxPlayer") ? null : object.getInt("productMaxPlayer");
+			Integer minPlayer = object.isNull("productMinPlayer") ? null : object.getInt("productMinPlayer");
+			String Difficulty = object.isNull("productDifficulty") ? null : object.getString("productDifficulty");
+
+//			String img = object.isNull("productImg") ? null : object.getString("productImg");
+
+			Product product = new Product();
+			product.setProductName(name);
+			product.setProductPrice(price);
+			product.setProductDescription(description);
+			product.setProductPlayTime(playTime);
+			product.setProductMaxPlayer(maxPlayer);
+			product.setProductMinPlayer(minPlayer);
+			product.setProductDifficulty(Difficulty);
+
+//			product.setProductImg(null);
+
+			return pDAO.save(product);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public void deleteProductById(Integer id) {
@@ -47,25 +77,37 @@ public class ProductService {
 	}
 
 	@Transactional
-	public Product updateProductById(Product product) {
+	public Product updateProductById(String json) {
+		try {
+			JSONObject object = new JSONObject(json);
 
-		Optional<Product> op = pDAO.findById(product.getProductId());
+			Integer id = object.isNull("productId") ? null : object.getInt("productId");
+			String name = object.isNull("productName") ? null : object.getString("productName");
+			Integer price = object.isNull("productPrice") ? null : object.getInt("productPrice");
+			String description = object.isNull("productDescription") ? null : object.getString("productDescription");
+			String playTime = object.isNull("productPlayTime") ? null : object.getString("productPlayTime");
+			Integer maxPlayer = object.isNull("productMaxPlayer") ? null : object.getInt("productMaxPlayer");
+			Integer minPlayer = object.isNull("productMinPlayer") ? null : object.getInt("productMinPlayer");
+			String Difficulty = object.isNull("productDifficulty") ? null : object.getString("productDifficulty");
 
-		if (op.isPresent()) {
-			Product newProduct = op.get();
+//			String img = object.isNull("productImg") ? null : object.getString("productImg");
+//			String time = object.isNull("addedTime") ? null : object.getString("addedTime");
 
-			newProduct.setProductName(product.getProductName());
-			newProduct.setProductDescription(product.getProductDescription());
-			newProduct.setProductDifficulty(product.getProductDifficulty());
-			newProduct.setProductMaxPlayer(product.getProductMaxPlayer());
-			newProduct.setProductMinPlayer(product.getProductMinPlayer());
-			newProduct.setProductPlayTime(product.getProductPlayTime());
-			newProduct.setProductPrice(product.getProductPrice());
+			Product product = pDAO.findById(id).get();
+			product.setProductName(name);
+			product.setProductPrice(price);
+			product.setProductDescription(description);
+			product.setProductPlayTime(playTime);
+			product.setProductMaxPlayer(maxPlayer);
+			product.setProductMinPlayer(minPlayer);
+			product.setProductDifficulty(Difficulty);
 
-			newProduct.setProductImg(product.getProductImg());
-			newProduct.setAddedTime(product.getAddedTime());
+//			product.setProductImg(null);
+//			product.setAddedTime(null);
 
-			return newProduct;
+			return pDAO.save(product);
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
