@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%> <%@taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -17,9 +18,8 @@
   <body>
     <jsp:include page="/WEB-INF/jsp/include/header.jsp" />
     <div class="container">
-      <h1>testpage</h1>
+      <h1>商品列表</h1>
       <hr />
-      <button class="test">查詢</button>
       <table>
         <thead>
           <tr>
@@ -42,17 +42,23 @@
               <td>${product.productPlayTime}</td>
               <td>${product.productMinPlayer}~${product.productMaxPlayer}</td>
               <td>${product.productDifficulty}</td>
+              <th>
+                <button class="cartbutton" value="${product.productId}">
+                  加入購物車
+                </button>
+              </th>
             </tr>
           </c:forEach>
         </tbody>
       </table>
     </div>
+    <script>
+      let product = document.getElementsByClassName("cartbutton");
+
+      product.forEach(element => {
+        console.log(element);
+      });
+    </script>
     <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
   </body>
-  <script type="text/javascript">
-    let test = $(".test");
-    test[0].addEventListener("click", function () {
-      console.log("test");
-    });
-  </script>
 </html>
