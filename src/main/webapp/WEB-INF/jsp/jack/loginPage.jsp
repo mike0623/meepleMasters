@@ -55,7 +55,7 @@ include file="../include/common_link.jsp" %>
             <a href="#" class="btn btn-outline-secondary">登入</a>
           </div>
           <div class="row justify-content-center" style="margin: 20px">
-            <a href="#" class="btn btn-outline-secondary">註冊會員</a>
+            <a href="/createPage" class="btn btn-outline-secondary">註冊會員</a>
           </div>
           <div class="col align-self-center">使用其他登入方式</div>
           <div class="row justify-content-center" style="margin: 20px">

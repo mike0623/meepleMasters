@@ -33,6 +33,17 @@ public class MemberController {
 		return "jack/jack";
 	}
 	
+	
+	/**
+	 * 跳轉到註冊頁面
+	 * @return createMember.jsp
+	 */
+	@RequestMapping("/member/createPage")
+	public String createPage() {
+		return "jack/createMember";
+	}
+	
+	
 	/**
 	 * 註冊會員
 	 * @param body
@@ -40,15 +51,23 @@ public class MemberController {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@PostMapping("/createMember")
+	@PostMapping("/member/createMember")
 	public String createMember(@RequestBody String body) throws IOException {
 		
 		mService.createMember(body);
 		
-		return "";
+		return "jack/loginPage";
 	}
 	
-	@RequestMapping("/loginPageTest")
+//	public String memberAuth() {
+//		
+//		mService.memberAuth();
+//		
+//		return "";
+//		
+//	}
+	
+	@RequestMapping("/member/loginPageTest")
 	public String loginPageTest() {
 		return "jack/loginPage";
 	}
@@ -60,7 +79,7 @@ public class MemberController {
 	 * @return Member
 	 */
 	@ResponseBody
-	@PostMapping("/login")
+	@PostMapping("/member/login")
 	public String login(@RequestBody Member member, HttpSession session) {
 		
 		Optional<Member> optional = mService.login(member);
@@ -83,7 +102,7 @@ public class MemberController {
 	 * @param session
 	 * @return String
 	 */
-	@GetMapping("/logout")
+	@GetMapping("/member/logout")
 	public String logout(HttpSession session) {
 		
 		session.invalidate();
@@ -98,7 +117,7 @@ public class MemberController {
 	 * @return String
 	 */
 	@ResponseBody
-	@PutMapping("/updatePwd/{id}")
+	@PutMapping("/member/updatePwd/{id}")
 	public String updatePwd(@PathVariable(name = "id")Integer memberId, @RequestBody String memberPwd) {
 		
 		
@@ -119,7 +138,7 @@ public class MemberController {
 	 * @return Member
 	 */
 	@ResponseBody
-	@PutMapping("/updateMember/{id}")
+	@PutMapping("/member/updateMember/{id}")
 	public String updateMember(@PathVariable(name = "id") Integer id, @RequestBody String body) {
 		
 		Integer memberUpdate = mService.updateMember(id, body);
@@ -137,7 +156,7 @@ public class MemberController {
 	 * @return Member(Json)
 	 */
 	@ResponseBody
-	@GetMapping("/findMemberById")
+	@GetMapping("/member/findMemberById")
 	public Member findMemberById(@RequestParam("id") Integer id) {
 		
 		Member member = mService.findMemberById(id);
@@ -151,12 +170,19 @@ public class MemberController {
 	 * @return Member(Json)
 	 */
 	@ResponseBody
-	@GetMapping("/findMemberByEmail")
+	@GetMapping("/member/findMemberByEmail")
 	public Member findMemberByEmail(@RequestParam("memberEmail") String memberEmail) {
 		
 		Member member = mService.findMemberByEmail(memberEmail);
 		
 		return member;
+	}
+	
+	@GetMapping("/member/findMemberImg/{id}")
+	@ResponseBody
+	public byte[] findMemberImg(@PathVariable("id") Integer memberId) {
+		
+		return mService.findMemberImg(memberId);
 	}
 	
 }
