@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
 import tw.com.eeit162.meepleMasters.jim.mall.service.ShoppingCartService;
 
 @Controller
@@ -18,7 +17,6 @@ public class ShoppingCartController {
 
 	@GetMapping("/insertShoppingCart")
 	public void insertShoppingCart(@RequestParam Integer productId, @RequestParam Integer memberId) {
-		ShoppingCart insertShoppingCart = scService.insertShoppingCart(productId, memberId);
-		System.out.println(insertShoppingCart);
+		scService.insertShoppingCart(productId, memberId);
 	}
 }

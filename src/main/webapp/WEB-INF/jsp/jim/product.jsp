@@ -1,6 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%> <%@taglib uri="http://java.sun.com/jsp/jstl/core"
-prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -30,10 +29,11 @@ prefix="c"%>
             <th>遊玩時間</th>
             <th>建議人數</th>
             <th>上手難度</th>
+            <th>商品圖片</th>
           </tr>
         </thead>
         <tbody>
-          <c:forEach items="${allProduct}" var="product">
+          <c:forEach items="${productPage.content}" var="product">
             <tr>
               <td>${product.productName}</td>
               <td>${product.productPrice}</td>
@@ -42,15 +42,24 @@ prefix="c"%>
               <td>${product.productPlayTime}</td>
               <td>${product.productMinPlayer}~${product.productMaxPlayer}</td>
               <td>${product.productDifficulty}</td>
-              <th>
+              <td>${product.productImg}</td>
+              <td>
                 <button class="cartbutton" value="${product.productId}">
                   加入購物車
                 </button>
-              </th>
+              </td>
             </tr>
           </c:forEach>
         </tbody>
       </table>
+      <c:forEach var="number" begin="1" step="1" end="${productPage.totalPages}">
+        <c:choose>
+          <c:when test="${productPage.number+1 != number}">
+            <a href="${root}/mall/productList?page=${number}">${number}</a>
+          </c:when>
+          <c:otherwise> ${number} </c:otherwise>
+        </c:choose>
+      </c:forEach>
     </div>
     <script>
       let product = document.getElementsByClassName("cartbutton");
@@ -59,13 +68,17 @@ prefix="c"%>
         product[i].addEventListener("click", function () {
           console.log(this.value);
           let pId = this.value;
+          let mId = 123;
           axios
-            .get("http://localhost:8080/meeple-masters/shoppingCart/insertShoppingCart", {
-              params: {
-                productId: pId,
-                memberId: pId,
-              },
-            })
+            .get(
+              "http://localhost:8080/meeple-masters/shoppingCart/insertShoppingCart",
+              {
+                params: {
+                  productId: pId,
+                  memberId: mId,
+                },
+              }
+            )
             .then((response) => console.log(response))
             .catch((error) => console.log(error));
         });
