@@ -50,7 +50,7 @@ public class Member {
 	private String memberGender;
 	
 	@Column(name = "memberTel")
-	private Integer memberTel;
+	private String memberTel;
 	
 	@Column(name = "memberAddress")
 	private String memberAddress;
@@ -140,11 +140,11 @@ public class Member {
 		this.memberGender = memberGender;
 	}
 
-	public Integer getMemberTel() {
+	public String getMemberTel() {
 		return memberTel;
 	}
 
-	public void setMemberTel(Integer memberTel) {
+	public void setMemberTel(String memberTel) {
 		this.memberTel = memberTel;
 	}
 

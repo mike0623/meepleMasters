@@ -26,5 +26,5 @@ public interface MemberDao extends JpaRepository<Member, Integer> {
 	@Query(value="update Member set memberName = :memberName, memberAge = :memberAge, memberGender = :memberGender, memberTel = :memberTel, memberAddress = :memberAddress where memberId = :memberId")
 	Integer updateMemberById(@Param(value = "memberId") Integer memberId, @Param(value = "memberName") String memberName, 
 			@Param(value = "memberAge") Integer memberAge, @Param(value = "memberGender") String memberGender, 
-			@Param(value = "memberTel") Integer memberTel, @Param(value = "memberAddress") String memberAddress);
+			@Param(value = "memberTel") String memberTel, @Param(value = "memberAddress") String memberAddress);
 }

@@ -51,7 +51,7 @@ public class MemberService {
 		 String name = jObject.getString("memberName");
 		 Integer age = jObject.isNull("memberAge")?null:jObject.getInt("memberAge");
 		 String gender = jObject.isNull("memberGender")?null:jObject.getString("memberGender");
-		 Integer tel = jObject.isNull("memberTel")?null:jObject.getInt("memberTel");
+		 String tel = jObject.isNull("memberTel")?null:jObject.getString("memberTel");
 		 String address	= jObject.isNull("memberAddress")?null:jObject.getString("memberAddress");
 		 
 		 Member member = new Member();
@@ -113,7 +113,7 @@ public class MemberService {
 		String name = jObject.isNull("memberName")?member.getMemberName():jObject.getString("memberName");
 		Integer age = jObject.isNull("memberAge")?member.getMemberAge():jObject.getInt("memberAge");
 		String gender = jObject.isNull("memberGender")?member.getMemberGender():jObject.getString("memberGender");
-		Integer tel = jObject.isNull("memberTel")?member.getMemberTel():jObject.getInt("memberTel");
+		String tel = jObject.isNull("memberTel")?member.getMemberTel():jObject.getString("memberTel");
 		String address	= jObject.isNull("memberAddress")?member.getMemberAddress():jObject.getString("memberAddress");
 		
 		System.out.println(member);

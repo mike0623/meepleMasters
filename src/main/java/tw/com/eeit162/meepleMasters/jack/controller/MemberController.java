@@ -178,6 +178,12 @@ public class MemberController {
 		return member;
 	}
 	
+	
+	/**
+	 * 用Id找會員圖片
+	 * @param memberId
+	 * @return byte[]
+	 */
 	@GetMapping("/member/findMemberImg/{id}")
 	@ResponseBody
 	public byte[] findMemberImg(@PathVariable("id") Integer memberId) {
