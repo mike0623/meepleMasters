@@ -55,9 +55,21 @@ prefix="c"%>
     <script>
       let product = document.getElementsByClassName("cartbutton");
 
-      product.forEach(element => {
-        console.log(element);
-      });
+      for (i = 0; i < product.length; i++) {
+        product[i].addEventListener("click", function () {
+          console.log(this.value);
+          let pId = this.value;
+          axios
+            .get("http://localhost:8080/meeple-masters/shoppingCart/insertShoppingCart", {
+              params: {
+                productId: pId,
+                memberId: pId,
+              },
+            })
+            .then((response) => console.log(response))
+            .catch((error) => console.log(error));
+        });
+      }
     </script>
     <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
   </body>
