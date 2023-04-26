@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%> <%@taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -52,7 +53,12 @@
           </c:forEach>
         </tbody>
       </table>
-      <c:forEach var="number" begin="1" step="1" end="${productPage.totalPages}">
+      <c:forEach
+        var="number"
+        begin="1"
+        step="1"
+        end="${productPage.totalPages}"
+      >
         <c:choose>
           <c:when test="${productPage.number+1 != number}">
             <a href="${root}/mall/productList?page=${number}">${number}</a>
@@ -62,8 +68,8 @@
       </c:forEach>
     </div>
     <script>
+      // 用AJAX將商品加入購物車
       let product = document.getElementsByClassName("cartbutton");
-
       for (i = 0; i < product.length; i++) {
         product[i].addEventListener("click", function () {
           console.log(this.value);
@@ -79,8 +85,8 @@
                 },
               }
             )
-            .then((response) => console.log(response))
-            .catch((error) => console.log(error));
+            .then((response) => console.log(response), alert("新增成功"))
+            .catch((error) => console.log(error), alert("新增失敗"));
         });
       }
     </script>

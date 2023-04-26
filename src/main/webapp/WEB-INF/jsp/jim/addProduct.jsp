@@ -16,27 +16,64 @@
 }
 </style>
 </head>
+
 <body>
 	<jsp:include page="/WEB-INF/jsp/include/header.jsp" />
 	<div class="container">
 		<h1>新增商品</h1>
-		<form:form action="/mall/addProduct" method="post" modelAttribute="p"
-			enctype="multipart/form-data">
-			商品名稱:<input>
+		<form:form action="/meeple-masters/mall/addProduct" method="post"
+			modelAttribute="product" enctype="multipart/form-data">
+			<label for="productName">商品名稱:</label>
+			<input type="text" id="productName" name="productName" />
 			<br>
-			商品價格:<input>
+			<label for="productPrice">商品價格:</label>
+			<input type="number" id="productPrice" name="productPrice" />
 			<br>
-			上架日期:<input>
+			<label for="productDescription">商品描述:</label>
+			<input type="text" id="productDescription" name="productDescription" />
 			<br>
-            商品描述:<input>
+			<label for="productPlayTime">遊玩時間:</label>
+			<input type="text" id="productPlayTime" name="productPlayTime" />
 			<br>
-            遊玩時間:<input>
+			<label for="productMaxPlayer">建議最多遊玩人數:</label>
+			<input type="number" id="productMaxPlayer" name="productMaxPlayer" />
 			<br>
-            建議人數:<input>
+			<label for="productMinPlayer">建議最少遊玩人數:</label>
+			<input type="number" id="productMinPlayer" name="productMinPlayer" />
 			<br>
-             上手難度:<input>
+			<label for="productDifficulty">上手難度:</label>
+			<input type="text" id="productDifficulty" name="productDifficulty" />
+			<br>
+			<label for="productImg">商品圖片:</label>
+			<input type="file" name="pImg" id="productImg">
+			<img alt="" src="#" id="imgPreview">
+			<br>
+			<button>新增</button>
+			<button type="reset">清除</button>
+			<input type="button" value="測試新增資料" id="newTest" />
 		</form:form>
 	</div>
+	<script>
+		// 一鍵輸入測試資料
+		$("#newTest").on("click", function() {
+			$("#productName").val("測試用商品");
+			$("#productPrice").val("162");
+			$("#productDescription").val("說明商品的地方");
+			$("#productPlayTime").val("簡短普通耗時");
+			$("#productMaxPlayer").val("8");
+			$("#productMinPlayer").val("4");
+			$("#productDifficulty").val("簡單普通困難");
+		});
+		// 顯示上傳圖片的預覽圖
+		let productImg = $("#productImg");
+		let imgPreview = $("#imgPreview");
+
+		productImg.change(function() {
+			const file = this.files[0];
+			const tempSrc = URL.createObjectURL(file);
+			imgPreview.attr("src", tempSrc);
+		});
+	</script>
 	<jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
 </body>
 </html>

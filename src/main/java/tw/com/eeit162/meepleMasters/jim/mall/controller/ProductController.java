@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,13 +20,13 @@ import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.jim.mall.service.ProductService;
 
 @Controller
-@RequestMapping(path = "/mall")
 public class ProductController {
 
 	@Autowired
 	private ProductService pService;
 
-	@GetMapping("/productList")
+	// 依照頁數顯示商品
+	@GetMapping("/mall/productList")
 	public String productList(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "6") Integer count, Model model) {
 		Page<Product> productPage = pService.findAllProduct(page, count);
@@ -37,16 +36,19 @@ public class ProductController {
 		return "jim/product";
 	}
 
-	@GetMapping("/findProductById")
+	// 透過ID尋找商品
+	@GetMapping("/mall/findProductById")
 	@ResponseBody
 	public Product findProductById(@RequestParam Integer id) {
 		return pService.findProductById(id);
 	}
 
-	@PostMapping("/addProduct")
+	// 新增商品
+	@PostMapping("/mall/addProduct")
 	@ResponseBody
-	public Product addProduct(@ModelAttribute Product p, @RequestParam(required = false) MultipartFile pImg) {
-		if (!pImg.isEmpty()) {
+	public Product addProduct(@ModelAttribute("product") Product p,
+			@RequestParam(required = false) MultipartFile pImg) {
+		if (pImg != null) {
 			try {
 				BufferedInputStream bis = new BufferedInputStream(pImg.getInputStream());
 				p.setProductImg(bis.readAllBytes());
@@ -58,7 +60,8 @@ public class ProductController {
 		return pService.addProduct(p);
 	}
 
-	@DeleteMapping("/deleteProductById")
+	// 透過ID刪除商品
+	@DeleteMapping("/mall/deleteProductById")
 	@ResponseBody
 	public String deleteProductById(@RequestParam Integer id) {
 		if (pService.findProductById(id) != null) {
@@ -68,9 +71,10 @@ public class ProductController {
 		return "刪除失敗";
 	}
 
-	@PutMapping("/updateProductById")
+	// 透過ID更改商品
+	@PutMapping("/mall/updateProductById")
 	@ResponseBody
-	public String updateProductById(@ModelAttribute Product p ,@RequestParam(required = false) MultipartFile pImg) {
+	public String updateProductById(@ModelAttribute Product p, @RequestParam(required = false) MultipartFile pImg) {
 		if (pService.findProductById(p.getProductId()) != null) {
 			pService.updateProductById(p);
 			return "修改成功";
