@@ -6,6 +6,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+
 @Controller
 public class PagesController {
 
@@ -23,7 +25,9 @@ public class PagesController {
 	@GetMapping("/michael/testWebsocket")
 	public String testWebsocket(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		session.setAttribute("userEmail", request.getParameter("userEmail"));
+		Member member = new Member();
+		member.setMemberEmail(request.getParameter("userEmail"));
+		session.setAttribute("member", member);
 		return "michael/michael";
 	}
 	
