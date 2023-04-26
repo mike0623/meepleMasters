@@ -1,0 +1,66 @@
+`<body>
+	<div class="cardListDiv">
+		<div class="title">卡片列表</div>
+		<div class="cardStarTableDiv">
+			<table class="cardStarTable">
+				<tr>
+					<td colspan="2">總機率</td>
+				</tr>
+				<tr>
+					<td><img src="${root}/img/lyh/star/star5.png"
+						class="cardStarlabel"></td>
+					<td>2%</td>
+				</tr>
+				<tr>
+					<td><img src="${root}/img/lyh/star/star4.png"
+						class="cardStarlabel"></td>
+					<td>6%</td>
+				</tr>
+				<tr>
+					<td><img src="${root}/img/lyh/star/star3.png"
+						class="cardStarlabel"></td>
+					<td>10%</td>
+				</tr>
+				<tr>
+					<td><img src="${root}/img/lyh/star/star2.png"
+						class="cardStarlabel"></td>
+					<td>22%</td>
+				</tr>
+				<tr>
+					<td><img src="${root}/img/lyh/star/star1.png"
+						class="cardStarlabel"></td>
+					<td>60%</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="dataHome"></div>
+
+	</div>
+
+	<script src="${root}/json/starcard.js"></script>
+	<script type="text/javascript">
+
+
+	let outputString = "";
+	
+	
+	for(let i = 4; i>=0 ; i--){
+		outputString += "<div class='row container cardContainer justify-content-center' id='card5'>"
+		outputString += "<div class='starDiv'>";
+		outputString += `<img src='${root}/img/lyh/star/star\${i+1}.png' class='star'>`;
+		outputString += "</div>";
+		
+		for(let item of cardList[i].imgs){
+			outputString += "<div class='col-3 d-flex'>";
+			outputString += "<div class='card'>";
+			outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda'>`;
+			outputString += `<figcaption>\${item.name}</figcaption>`;
+			outputString += "</figure></div></div>";
+		}
+		outputString += "</div>";
+	}
+	
+	$("#dataHome").html(outputString)
+
+	</script>`

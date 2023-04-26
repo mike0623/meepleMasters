@@ -1,0 +1,184 @@
+/* ad */
+
+.ad {
+    position: relative;
+    height: 800px;
+    background-color: #CA7159;
+}
+
+.adDiv1 {
+    width: 640px;
+    height: 500px;
+    margin: auto;
+    position: relative;
+}
+
+.adsImg {
+    position: absolute;
+    top: 160px;
+}
+
+.adBlock1 {
+    color: #FFF;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-color: #613E3B;
+    right: -200px;
+    padding: 50px;
+}
+
+.adsContent {
+    height: 150px;
+}
+
+.adDiv2 {
+    height: 300px;
+    background-color: #df927d;
+}
+
+.carouselBlock {
+    width: 700px;
+}
+
+.carousel {
+    top: 150px;
+}
+
+/* adsButton */
+.button-19 {
+    appearance: button;
+    background-color: #647168;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    box-sizing: border-box;
+    color: #F0EBE2;
+    cursor: pointer;
+    display: inline-block;
+    font-family: din-round, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin: 0;
+    outline: none;
+    overflow: visible;
+    padding: 13px 16px;
+    text-align: center;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    transition: filter .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 30%;
+}
+
+.button-19:after {
+    background-clip: padding-box;
+    background-color: #8fa496;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+}
+
+.button-19:main,
+.button-19:focus {
+    user-select: auto;
+}
+
+.button-19:hover:not(:disabled) {
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
+}
+
+.button-19:disabled {
+    cursor: auto;
+}
+
+/* card */
+
+.gameCardDiv {
+    top: 100px;
+    position: relative;
+}
+
+.gameListTitle {
+    width: 1320px;
+    height: 60px;
+    text-align: center;
+    font-size: 30px;
+    /* border-bottom: #000 solid 2px; */
+}
+
+.link-top {
+    width: 200px;
+    height: 2px;
+    background-color: #000;
+    margin: auto;
+    margin-top: 10px;
+}
+
+
+.card {
+    width: 1000px;
+    background-color: #ffffff;
+    border-radius: 3px;
+    border: 1px solid #a1a1a1;
+    padding: 20px;
+}
+
+.card .pic img {
+    width: 100%;
+}
+
+.card .card-header {
+    border-bottom: none;
+    background-color: transparent;
+}
+
+.card .title {
+    color: #444444;
+}
+
+.card .text {
+    color: #444444;
+}
+
+.card-footer {
+    border-top: none !important;
+    background-color: transparent !important;
+}
+
+/* store */
+
+.storeBlock {
+    position: relative;
+    top: 200px;
+    height: 800px;
+    background-color: #F3D18E;
+}
+
+.map {
+    width: 600px;
+    ;
+    position: relative;
+    top: 200px;
+    margin: auto;
+}
+
+.bodyContainer {
+    position: relative;
+    top: 75px;
+    padding-bottom: 200px;
+}
