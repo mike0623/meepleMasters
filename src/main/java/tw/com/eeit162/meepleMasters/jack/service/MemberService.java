@@ -78,7 +78,7 @@ public class MemberService {
 		 
 		 memberDao.save(member);
 		 
-		
+		System.out.println("ok");
 		return member;
 	}
 	
@@ -88,10 +88,26 @@ public class MemberService {
 //		return "success";
 //	}
 	
-	public Optional<Member> login(Member member) {
+	public Optional<Member> login(String json) {
+		JSONObject member = new JSONObject(json);
+		String email = member.getString("memberEmail");
+		String password = member.getString("memberPwd");
+
+		Optional<Member> option = Optional.ofNullable(memberDao.findMemberByEmail(email));
+		if(option.isEmpty()) {
+			return Optional.empty();
+		}else {
+			String memberPwd = option.get().getMemberPwd();
+			if(password.equals(memberPwd)) {
+				return option;
+			}
+			return Optional.empty();
+		}
+			
+		
 		
 //		Member memberLogin = memberDao.findMemberByEmailandPassword(member.getMemberEmail(), member.getMemberPwd());
-		return Optional.ofNullable(memberDao.findMemberByEmailandPassword(member.getMemberEmail(), member.getMemberPwd())); 
+//		return Optional.ofNullable(memberDao.findMemberByEmailandPassword(member.getMemberEmail(), member.getMemberPwd())); 
 	}
 	
 	public Integer updatePwd(Integer id,String json) {

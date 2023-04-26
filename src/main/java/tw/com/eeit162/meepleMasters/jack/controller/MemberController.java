@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,17 +38,6 @@ public class MemberController {
 		return "jack/jack";
 	}
 	
-	
-	/**
-	 * 跳轉到註冊頁面
-	 * @return createMember.jsp
-	 */
-	@RequestMapping("/member/createPage")
-	public String createPage() {
-		return "jack/createMember";
-	}
-	
-	
 	/**
 	 * 註冊會員
 	 * @param body
@@ -56,11 +46,15 @@ public class MemberController {
 	 */
 	@ResponseBody
 	@PostMapping("/member/createMember")
-	public String createMember(@RequestBody String body) throws IOException {
+	public boolean createMember(@RequestBody String body) throws IOException {
+		JSONObject newMember = new JSONObject(body);
+		Member email = mService.findMemberByEmail(newMember.getString("memberEmail")) ;
+		if(email == null) {
+			mService.createMember(body);
+			return true;
+		}
 		
-		mService.createMember(body);
-		
-		return "jack/loginPage";
+		return false;
 	}
 	
 //	public String memberAuth() {
@@ -71,10 +65,6 @@ public class MemberController {
 //		
 //	}
 	
-	@RequestMapping("/member/loginPageTest")
-	public String loginPageTest() {
-		return "jack/loginPage";
-	}
 	
 	/**
 	 * 會員登入
@@ -84,21 +74,23 @@ public class MemberController {
 	 */
 	@ResponseBody
 	@PostMapping("/member/login")
-	public String login(@RequestBody Member member, HttpSession session) {
+	public String login(@RequestBody String member, HttpSession session) {
 		
 		Optional<Member> optional = mService.login(member);
 		
 		if (optional.isEmpty()) {
 			// No Member
-			return null;
+			return "redirect:/member/login";
 		}
+		JSONObject url = new JSONObject();
 		session.setAttribute("member", optional.get());
 		if(optional.get().getMemberLevel().contentEquals("管理員")) {
 			System.out.println("管理員");
-			return ""; 
+			url.put("url", "/member/admin");
+			return url.toString();
 		}
-			
-		return "";
+			url.put("url","/member/member");
+		return url.toString();
 	}
 	
 	/**
@@ -182,6 +174,23 @@ public class MemberController {
 		return member;
 	}
 	
+	/**
+	 * 確認email是否重複
+	 * @param memberEmail
+	 * @return Http status
+	 */
+	@ResponseBody
+	@GetMapping("/member/checkMemberByEmail")
+	public ResponseEntity<Member> checkMemberByEmail(@RequestParam("memberEmail") String memberEmail) {
+		
+		Member member = mService.findMemberByEmail(memberEmail);
+		
+		if(member != null) {
+			return new ResponseEntity<Member>(member, HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<Member>(member, HttpStatus.NO_CONTENT);
+	}
 	
 	/**
 	 * 用Id找會員圖片

@@ -34,9 +34,9 @@ include file="../include/common_link.jsp" %>
                 required
               />
               <label for="name">Name</label>
-              <!-- <div class="invalid-feedback">
-                Your name can't be empty.
-              </div>  -->
+              <div id="name-error" class="invalid-feedback">
+                Your name shouldn't be empty.
+              </div> 
             </div>
             <div class="form-floating mb-3">
               <input
@@ -47,9 +47,9 @@ include file="../include/common_link.jsp" %>
                 style="background-color: rgb(255, 245, 223)"
                 required
               />
-              <!-- <div class="invalid-feedback">
-                Your email has been used.
-              </div>               -->
+              <div id="email-error" class="invalid-feedback">
+                
+              </div> 
               <label for="email">Email address</label>
             </div>
             <div class="form-floating mb-3">
@@ -62,6 +62,9 @@ include file="../include/common_link.jsp" %>
                 required
               />
               <label for="password">Password</label>
+              <div id="password-error" class="invalid-feedback">
+                
+              </div> 
             </div>
             <div class="form-floating mb-3">
               <input
@@ -72,6 +75,9 @@ include file="../include/common_link.jsp" %>
                 style="background-color: rgb(250, 240, 217)"
               />
               <label for="confirmPwd">Repeat your password</label>
+              <div id ="confirmPwd-error" class="invalid-feedback">
+                
+              </div> 
             </div>
             <div class="form-floating mb-3">
               <input
@@ -91,9 +97,9 @@ include file="../include/common_link.jsp" %>
                 style="background-color: rgb(250, 240, 217)"
               >
                 <option selected value="">請選擇性別</option>
-                <option value="male">男</option>
-                <option value="female">女</option>
-                <option value="other">其他</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+                <option value="其他">其他</option>
               </select>
             </div>
             <div class="form-floating mb-3">
@@ -121,7 +127,9 @@ include file="../include/common_link.jsp" %>
               <a href="#" class="" style="text-decoration: none; color: #8a513f"
                 >會員條款</a
               >
-              <p class="invalid-feedback">Please check the box.</p>
+              <div id="checkbox-error" class="invalid-feedback">
+
+              </div>
             </span>
 
             <div
@@ -135,6 +143,7 @@ include file="../include/common_link.jsp" %>
               >
                 確認
               </button>
+              <div id="confirm-error" class="invalid-feedback"></div>
             </div>
           </form>
           <button
@@ -154,88 +163,7 @@ include file="../include/common_link.jsp" %>
         </div>
       </div>
     </div>
-
-    <script>
-      //       let data = {
-      //     "memberName":document.querySelector('#name').value,
-      //     "memberEmail":document.querySelector('#email').value,
-      //     "memberPwd":document.querySelector('#password').value,
-      //     "memberAge":document.querySelector('#age').value,
-      //     "memberGender":document.querySelector('#gender').value,
-      //     "memberTel":document.querySelector('#tel').value,
-      //     "memberAddress":document.querySelector('#address').value
-      // };
-
-      document.querySelector("#member").addEventListener("click", function () {
-        document.querySelector("#name").value = "Test";
-        document.querySelector("#email").value = "456456@gmail.com";
-        document.querySelector("#password").value = "123123123";
-        document.querySelector("#confirmPwd").value = "123123123";
-        document.querySelector("#age").value = 20;
-        document.querySelector("#gender").value = "male";
-        document.querySelector("#tel").value = 0900111222;
-        document.querySelector("#address").value = "台北市";
-      });
-
-      document.querySelector("#reset").addEventListener("click", function () {
-        document.querySelector("#name").value = "";
-        document.querySelector("#email").value = "";
-        document.querySelector("#password").value = "";
-        document.querySelector("#confirmPwd").value = "";
-        document.querySelector("#age").value = null;
-        document.querySelector("#gender").value = "";
-        document.querySelector("#tel").value = null;
-        document.querySelector("#address").value = "";
-      });
-
-      document.querySelector("#name").addEventListener("blur", function () {
-        if (document.querySelector("#name").value)
-          document.querySelector("#agree").classList.add("is-invalid");
-      });
-
-      // document.querySelector("#email").addEventListener("blur",function(){
-      //   console.log(document.querySelector('#email').value)
-      //   axios.get("/meeple-masters/findMemberByEmail")
-      //   .then(res => {
-      //     console.log(res)
-      //     document.querySelector("#email").classList.add("is-invalid");
-      //   })
-      //   .catch(err => {
-      //     document.querySelector("#email").classList.remove("is-invalid");
-      //   }
-      // )});
-
-      document
-        .querySelector("#confirm")
-        .addEventListener("click", function (e) {
-          if (!document.querySelector("#agree").checked) {
-            e.preventDefault();
-            document.querySelector("#agree").classList.add("is-invalid");
-          } else {
-            console.log(document.querySelector("#address").value);
-            axios
-              .post("/meeple-masters/createMember", {
-                memberName: document.querySelector("#name").value,
-                memberEmail: document.querySelector("#email").value,
-                memberPwd: document.querySelector("#password").value,
-                memberAge: document.querySelector("#age").value,
-                memberGender: document.querySelector("#gender").value,
-                memberTel: document.querySelector("#tel").value,
-                memberAddress: document.querySelector("#address").value,
-              })
-              .then((res) => {
-                console.log(res);
-                console.log(data);
-              })
-              .catch((err) => {
-                // console.error(err);
-              });
-          }
-        });
-
-      document.querySelector("#agree").addEventListener("change", function () {
-        document.querySelector("#agree").classList.remove("is-invalid");
-      });
-    </script>
+    <script type="text/javascript" src="${root}/js/jack/createMember.js"></script>
+   
   </body>
 </html>
