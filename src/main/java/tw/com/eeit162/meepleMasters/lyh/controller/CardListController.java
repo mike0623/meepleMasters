@@ -61,5 +61,7 @@ public class CardListController {
 		return new ResponseEntity<byte[]>(cardFile, headers, HttpStatus.CREATED);
 		
 	}
+	
+
 
 }
