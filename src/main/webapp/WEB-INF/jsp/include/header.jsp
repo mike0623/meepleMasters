@@ -15,17 +15,17 @@
 <body>
     <div class="nav fixed-top">
         <header>
-            <div class="logo"><img src="${root}/img/logo.png" alt="" class="logoImg" /></div>
+            <div class="logo"><a href="${root}"><img src="${root}/img/logo.png" alt="" class="logoImg" /></a></div>
             <nav role="navigation">
                 <ul>
                     <li>
                         <a href="/">遊戲列表</a>
                     </li>
                     <li>
-                        <a href="/"> 卡片收藏</a>
+                        <a href="${root}" aria-disabled="true"> 卡片收藏</a>
                         <div>
                             <ul>
-                                <li><a href="#">我的卡片</a></li>
+                                <li><a href="${root}/card/mycard/1">我的卡片</a></li>
                                 <li><a href="#">卡片市集</a></li>
                                 <li><a href="#">收藏記錄</a></li>
                             </ul>

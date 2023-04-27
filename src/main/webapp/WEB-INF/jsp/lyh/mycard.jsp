@@ -15,13 +15,33 @@
 
 <body>
 	<jsp:include page="../include/header.jsp"></jsp:include>
-	<div class="container">
+	<div class="mycardContainer">
 		<div class="mycardTitle">我的卡片</div>
+		<div class="cardListButtons">
+			<button onclick="showCardList()" class="cardListButton">卡片列表</button>
+			<button onclick="showCardAnime()" class="cardAnimeButton">抽卡動畫</button>
+			<button onclick="drawCard()" class="cardAnimeButton">抽卡</button>
+		</div>
 
 
+		<div class="row container cardContainer justify-content-center">
+
+			<c:forEach var="card" items="${cardList}">
+
+				<div class="col-3 d-flex">
+					<div class="card">
+						<figure><img alt="" src="${root}/card/downloadCard/${card.cardId}" class="hanafuda">
+						<figcaption>${card.cardName}</figcaption>
+						</figure>
+					</div>
+
+				</div>
+
+			</c:forEach>
+		</div>
 	</div>
 
-	<div><button onclick="showCardList()" class="cardListButton">卡片列表</button></div>
+
 
 	<script src="${root}/json/starcard.js"></script>
 	<script type="text/javascript">
@@ -31,13 +51,13 @@
 
 
 		for (let i = 4; i >= 0; i--) {
-			outputString += "<div class='row container cardContainer justify-content-center' id='card5'>"
+			outputString += `<div class='row container cardContainer justify-content-center' id='card'>`;
 			outputString += "<div class='starDiv'>";
 			outputString += `<img src='${root}/img/lyh/star/star\${i+1}.png' class='star'>`;
 			outputString += "</div>";
 
 			for (let item of cardList[i].imgs) {
-				outputString += "<div class='col-3 d-flex'>";
+				outputString += "<div class='col-3 d-flex' id='cardContent'>";
 				outputString += "<div class='card'>";
 				outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda'>`;
 				outputString += `<figcaption>\${item.name}</figcaption>`;
@@ -45,6 +65,10 @@
 			}
 			outputString += "</div>";
 		}
+
+		$("#cardContent").hide();
+
+		$("")
 
 		function showCardList() {
 
@@ -58,7 +82,39 @@
 				confirmButtonColor: '#dfa661'
 			})
 		}
+		
+		function showCardAnime() {
+
+			Swal.fire({
+				title: '卡片列表',
+				html: outputString,
+				color: '#FFF',
+				showCloseButton: true,
+				focusConfirm: false,
+				background: '#647168',
+				confirmButtonColor: '#dfa661'
+			})
+			
+			Swal.fire({
+			imageUrl: '${root}/img/lyh/gift-box.gif',
+			imageHeight: 300,
+			timer: '1500',
+			showCloseButton: false,
+			showConfirmButton: false
+			})
+			
+			
+			
+		}
+		
+		function drawCard() {
+			
+		}
+		
+		
 	</script>
+		
+	
 </body>
 
 
