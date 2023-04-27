@@ -7,7 +7,7 @@ include file="../include/common_link.jsp" %>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Insert title here</title>
+    <title>${webName}</title>
   </head>
   <body>
     <div

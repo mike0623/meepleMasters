@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>${webName}</title>
 <style>
             /* ad */
 
@@ -183,7 +183,7 @@
 </style>
 </head>
 <body>
-<jsp:include page="../include/header.jsp"></jsp:include>
+<jsp:include page="./loginHeader.jsp"></jsp:include>
 <div class="bodyContainer">
     <div class="ad">
         <div class="adDiv1">

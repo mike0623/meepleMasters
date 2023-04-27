@@ -7,11 +7,11 @@ include file="../include/common_link.jsp" %>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Insert title here</title>
+    <title>${webName}</title>
     <style></style>
   </head>
   <body>
-    <!-- <jsp:include page="../include/header.jsp"></jsp:include> -->
+    <jsp:include page="../include/header.jsp"></jsp:include>
     <div
       class="bodyContainer position-absolute top-50 start-50"
       style="text-align: center"
@@ -25,7 +25,7 @@ include file="../include/common_link.jsp" %>
       <form action="${root}/member/login" method="post">
       <div class="card" style="width: 30rem; background-color: #e0ccc5">
         <div class="card-body container text-center">
-          <h5 class="card-title" style="color: #8a513f">會員登入</h5>
+          <h5 class="card-title" style="color: #8a513f">Login</h5>
           <div class="form-floating mb-3">
             <input
               type="email"
@@ -47,30 +47,35 @@ include file="../include/common_link.jsp" %>
             <label for="password">Password</label>
           </div>
           <span>
-            <input type="checkbox" name="agree" id="agree" />我同意會員條款
+            <input type="checkbox" name="agree" id="agree" />I agree all statement.
             <a href="#" class="" style="text-decoration: none; color: #8a513f"
-              >會員條款</a
+              >Terms of service</a
             >
             <div id="checkbox-error" class="invalid-feedback">
 
             </div>
           </span>
+          <div id="login-error" class="d-none alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Login error!</strong> Your email or password is empty.
+          </div>
           <div class="row justify-content-center" style="margin: 20px">
-            <button class="btn btn-outline-secondary" type="button" id="login">登入</button>
+            <button class="btn btn-outline-secondary" type="button" id="login">Login</button>
           </div>
         </form>
           <div class="row justify-content-center" style="margin: 20px">
-            <a href="${root}/member/register" class="btn btn-outline-secondary">註冊會員</a>
+            <a href="${root}/member/register" class="btn btn-outline-secondary">Register</a>
           </div>
-          <div class="col align-self-center">使用其他登入方式</div>
+          <div class="col align-self-center">Other way to login</div>
           <div class="row justify-content-center" style="margin: 20px">
             <a href="#" class="btn btn-outline-secondary">Google</a>
         </div>
       </div>
     </div>
-    <script>const root = "${root}" </script>
+    <script>
+        const root = "${root}" 
+    </script>
     <script type="text/javascript" src="${root}/js/jack/loginPage.js"></script>
 
-    <!-- <jsp:include page="../include/footer.jsp"></jsp:include> -->
+    <jsp:include page="../include/footer.jsp"></jsp:include>
   </body>
 </html>

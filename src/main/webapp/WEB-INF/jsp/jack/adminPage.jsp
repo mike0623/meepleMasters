@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>${webName}</title>
 </head>
 <body>
 <h1>admin</h1>
+<img src="${root}/member/findMemberImg/${member.memberId}" alt="" class="rounded-circle">
 </body>
 </html>

@@ -77,12 +77,13 @@ public class MemberController {
 	public String login(@RequestBody String member, HttpSession session) {
 		
 		Optional<Member> optional = mService.login(member);
+		JSONObject url = new JSONObject();
 		
 		if (optional.isEmpty()) {
 			// No Member
-			return "redirect:/member/login";
+			url.put("url", "/member/login");
+			return url.toString();
 		}
-		JSONObject url = new JSONObject();
 		session.setAttribute("member", optional.get());
 		if(optional.get().getMemberLevel().contentEquals("管理員")) {
 			System.out.println("管理員");
@@ -103,7 +104,7 @@ public class MemberController {
 		
 		session.invalidate();
 		
-		return "Logout";
+		return "redirect:/index";
 	}
 	
 	/**
@@ -206,5 +207,6 @@ public class MemberController {
 		
 		return new ResponseEntity<byte[]>(memberImg, headers, HttpStatus.OK);
 	}
+	
 	
 }
