@@ -208,5 +208,20 @@ public class MemberController {
 		return new ResponseEntity<byte[]>(memberImg, headers, HttpStatus.OK);
 	}
 	
+	/**
+	 * 用Id找會員圖片
+	 * @param memberId
+	 * @return byte[]
+	 */
+	@GetMapping("/member/emailFindMemberImg/{email}")
+	@ResponseBody
+	public ResponseEntity<byte[]> findMemberImg(@PathVariable("email") String memberEmail) {
+		byte[] memberImg = mService.findMemberImg(memberEmail);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.IMAGE_PNG);
+		
+		return new ResponseEntity<byte[]>(memberImg, headers, HttpStatus.OK);
+	}
+	
 	
 }
