@@ -1,0 +1,24 @@
+.cardListButton {
+    position: relative;
+    top:200px;
+}
+
+
+.container {
+    position: relative;
+    top: 75px;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-auto-flow: column;
+	font-family: 微軟正黑體;
+	height: 100%;
+    background-color: #F0EBE2;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}

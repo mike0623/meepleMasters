@@ -1,0 +1,181 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ include file="./common_link.jsp" %>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>${webName}</title>
+    <link rel="stylesheet" type="text/css" href="${root}/css/index.css">
+    <style>
+
+
+    </style>
+</head>
+
+<body>
+    <jsp:include page="header.jsp"></jsp:include>
+    <div class="bodyContainer">
+        <div class="ad">
+            <div class="adDiv1">
+                <!-- <div class="carouselBlock">
+                <img src="${root}/img/example/checkmate.jpg" class="adsImg" />
+                <div class="adBlock1">
+                    <div class="adsContent">挑戰德州撲克！<br />世界上最流行的公牌撲克，目標贏取彩池中的所有彩金！</div>
+                    <button class="button-19" role="button">開始遊玩</button>
+                </div>
+            </div>
+            <div class="carouselBlock">
+                <img src="${root}/img/example/puzzle.jpg" class="adsImg" />
+                <div class="adBlock1">
+                    <div class="adsContent">挑戰德州撲克！<br />世界上最流行的公牌撲克，目標贏取彩池中的所有彩金！</div>
+                    <button class="button-19" role="button">開始遊玩</button>
+                </div>
+            </div> -->
+                <div class="carouselBlock">
+                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0"
+                                class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                                aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                                aria-label="Slide 3"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="${root}/img/example/checkmate.jpg" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <button class="button-19" role="button">開始遊玩</button>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <img src="${root}/img/example/puzzle.jpg" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <button class="button-19" role="button">開始遊玩</button>
+                                </div>
+                                <div class="adBlock1" hidden>
+                                    <div class="adsContent">挑戰德州撲克！<br />世界上最流行的公牌撲克，目標贏取彩池中的所有彩金！</div>
+                                    <button class="button-19" role="button">開始遊玩</button>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <img src="${root}/img/example/gambling.jpg" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <button class="button-19" role="button">開始遊玩</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="adDiv2"></div>
+        </div>
+
+        <div class="container gameCardDiv">
+            <div class="gameListTitle">遊戲列表
+                <div class="link-top"></div>
+            </div>
+            <div class="row px-4 pt-4 justify-content-center">
+                <div class="col-3 d-flex align-items-stretch">
+                    <div class="card">
+                        <div class="pic">
+                            <img src="https://picsum.photos/300/?random=10">
+                        </div>
+                        <div class="card-header">
+                            number 1
+                        </div>
+                        <div class="card-body">
+                            <h3 class="title">
+                                Special title treatment
+                            </h3>
+                        </div>
+                        <div class="card-footer">
+                            <p class="text">
+                                This is a wider card with supporting text below as a natural lead-in
+                                to additional
+                                content.
+                                This
+                                content is a little bit longer.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 d-flex align-items-stretch">
+                    <div class="card">
+                        <div class="pic">
+                            <img src="https://picsum.photos/300/?random=11">
+                        </div>
+                        <div class="card-header">
+                            number 2
+                        </div>
+                        <div class="card-body">
+                            <h3 class="title">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                            </h3>
+                        </div>
+                        <div class="card-footer">
+                            <p class="text">
+                                With supporting text below as a natural lead-in to additional
+                                content.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3 d-flex align-items-stretch">
+                    <div class="card">
+                        <div class="pic">
+                            <img src="https://picsum.photos/300/?random=12">
+                        </div>
+                        <div class="card-header">
+                            number 3
+                        </div>
+                        <div class="card-body">
+                            <h3 class="title">
+                                Lorem ipsum dolor sit amet.
+                            </h3>
+                        </div>
+                        <div class="card-footer">
+                            <p class="text">
+                                With supporting text below as a natural lead-in to additional
+                                content.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="storeBlock">
+            <div class="">
+
+            </div>
+            <div class="map">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.0109929955192!2d121.54330379999999!3d25.033700999999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442abd37971c7cb%3A0x40ba641f27b6d4e3!2zMTA25Y-w5YyX5biC5aSn5a6J5Y2A5b6p6IiI5Y2X6Lev5LiA5q61Mzkw6Jmf!5e0!3m2!1szh-TW!2stw!4v1681057217647!5m2!1szh-TW!2stw"
+                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+
+        </div>
+    </div>
+    <jsp:include page="footer.jsp"></jsp:include>
+</body>
+
+</html>

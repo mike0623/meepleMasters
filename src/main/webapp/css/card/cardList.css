@@ -1,0 +1,95 @@
+@charset "UTF-8";
+
+figure {
+	display: grid;
+	border-radius: 1rem;
+	overflow: hidden;
+	cursor: pointer;
+	margin: 10px;
+}
+
+figure>* {
+	grid-area: 0;
+	transition: .4s;
+}
+
+figure figcaption {
+	display: grid;
+	align-items: flex-start;
+	font-family: sans-serif;
+	font-size: 1rem;
+	font-weight: bold;
+	color: #FFF;
+	padding: .75rem;
+	background: var(--c, #0009);
+	clip-path: inset(0 var(--_i, 100%) 0 0);
+	text-align: left;
+}
+
+figure:hover figcaption { 
+	--_i: 0%;
+}
+
+@supports not (-webkit-mask-clip: text) {
+	figure figcaption { -webkit-mask:none;
+	color: #fff;
+}
+
+}
+
+.hanafuda {
+	width: 150px;
+}
+
+.title {
+	font-size: 2rem;
+	color: #FFF;
+	text-align: center;
+	margin: 20px;
+	height: 100px;
+}
+
+.cardStarlabel {
+	width: 150px;
+}
+
+.cardStarTable {
+	width: 200px;
+	margin: auto;
+	text-align: center;
+	border: #dc7e6a 3px solid;
+	background-color: #F0EBE2;
+	color: #47322d;
+}
+
+.cardListDiv {
+	width: 50%;
+	margin: auto;
+}
+
+.star {
+	width: 30%;
+}
+
+.starDiv {
+	text-align: center;
+	margin: 20px 0;
+}
+
+.card {
+	margin-bottom: 20px;
+}
+
+.swal2-container.swal2-center>.swal2-popup {
+	width: 900px;
+}
+
+.swal2-container.swal2-center>.swal2-popup::-webkit-scrollbar {
+	display: none;
+}
+
+.row {
+	margin: 0;
+}
+
+
