@@ -88,8 +88,16 @@ figure:hover figcaption {
 	display: none;
 }
 
+.swal2-html-container::-webkit-scrollbar {
+	display: none;
+}
+
 .row {
 	margin: 0;
+}
+
+.d-flex {
+	justify-content: center;
 }
 
 
