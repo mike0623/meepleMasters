@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -33,18 +32,23 @@ public class FriendMessage implements Serializable{
 	@Column(name = "fk_receiverId")
 	private Integer fkReceiverId;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Taipei")
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "friendMessageCreatedDate")
 	private Date friendMessageCreatedDate;
 	
-	@Column(name = "messageContext")
-	private String messageContext;
 	
-	@Lob
-	@Column(name = "messageImg")
-	private byte[] messageImg;
+	@Column(name = "haveRead")
+	private Integer haveRead;
+
+	@Column(name = "messageType")
+	private Integer messageType;
+	
+	@Column(name = "fk_messageContent")
+	private Integer fkMessageContent;
+	
+	
 	
 	public FriendMessage() {
 	}
@@ -89,21 +93,30 @@ public class FriendMessage implements Serializable{
 		this.friendMessageCreatedDate = friendMessageCreatedDate;
 	}
 
-	public String getMessageContext() {
-		return messageContext;
+	public Integer getHaveRead() {
+		return haveRead;
 	}
 
-	public void setMessageContext(String messageContext) {
-		this.messageContext = messageContext;
+	public void setHaveRead(Integer haveRead) {
+		this.haveRead = haveRead;
 	}
 
-	public byte[] getMessageImg() {
-		return messageImg;
+	public Integer getMessageType() {
+		return messageType;
 	}
 
-	public void setMessageImg(byte[] messageImg) {
-		this.messageImg = messageImg;
+	public void setMessageType(Integer messageType) {
+		this.messageType = messageType;
 	}
+
+	public Integer getFkMessageContent() {
+		return fkMessageContent;
+	}
+
+	public void setFkMessageContent(Integer fkMessageContent) {
+		this.fkMessageContent = fkMessageContent;
+	}
+
 	
 	
 

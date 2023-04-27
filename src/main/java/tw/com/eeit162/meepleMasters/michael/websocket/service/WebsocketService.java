@@ -13,6 +13,8 @@ import javax.websocket.server.ServerEndpoint;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.michael.util.DataInterface;
 import tw.com.eeit162.meepleMasters.michael.websocket.util.WebsocketUtil;
 
 
@@ -56,6 +58,38 @@ public class WebsocketService {
 	@OnMessage
     public void onMessage(String message,Session session) {
 		System.out.println("用戶" + userEmail + "收到訊息: "+message);
+		JSONObject json = new JSONObject(message);
+		String action = json.getString("action");
+		//-------------------------------------------------------------------------------------
+		//接到前端傳來說我傳訊息給別人了，判斷對方是否在線，是否需要發訊息給他
+		if("sendMessage".equals(action)) {
+			boolean isOnline = false;
+			Member receiver = DataInterface.getMemberByEmail(json.getString("receiver"));
+			Member myself = DataInterface.getMemberByEmail(this.userEmail);
+			for(WebsocketService service :WebsocketUtil.getOnlineClient().values()) {
+				if(json.getString("receiver").equals(service.getUserEmail())) {
+					Integer notRead = DataInterface.getNotRead(myself.getMemberId(),receiver.getMemberId());
+					System.out.println("未讀訊息"+notRead);
+					
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("action", "getMessage");
+					jsonObject.put("notRead", notRead);
+					jsonObject.put("senderName", myself.getMemberName());
+					jsonObject.put("sender", this.userEmail);
+					WebsocketUtil.sendMessageByUserEmail(json.getString("receiver"),jsonObject.toString());
+					isOnline = true;
+				}
+			}
+			//若不在線就更新排序，下次上線時才會跳出框框
+			if(isOnline == false) {
+				JSONObject sendToChatRoomOrder =  new JSONObject();
+				sendToChatRoomOrder.put("fkOwner", receiver.getMemberId());
+				sendToChatRoomOrder.put("fkChatToWhom", myself.getMemberId());
+				sendToChatRoomOrder.put("chatOrderWhenLeave", 0);
+				DataInterface.insertWhenSendToOfflineFriend(sendToChatRoomOrder.toString());
+			}
+		}
+		//-------------------------------------------------------------------------------------
 
 	}
 	
@@ -85,6 +119,7 @@ public class WebsocketService {
 			}			
 		}
 		//-------------------------------------------------------------------------------------
+		
 		
 	}
 
