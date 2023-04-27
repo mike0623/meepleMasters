@@ -61,6 +61,15 @@ public class CardListService {
 		
 	}
 	
-	
+	public Card findById(Integer cardId) {
+		
+		Optional<Card> option = cDao.findById(cardId);
+		
+		if (option.isEmpty()) {
+			return null;
+		}
+		
+		return option.get();
+	}
 	
 }

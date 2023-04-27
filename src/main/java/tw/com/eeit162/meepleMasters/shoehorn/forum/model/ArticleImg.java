@@ -21,7 +21,7 @@ public class ArticleImg {
 	private Integer fkArticleId;
 	
 	@Lob
-	@Column(name = "img")
+	@Column(name = "Img")
 	private byte[] img;
 
 	public ArticleImg() {
