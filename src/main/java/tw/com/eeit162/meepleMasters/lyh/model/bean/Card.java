@@ -1,5 +1,7 @@
 package tw.com.eeit162.meepleMasters.lyh.model.bean;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -58,6 +60,12 @@ public class Card {
 
 	public void setCardImg(byte[] cardImg) {
 		this.cardImg = cardImg;
+	}
+
+	@Override
+	public String toString() {
+		return "Card [cardId=" + cardId + ", cardName=" + cardName + ", cardStar=" + cardStar + ", cardImg="
+				+ Arrays.toString(cardImg) + "]";
 	}
 	
 	

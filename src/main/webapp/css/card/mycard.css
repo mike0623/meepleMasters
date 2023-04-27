@@ -1,12 +1,22 @@
 .cardListButton {
     position: relative;
-    top:200px;
 }
 
-
-.container {
+.mycardContainer {
     position: relative;
     top: 75px;
+    text-align: center;
+    width: 1000px;
+    margin: auto;
+}
+
+.mycardTitle {
+    margin-top: 50px;
+    font-size:xx-large;
+}
+
+.cardListButton, .cardAnimeButton, .cardAnimeButton {
+    margin: 20px;
 }
 
 body {
