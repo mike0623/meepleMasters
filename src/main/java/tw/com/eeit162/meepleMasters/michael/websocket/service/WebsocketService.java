@@ -32,16 +32,7 @@ public class WebsocketService {
 	public void opOpen(@PathParam("userEmail") String userEmail,Session session) {
 		this.userEmail = userEmail;
 		this.session = session;
-		boolean isRepeatWebsocket = false;
-		for(WebsocketService service :WebsocketUtil.getOnlineClient().values()) {
-			if(userEmail.equals(service.getUserEmail())) {
-				isRepeatWebsocket = true;
-				break;
-			}
-		}
-		if(!isRepeatWebsocket) {
-			WebsocketUtil.putOnlineClient(session.getId(),this);
-		}
+		WebsocketUtil.putOnlineClient(session.getId(),this);
 		System.out.print("用戶"+userEmail+"已連線");
 		System.out.println("目前在線用戶數:"+WebsocketUtil.getOnlineClient().size());
 		//以上為確認有啟動，不動他
@@ -72,19 +63,30 @@ public class WebsocketService {
 		//-------------------------------------------------------------------------------------
 		//接到前端傳來說我傳訊息給別人了，判斷對方是否在線，是否需要發訊息給他
 		if("sendMessage".equals(action)) {
+			boolean isOnline = false;
+			Member receiver = DataInterface.getMemberByEmail(json.getString("receiver"));
+			Member myself = DataInterface.getMemberByEmail(this.userEmail);
 			for(WebsocketService service :WebsocketUtil.getOnlineClient().values()) {
 				if(json.getString("receiver").equals(service.getUserEmail())) {
-					Member receiver = DataInterface.getMemberByEmail(json.getString("receiver"));
-					Member myself = DataInterface.getMemberByEmail(this.userEmail);
 					Integer notRead = DataInterface.getNotRead(myself.getMemberId(),receiver.getMemberId());
 					System.out.println("未讀訊息"+notRead);
+					
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put("action", "getMessage");
 					jsonObject.put("notRead", notRead);
 					jsonObject.put("senderName", myself.getMemberName());
 					jsonObject.put("sender", this.userEmail);
 					WebsocketUtil.sendMessageByUserEmail(json.getString("receiver"),jsonObject.toString());
+					isOnline = true;
 				}
+			}
+			//若不在線就更新排序，下次上線時才會跳出框框
+			if(isOnline == false) {
+				JSONObject sendToChatRoomOrder =  new JSONObject();
+				sendToChatRoomOrder.put("fkOwner", receiver.getMemberId());
+				sendToChatRoomOrder.put("fkChatToWhom", myself.getMemberId());
+				sendToChatRoomOrder.put("chatOrderWhenLeave", 0);
+				DataInterface.insertWhenSendToOfflineFriend(sendToChatRoomOrder.toString());
 			}
 		}
 		//-------------------------------------------------------------------------------------

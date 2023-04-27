@@ -12,6 +12,8 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.michael.util.DataInterface;
 import tw.com.eeit162.meepleMasters.michael.websocket.service.WebsocketService;
 
 public class WebsocketUtil {
@@ -40,11 +42,8 @@ public class WebsocketUtil {
 		boolean isOnlineFriend = false;
 		JSONObject jsonObject = new JSONObject();
 		//資料介接用email找memberId
-		URI uri = URI.create("http://localhost:8080/meeple-masters/findMemberByEmail?memberEmail="+userEmail);
-		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<String> response = template.exchange(requset, String.class);
-		JSONObject member = new JSONObject(response.getBody());
-		Integer memberId = member.getInt("memberId");
+		Member member = DataInterface.getMemberByEmail(userEmail);
+		Integer memberId = member.getMemberId();
 //		System.out.println("自己的memberId:"+memberId);
 		
 		
@@ -57,18 +56,12 @@ public class WebsocketUtil {
 		HashMap<String, String> friendMap = new HashMap<String, String>();
 		for(int i = 0;i<resultJson.length();i++) {
 			if(resultJson.getJSONObject(i).getInt("fkMemberAId") != memberId) {
-				URI uri2 = URI.create("http://localhost:8080/meeple-masters/findMemberById?id="+resultJson.getJSONObject(i).getInt("fkMemberAId"));
-				RequestEntity<Void> requset2 = RequestEntity.get(uri2).accept(MediaType.APPLICATION_JSON).build();
-				ResponseEntity<String> response2 = template.exchange(requset2, String.class);
-				JSONObject friendMember = new JSONObject(response2.getBody());
-				friendMap.put(friendMember.getString("memberEmail"), friendMember.getString("memberName"));
+				Member member2 =  DataInterface.getMemberByMemberId(resultJson.getJSONObject(i).getInt("fkMemberAId"));
+				friendMap.put(member2.getMemberEmail(), member2.getMemberName());
 			}
 			if(resultJson.getJSONObject(i).getInt("fkMemberBId") != memberId) {
-				URI uri2 = URI.create("http://localhost:8080/meeple-masters/findMemberById?id="+resultJson.getJSONObject(i).getInt("fkMemberBId"));
-				RequestEntity<Void> requset2 = RequestEntity.get(uri2).accept(MediaType.APPLICATION_JSON).build();
-				ResponseEntity<String> response2 = template.exchange(requset2, String.class);
-				JSONObject friendMember = new JSONObject(response2.getBody());
-				friendMap.put(friendMember.getString("memberEmail"), friendMember.getString("memberName"));
+				Member member3 =  DataInterface.getMemberByMemberId(resultJson.getJSONObject(i).getInt("fkMemberBId"));
+				friendMap.put(member3.getMemberEmail(), member3.getMemberName());
 			}
 		}
 		HashMap<String,String> onlineFriend = new HashMap<String,String>();

@@ -248,21 +248,31 @@
 				//重新製作tag
 				//如果本來就在，把本來的刪掉
 				let idTag = changeToIdType(json.sender)+"tag";
+				//傳訊息來的人本來就是active
 				if($("#"+idTag).length != 0 && $("#"+idTag).hasClass("active")){
 					$("#"+idTag).remove();
 					makeChatTag(json.sender,json.senderName,0);
-					showChatContent(json.sender);
-					haveRead(json.sender);
+					changeToActive(  changeToOriginEmail($(".active")[0].id.replace("tag",""))   );
+				//傳訊息來的人本來存在列表內，但是不是active
 				}else if($("#"+idTag).length != 0){
 					$("#"+idTag).remove();
 					makeChatTag(json.sender,json.senderName,json.notRead);
 					$(".chatListTag")[0].classList.remove("active");
+				//傳訊息來的人本來不在列表內
 				}else{
-					makeChatTag(json.sender,json.senderName,json.notRead);
-					$(".chatListTag")[0].classList.remove("active");
+					//如果原本有active存在，要拿掉自己的active
+					if($(".active").length != 0){
+						makeChatTag(json.sender,json.senderName,json.notRead);
+						$(".chatListTag")[0].classList.remove("active");
+					}
+					//我就是active，並且要更新已讀，秀出右邊頁面
+					makeChatTag(json.sender,json.senderName,0);
+					changeToActive(  changeToOriginEmail($(".active")[0].id.replace("tag",""))   );
 				}
-				//原本的active不見了
-				//傳送訊息後滾輪沒到底
+				//把active的show畫面
+				console.log("印出目前active的email",$(".active")[0].id.replace("tag",""));
+				//呼叫資料庫更新順序
+				updateChatRoomOrder();
 			}
 			
 			
@@ -273,6 +283,9 @@
 //		//控制聊天室開關
 		$(".dialogBox").hide();
 		function openCloseChatRoom(){
+			//把滾輪調到最下面
+			let height = $("#chatRoom")[0].scrollHeight;
+			$("#chatRoom").scrollTop(height);
 			//關閉有新訊息視窗
 			$(".getNewMessage").hide();
 			$(".controllerDialogBox").toggleClass("closedChatRoom").toggleClass("openChatRoom");
@@ -491,6 +504,10 @@
 					let userName = responseArray[responseArray.length-1-i].chatToWhomName;
 					let notReadNum = responseArray[responseArray.length-1-i].notRead;
 					makeChatTag(memberEmail,userName,notReadNum);
+					//第一位要秀畫面
+					if(i == responseArray.length-1){
+						showChatContent(memberEmail);
+					}
 					//除了第一位其他都移除active
 					if(i != responseArray.length-1){
 						$(".chatListTag")[0].classList.remove("active");
@@ -501,6 +518,7 @@
 						showChatContent(memberEmail);
 					}
 				}
+				
 			}).catch(function(error){
 				console.log("上線時製作tag出錯啦",error);
 			}).finally(function(){
@@ -651,14 +669,13 @@
 						}
 					}
 				}
-				//把滾輪調到最下面
-				let height = $("#chatRoom")[0].scrollHeight;
-				$("#chatRoom").scrollTop(height);
 			}).catch(function(error){
 				console.log("呼叫聊天紀錄出錯啦");
 				console.log(error);
 			}).finally(function(){
-				
+				//把滾輪調到最下面
+				let height = $("#chatRoom")[0].scrollHeight;
+				$("#chatRoom").scrollTop(height);
 			});
 		}
 		

@@ -30,10 +30,7 @@ public class ChatRoomOrderController {
 	
 	@Autowired
 	private ChatRoomOrderService orderService;
-	
-	
-	//資料介接用
-	private static RestTemplate template = new RestTemplate();
+
 	
 	@PostMapping("/chatRoomOrder/reflesh")
 	public ResponseEntity<Void> refleshchatRoomOrder(@RequestBody String json) {
@@ -41,11 +38,8 @@ public class ChatRoomOrderController {
 		JSONObject body = new JSONObject(json);
 		//取得owner的memberId
 		String owner = body.getString("owner");
-		URI uri = URI.create("http://localhost:8080/meeple-masters/findMemberByEmail?memberEmail="+owner);
-		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<String> response = template.exchange(requset, String.class);
-		JSONObject member = new JSONObject(response.getBody());
-		Integer ownerId = member.getInt("memberId");
+		
+		Integer ownerId = DataInterface.getMemberByEmail(owner).getMemberId();
 		//刪除原本的排序資料
 		orderService.deleteChatRoomOrderByOwnerId(ownerId);
 		
@@ -56,11 +50,7 @@ public class ChatRoomOrderController {
 		if(chatToWhom.length()>0) {
 			for(int i = 0;i<chatToWhom.length();i++) {
 				ChatRoomOrder chatRoomOrder = new ChatRoomOrder();
-				URI uri1 = URI.create("http://localhost:8080/meeple-masters/findMemberByEmail?memberEmail="+chatToWhom.getString(i));
-				RequestEntity<Void> requset1 = RequestEntity.get(uri1).accept(MediaType.APPLICATION_JSON).build();
-				ResponseEntity<String> response1 = template.exchange(requset1, String.class);
-				JSONObject member1 = new JSONObject(response1.getBody());
-				Integer fkChatToWhom = member1.getInt("memberId");
+				Integer fkChatToWhom = DataInterface.getMemberByEmail(chatToWhom.getString(i)).getMemberId();
 				
 				chatRoomOrder.setFkOwner(ownerId);
 				chatRoomOrder.setFkChatToWhom(fkChatToWhom);
@@ -94,5 +84,22 @@ public class ChatRoomOrderController {
 			list.add(dto);
 		}
 		return list;
+	}
+	
+	
+	@PostMapping("/chatRoomOrder/insertWhenSendToOfflineFriend")
+	public void insertWhenSendToOfflineFriend(@RequestBody String json) {
+		JSONObject body = new JSONObject(json);
+		int fkOwner = body.getInt("fkOwner");
+		int fkChatToWhom = body.getInt("fkChatToWhom");
+		int chatOrderWhenLeave = body.getInt("chatOrderWhenLeave");
+		ChatRoomOrder chatRoomOrder = new ChatRoomOrder();
+		
+		chatRoomOrder.setFkOwner(fkOwner);
+		chatRoomOrder.setFkChatToWhom(fkChatToWhom);
+		chatRoomOrder.setChatOrderWhenLeave(chatOrderWhenLeave);
+		
+		
+		orderService.insertChatRoomOrder(chatRoomOrder);
 	}
 }

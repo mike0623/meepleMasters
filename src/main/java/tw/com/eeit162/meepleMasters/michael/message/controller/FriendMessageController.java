@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.michael.message.model.FriendMessage;
 import tw.com.eeit162.meepleMasters.michael.message.model.MessageDto;
 import tw.com.eeit162.meepleMasters.michael.message.service.FriendMessageService;
@@ -67,19 +66,10 @@ public class FriendMessageController {
 		JSONObject body = new JSONObject(json);
 		String sender = body.getString("sender");
 		String receiver = body.getString("receiver");
-		RequestEntity<Void> request1 = RequestEntity
-				.get("http://localhost:8080/meeple-masters/findMemberByEmail?memberEmail=" + sender)
-				.accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<String> response1 = template.exchange(request1, String.class);
-		JSONObject sendMember = new JSONObject(response1.getBody());
-		int sendId = sendMember.getInt("memberId");
 
-		RequestEntity<Void> request2 = RequestEntity
-				.get("http://localhost:8080/meeple-masters/findMemberByEmail?memberEmail=" + receiver)
-				.accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<String> response2 = template.exchange(request2, String.class);
-		JSONObject receiverMember = new JSONObject(response2.getBody());
-		int receiverId = receiverMember.getInt("memberId");
+		int sendId = DataInterface.getMemberByEmail(sender).getMemberId();
+		int receiverId = DataInterface.getMemberByEmail(receiver).getMemberId();
+
 
 		messageService.updateHaveRead(sendId, receiverId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
@@ -89,20 +79,10 @@ public class FriendMessageController {
 	@ResponseBody
 	public List<MessageDto> findPersonalMessage(@RequestParam("sender") String sender,
 			@RequestParam("receiver") String receiver) {
-		RequestEntity<Void> request1 = RequestEntity
-				.get("http://localhost:8080/meeple-masters/findMemberByEmail?memberEmail=" + sender)
-				.accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<String> response1 = template.exchange(request1, String.class);
-		JSONObject sendMember = new JSONObject(response1.getBody());
-		int sendId = sendMember.getInt("memberId");
+		int sendId = DataInterface.getMemberByEmail(sender).getMemberId();
 
-		RequestEntity<Void> request2 = RequestEntity
-				.get("http://localhost:8080/meeple-masters/findMemberByEmail?memberEmail=" + receiver)
-				.accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<String> response2 = template.exchange(request2, String.class);
-		JSONObject receiverMember = new JSONObject(response2.getBody());
-		int receiverId = receiverMember.getInt("memberId");
-
+		int receiverId = DataInterface.getMemberByEmail(receiver).getMemberId();
+		
 		List<FriendMessage> senderIsSender = messageService.findAllBySenderAndReceiver(sendId, receiverId);
 		List<MessageDto> dtoList = new ArrayList<MessageDto>();
 		

@@ -3,7 +3,6 @@ package tw.com.eeit162.meepleMasters.michael.util;
 import java.net.URI;
 
 import org.json.JSONObject;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ public class DataInterface {
 	public static Member getMemberByMemberId(Integer memberId) {
 		Member member = new Member();
 		
-		URI uri = URI.create("http://localhost:8080/meeple-masters/findMemberById?id="+memberId);
+		URI uri = URI.create("http://localhost:8080/meeple-masters/member/findMemberById?id="+memberId);
 		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<String> response = template.exchange(requset, String.class);
 		JSONObject memberJson = new JSONObject(response.getBody());
@@ -31,7 +30,7 @@ public class DataInterface {
 		member.setMemberName(memberJson.getString("memberName"));
 		member.setMemberAge(memberJson.getInt("memberAge"));
 		member.setMemberGender(memberJson.getString("memberGender"));
-		member.setMemberTel(memberJson.getInt("memberTel"));
+		member.setMemberTel(memberJson.getString("memberTel"));
 		member.setMemberAddress(memberJson.getString("memberAddress"));
 		
 		return member;
@@ -40,7 +39,7 @@ public class DataInterface {
 	public static Member getMemberByEmail(String memberEmail) {
 		Member member = new Member();
 		
-		URI uri = URI.create("http://localhost:8080/meeple-masters/findMemberByEmail?memberEmail="+memberEmail);
+		URI uri = URI.create("http://localhost:8080/meeple-masters/member/findMemberByEmail?memberEmail="+memberEmail);
 		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<String> response = template.exchange(requset, String.class);
 		JSONObject memberJson = new JSONObject(response.getBody());
@@ -51,7 +50,7 @@ public class DataInterface {
 		member.setMemberName(memberJson.getString("memberName"));
 		member.setMemberAge(memberJson.getInt("memberAge"));
 		member.setMemberGender(memberJson.getString("memberGender"));
-		member.setMemberTel(memberJson.getInt("memberTel"));
+		member.setMemberTel(memberJson.getString("memberTel"));
 		member.setMemberAddress(memberJson.getString("memberAddress"));
 		
 		
@@ -85,5 +84,11 @@ public class DataInterface {
 		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<Integer> response = template.exchange(requset, Integer.class);
 		return response.getBody();
+	}
+	
+	public static void insertWhenSendToOfflineFriend(String json) {
+		URI uri = URI.create("http://localhost:8080/meeple-masters/chatRoomOrder/insertWhenSendToOfflineFriend");
+		RequestEntity<String> requset = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).header("Content-Type", "application/json;charset=UTF-8").body(json);
+		ResponseEntity<Void> response = template.exchange(requset, Void.class);
 	}
 }
