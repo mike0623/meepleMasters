@@ -8,13 +8,7 @@
 <meta charset="UTF-8" />
 <title>${webName}</title>
 <jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
-<style>
-.container {
-	top: 75px;
-	position: relative;
-	height: 600px;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
 </head>
 
 <body>
@@ -46,11 +40,11 @@
 			<br>
 			<label for="productImg">商品圖片:</label>
 			<input type="file" name="pImg" id="productImg">
-			<img alt="" src="#" id="imgPreview">
 			<br>
 			<button>新增</button>
 			<button type="reset">清除</button>
 			<input type="button" value="測試新增資料" id="newTest" />
+			<img alt="" src="#" id="imgPreview">
 		</form:form>
 	</div>
 	<script>

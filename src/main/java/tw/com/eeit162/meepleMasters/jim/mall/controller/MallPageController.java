@@ -10,4 +10,9 @@ public class MallPageController {
 	public String addProductPage() {
 		return "jim/addProduct";
 	}
+	
+	@GetMapping("/mall/product")
+	public String product() {
+		return "jim/product";
+	}
 }

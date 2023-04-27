@@ -1,12 +1,13 @@
 package tw.com.eeit162.meepleMasters.jim.mall.controller;
 
 import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,13 +28,12 @@ public class ProductController {
 
 	// 依照頁數顯示商品
 	@GetMapping("/mall/productList")
-	public String productList(@RequestParam(defaultValue = "1") Integer page,
-			@RequestParam(defaultValue = "6") Integer count, Model model) {
+	@ResponseBody
+	public Page<Product> productList(@RequestParam(defaultValue = "1") Integer page,
+			@RequestParam(defaultValue = "6") Integer count) {
 		Page<Product> productPage = pService.findAllProduct(page, count);
 
-		model.addAttribute("productPage", productPage);
-
-		return "jim/product";
+		return productPage;
 	}
 
 	// 透過ID尋找商品
@@ -45,9 +45,7 @@ public class ProductController {
 
 	// 新增商品
 	@PostMapping("/mall/addProduct")
-	@ResponseBody
-	public Product addProduct(@ModelAttribute("product") Product p,
-			@RequestParam(required = false) MultipartFile pImg) {
+	public String addProduct(@ModelAttribute("product") Product p, @RequestParam(required = false) MultipartFile pImg) {
 		if (pImg != null) {
 			try {
 				BufferedInputStream bis = new BufferedInputStream(pImg.getInputStream());
@@ -57,7 +55,8 @@ public class ProductController {
 				e.printStackTrace();
 			}
 		}
-		return pService.addProduct(p);
+		pService.addProduct(p);
+		return "/jim/product";
 	}
 
 	// 透過ID刪除商品
@@ -80,5 +79,21 @@ public class ProductController {
 			return "修改成功";
 		}
 		return "修改失敗";
+	}
+
+	@GetMapping("/mall/getPhoto")
+	@ResponseBody
+	public byte[] getProductPhoto(@RequestParam Integer pId) throws IOException {
+		Product p = pService.findProductById(pId);
+
+		byte[] pImg = p.getProductImg();
+		if (pImg == null || pImg.length == 0) {
+			BufferedInputStream bis = new BufferedInputStream(
+					new FileInputStream(ResourceUtils.getFile("classpath:\\no_image.png")));
+			pImg = bis.readAllBytes();
+			bis.close();
+		}
+
+		return pImg;
 	}
 }
