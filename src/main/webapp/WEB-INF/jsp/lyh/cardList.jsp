@@ -60,7 +60,7 @@
 	
 	
 	for(let i = 4; i>=0 ; i--){
-		outputString += "<div class='row container cardContainer justify-content-center' id='card5'>"
+		outputString += `<div class='row container cardContainer justify-content-center' id='123'>`;
 		outputString += "<div class='starDiv'>";
 		outputString += `<img src='${root}/img/lyh/star/star\${i+1}.png' class='star'>`;
 		outputString += "</div>";
