@@ -7,11 +7,12 @@ include file="../include/common_link.jsp" %>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Insert title here</title>
+    <title>${webName}</title>
   </head>
   <body>
+  <jsp:include page="../include/header.jsp"></jsp:include>
     <div
-      class="bodyContainer position-absolute top-50 start-50"
+      class="bodyContainer"
       style="text-align: center"
     >
       <img
@@ -20,8 +21,8 @@ include file="../include/common_link.jsp" %>
         alt="..."
         style="width: 200px; margin: 10px"
       />
-      <div class="card" style="width: 30rem; background-color: #e0ccc5">
-        <div class="card-body container text-center" id="main-form">
+      <div class="card container" style="width: 30rem; background-color: #e0ccc5">
+        <div class="card-body text-center" id="main-form">
           <h5 class="card-title" style="color: #8a513f">Sign-up</h5>
           <form class="needs-validation" novalidate>
             <div class="form-floating mb-3">
@@ -123,9 +124,9 @@ include file="../include/common_link.jsp" %>
               <label for="address">Address</label>
             </div>
             <span>
-              <input type="checkbox" name="agree" id="agree" />我同意會員條款
+              <input type="checkbox" name="agree" id="agree" />I agree all statement.
               <a href="#" class="" style="text-decoration: none; color: #8a513f"
-                >會員條款</a
+                >Terms of service</a
               >
               <div id="checkbox-error" class="invalid-feedback">
 

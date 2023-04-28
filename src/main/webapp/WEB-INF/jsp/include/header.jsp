@@ -38,7 +38,7 @@
                         <a href="#">場地預約</a>
                     </li>
                     <li><a href="#">會員中心</a></li>
-                    <li style="background: none;"><a href="#" style="font-size: 16px;">註冊 / 登入</a></li>
+                    <li style="background: none;"><a href="${root}/member/login" style="font-size: 16px;">註冊 / 登入</a></li>
                 </ul>
             </nav>
         </header>

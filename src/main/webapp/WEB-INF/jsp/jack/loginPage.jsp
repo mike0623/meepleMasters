@@ -7,13 +7,17 @@ include file="../include/common_link.jsp" %>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Insert title here</title>
-    <style></style>
+    <title>${webName}</title>
+    <style>
+    .card{
+    	text-align: center;
+    }
+    </style>
   </head>
   <body>
-    <!-- <jsp:include page="../include/header.jsp"></jsp:include> -->
+    <jsp:include page="../include/header.jsp"></jsp:include>
     <div
-      class="bodyContainer position-absolute top-50 start-50"
+      class="bodyContainer"
       style="text-align: center"
     >
       <img
@@ -23,9 +27,10 @@ include file="../include/common_link.jsp" %>
         style="width: 200px; margin: 10px"
       />
       <form action="${root}/member/login" method="post">
-      <div class="card" style="width: 30rem; background-color: #e0ccc5">
-        <div class="card-body container text-center">
-          <h5 class="card-title" style="color: #8a513f">會員登入</h5>
+      <div class="card container" style="width: 30rem; background-color: #e0ccc5; position: relative; top:80px">
+      
+        <div class="card-body  text-center" >
+          <h5 class="card-title" style="color: #8a513f">Login</h5>
           <div class="form-floating mb-3">
             <input
               type="email"
@@ -47,30 +52,37 @@ include file="../include/common_link.jsp" %>
             <label for="password">Password</label>
           </div>
           <span>
-            <input type="checkbox" name="agree" id="agree" />我同意會員條款
-            <a href="#" class="" style="text-decoration: none; color: #8a513f"
-              >會員條款</a
-            >
+            <input type="checkbox" name="agree" id="agree" />Remember me.&nbsp;&nbsp;&nbsp;   
+            
             <div id="checkbox-error" class="invalid-feedback">
 
             </div>
           </span>
-          <div class="row justify-content-center" style="margin: 20px">
-            <button class="btn btn-outline-secondary" type="button" id="login">登入</button>
+          <div id="login-error" class="d-none alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Login error!</strong> Your email or password is empty.
           </div>
-        </form>
           <div class="row justify-content-center" style="margin: 20px">
-            <a href="${root}/member/register" class="btn btn-outline-secondary">註冊會員</a>
+            <button class="btn btn-outline-secondary" type="button" id="login">Login</button>
           </div>
-          <div class="col align-self-center">使用其他登入方式</div>
+          <div class="row justify-content-center" style="margin: 20px">
+            <a href="${root}/member/register" class="btn btn-outline-secondary">Register</a>
+          </div>
+          <div class="col align-self-center">
+          	Other way to login
+          </div>
           <div class="row justify-content-center" style="margin: 20px">
             <a href="#" class="btn btn-outline-secondary">Google</a>
         </div>
+        <a href="#" class="" style="text-decoration: none; color: #8a513f"
+              >Terms of service</a
+            >
+        </div>
       </div>
+        </form>
     </div>
-    <script>const root = "${root}" </script>
+    
     <script type="text/javascript" src="${root}/js/jack/loginPage.js"></script>
 
-    <!-- <jsp:include page="../include/footer.jsp"></jsp:include> -->
+ 
   </body>
 </html>
