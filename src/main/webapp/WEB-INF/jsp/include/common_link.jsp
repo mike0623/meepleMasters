@@ -28,6 +28,18 @@
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- admin用CSS -->
+<link href="${root}/css/admin/sb-admin-2.min.css" rel="stylesheet">
+<link href="${root}/css/admin/admin.css" rel="stylesheet">
+<link href="${root}/css/admin/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+<!-- admin用JS -->
+<script src="${root}/js/admin/jquery.easing.min.js"></script>
+<script src="${root}/js/admin/sb-admin-2.min.js"></script>
+<script src="${root}/js/admin/jquery.dataTables.min.js"></script>
+<script src="${root}/js/admin/dataTables.bootstrap4.min.js"></script>
+<script src="${root}/js/admin/datatables-demo.js"></script>
+
 <!-- 全域通用root -->
 <script type="text/javascript">
 	const root = "${root}";
