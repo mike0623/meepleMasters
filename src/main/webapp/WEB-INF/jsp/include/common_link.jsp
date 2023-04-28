@@ -3,12 +3,12 @@
 <!-- 自定義通用css -->
 <link href="${root}/css/common.css" rel="stylesheet">
 
+<!-- jQuery 3.6.4 -->
+<script src="${root}/js/jquery-3.6.4.min.js"></script>
+
 <!-- bootstrap 5.2.3 -->
 <link href="${root}/css/bootstrap.min.css" rel="stylesheet">
 <script src="${root}/js/bootstrap.bundle.min.js"></script>
-
-<!-- jQuery 3.6.4 -->
-<script src="${root}/js/jquery-3.6.4.min.js"></script>
 
 <!-- axios 1.3.5 -->
 <script src="${root}/js/axios.min.js"></script>
@@ -34,6 +34,8 @@
 <link href="${root}/css/admin/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 <!-- admin用JS -->
+<script src="${root}/js/admin/jquery.min.js"></script>
+<script src="${root}/js/admin/bootstrap.bundle.min.js"></script>
 <script src="${root}/js/admin/jquery.easing.min.js"></script>
 <script src="${root}/js/admin/sb-admin-2.min.js"></script>
 <script src="${root}/js/admin/jquery.dataTables.min.js"></script>
