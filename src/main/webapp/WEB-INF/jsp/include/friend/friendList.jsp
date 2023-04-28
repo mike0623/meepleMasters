@@ -17,7 +17,7 @@
 		position: fixed;
         right: 0;
         top: 0;
-        width: 500px;
+        width: 380px;
         border: 3px solid black;
 	}
 	.dialogBox{
@@ -58,6 +58,33 @@
 		background-color:red;
 		z-index:0.5;
 	}
+	.xxx{
+		width: 40px;
+    	height: 40px;
+    	line-height: 40px;
+    	border-radius: 50%;
+	}
+	.circleFather{
+		position:relative;
+	}
+	.onlineCircle{
+		width: 10px;
+    	height: 10px;
+    	border-radius: 50%;
+    	background-color:green;
+    	position: absolute;
+    	top:15px;
+    	left:50px;
+	}
+	.offlineCircle{
+		width: 10px;
+    	height: 10px;
+    	border-radius: 50%;
+    	background-color:red;
+    	position: absolute;
+    	top:15px;
+    	left:50px;
+	}
 </style>
 </head>
 <body>
@@ -74,47 +101,14 @@
 	
 	
 	
-	
-	
-	
-	
-	
-	
 	<div class="dialogBox">
 		<div class="chat_container">
     <div id="myChatList" class="chat_list">
-      <div class="chatListTag">
-        <div class="head"><img src="${root}/img/michael/chatRoom/friends/Alpha_Team.png" alt=""></div>
-        <div class="mytext">
-          <div class="name">Alpha_Team</div>
-          <div class="dec">Alpha 測試團隊</div>
-        </div>
-        <div class="msg_num">3</div>
-      </div>
+		<!-- 放tag的 -->
     </div>
     <div class="chat_box">
       <div id="chatRoom" class="chat_message">
-        <div class="message_row you-message">
-          <div class="message-content">
-            <div class="message-text">Ok then</div>
-            <div class="message-time">09/23 10:16</div>
-          </div>
-        </div>
-        <div class="message_row other-message">
-          <div class="message-content">
-            <img class="head" src="${root}/img/michael/chatRoom/friends/David.png" alt="">
-            <div class="message-text">推薦給你一張漂亮的底圖...</div>
-            <div class="message-time">09/23 10:16</div>
-          </div>
-        </div>
-        <div class="message_row other-message">
-          <div class="message-content">
-            <img class="head" src="${root}/img/michael/chatRoom/friends/David.png" alt="">
-            <!-- <div class="message-text"></div> -->
-            <img class="ejIcon" src="${root}/img/michael/chatRoom/emoji/like.png" alt="">
-            <div class="message-time">09/23 10:16</div>
-          </div>
-        </div>
+			<!-- 放聊天內容的 -->
       </div>
       <div class="chat_input">
         <div class="myIcon2 iconTag">
@@ -176,20 +170,16 @@
 		//直接執行的
 		chatTagWhenLogin();
 		$(".getNewMessage").hide();
-		$(".ejIcon").onload = function(e){
-			e.stopPropagation();
-	        alert(1);
-		}
+
 		
 		var ws = new WebSocket("ws://localhost:8080${root}/michael/websocket/${member.memberEmail}");
 		
 		ws.onopen = function(){
-			
 			console.log("friend的${member.memberEmail}");
 		}
 		
 		ws.onclose = function(){
-			
+			//ajax也沒用
 		}
 //		//接收訊息時
 		ws.onmessage = function(message){
@@ -210,8 +200,9 @@
 				$(".onlineFriend").append(`
 							<div class="container text-center">
 								<div class="row">
-									<div class="col-3">圖像</div>
-									<div class="col-6">
+									<div class="col-3 circleFather"><div class="onlineCircle"></div></div>
+									<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.loginer+`" alt=""></div>
+									<div class="col-3">
 										<span id="`+ email +`">`+ name +`</span>
 									</div>
 									<div class="col-3">
@@ -229,8 +220,9 @@
 				$(".offlineFriend").append(`
 						<div class="container text-center">
 						<div class="row">
-							<div class="col-3">圖像</div>
-							<div class="col-6">
+							<div class="col-3 circleFather"><div class="offlineCircle"></div></div>
+							<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.logouter+`" alt=""></div>
+							<div class="col-3">
 								<span id="`+ email +`">`+ name +`</span>
 							</div>
 							<div class="col-3">
@@ -252,7 +244,7 @@
 				if($("#"+idTag).length != 0 && $("#"+idTag).hasClass("active")){
 					$("#"+idTag).remove();
 					makeChatTag(json.sender,json.senderName,0);
-					changeToActive(  changeToOriginEmail($(".active")[0].id.replace("tag",""))   );
+					changeToActive($(".active")[0].id);
 				//傳訊息來的人本來存在列表內，但是不是active
 				}else if($("#"+idTag).length != 0){
 					$("#"+idTag).remove();
@@ -267,13 +259,131 @@
 					}
 					//我就是active，並且要更新已讀，秀出右邊頁面
 					makeChatTag(json.sender,json.senderName,0);
-					changeToActive(  changeToOriginEmail($(".active")[0].id.replace("tag",""))   );
+					changeToActive($(".active")[0].id);
 				}
 				//把active的show畫面
-				console.log("印出目前active的email",$(".active")[0].id.replace("tag",""));
+				showChatContent(changeToOriginEmail($(".active")[0].id.replace("tag","")));
 				//呼叫資料庫更新順序
 				updateChatRoomOrder();
 			}
+			//收到有人刪除與我的好友關係
+			if("someoneDeleteFriendWithYou" == action){
+				let theOtherEmail = changeToIdType(json.theOther);
+				let idTypeTag = theOtherEmail+"tag";
+				$("#"+theOtherEmail).closest(".container").remove();
+				if($("#"+idTypeTag).length != 0){
+					$("#"+idTypeTag).remove();
+				}
+				updateChatRoomOrder();
+				//如果他剛好是active，就重新給active並更新右邊畫面
+				if($(".active").id == idTypeTag){
+					theIsActive = true;
+				}
+				//重給active並更新畫面
+				if($(".chatListTag").length != 0){
+					$(".chatListTag")[0].classList.add("active");
+					showChatContent(changeToOriginEmail($(".chatListTag")[0].id.replace("tag","")));
+				}else{
+					$("#chatRoom").empty();							
+				}
+				//如果剛好在看對方的頁面，就變更按鈕
+				if(isSelectedPage==true){
+					$(".friendButtonDiv").empty();
+					$(".friendButtonDiv").append(`
+							<button onclick="sendFriendInvite('${member.memberEmail}','`+json.theOther+`')">加好友</button>
+							`);
+				}
+			}
+			//收到有人取消邀請
+			if("someoneDeleteFriendInviteWithYou" == action){
+				//如果剛好在看對方的頁面，就變更按鈕
+				if(isSelectedPage==true){
+					$(".friendButtonDiv").empty();
+					$(".friendButtonDiv").append(`
+							<button onclick="sendFriendInvite('${member.memberEmail}','`+json.theOther+`')">加好友</button>
+							`);
+				}
+			}
+			//我確認別人的邀請後，回傳對方資料，以製作好友欄
+			if("addFriend" == action){
+				if(json.isOnline == true){
+					let email = json.newFriendEmail;
+					email = email.replace('@','').replace('.','');
+					let name = json.newFriendName;
+					$(".onlineFriend").append(`
+								<div class="container text-center">
+									<div class="row">
+										<div class="col-3 circleFather"><div class="onlineCircle"></div></div>
+										<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.newFriendEmail+`" alt=""></div>
+										<div class="col-3">
+											<span id="`+ email +`">`+ name +`</span>
+										</div>
+										<div class="col-3">
+											<button id="`+ name +`button" name="`+ email +`" onclick="pressChatButton(this.id,this.name)">傳送訊息</button>
+										</div>
+									</div>
+								</div>
+								`);
+				}
+				if(json.isOnline != true){
+					let email = json.newFriendEmail;
+					email = email.replace('@','').replace('.','');
+					let name = json.newFriendName;
+					$(".offlineFriend").append(`
+							<div class="container text-center">
+							<div class="row">
+								<div class="col-3 circleFather"><div class="offlineCircle"></div></div>
+								<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.newFriendEmail+`" alt=""></div>
+								<div class="col-3">
+									<span id="`+ email +`">`+ name +`</span>
+								</div>
+								<div class="col-3">
+									<button id="`+ name +`button" name="`+ email +`" onclick="pressChatButton(this.id,this.name)">傳送訊息</button>
+								</div>
+							</div>
+						</div>
+						`);
+				}
+			}
+			//對方確認了我的邀請，更新好友欄，及按鈕
+			if("someoneConcirmFriendInvite" == action){
+				let email = json.theOther;
+				email = email.replace('@','').replace('.','');
+				let name = json.theOtherName;
+				$(".onlineFriend").append(`
+							<div class="container text-center">
+								<div class="row">
+									<div class="col-3 circleFather"><div class="onlineCircle"></div></div>
+									<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.theOther+`" alt=""></div>
+									<div class="col-3">
+										<span id="`+ email +`">`+ name +`</span>
+									</div>
+									<div class="col-3">
+										<button id="`+ name +`button" name="`+ email +`" onclick="pressChatButton(this.id,this.name)">傳送訊息</button>
+									</div>
+								</div>
+							</div>
+							`);
+				$(".friendButtonDiv").empty();
+				$(".friendButtonDiv").append(`
+						<button onclick="pressChatButton('`+buttonTypeName+`','`+idTypeEmail+`')">傳送訊息</button>
+						<button onclick="deleteFriend('${member.memberEmail}','`+json.theOther+`')">刪除好友</button>
+						`)
+			}
+			//有人送好友邀請給我
+			if("someoneAddFriendInviteToYou" == action){
+				//如果剛好在看對方的頁面，就變更按鈕
+				if(isSelectedPage==true){
+					$(".friendButtonDiv").empty();
+					$(".friendButtonDiv").append(`
+							<button onclick="acceptFriendInvite('${member.memberEmail}','`+json.theOther+`')">接受邀請</button>
+							`);
+				}
+			}
+			
+			
+			
+			
 			
 			
 		}
@@ -283,9 +393,6 @@
 //		//控制聊天室開關
 		$(".dialogBox").hide();
 		function openCloseChatRoom(){
-			//把滾輪調到最下面
-			let height = $("#chatRoom")[0].scrollHeight;
-			$("#chatRoom").scrollTop(height);
 			//關閉有新訊息視窗
 			$(".getNewMessage").hide();
 			$(".controllerDialogBox").toggleClass("closedChatRoom").toggleClass("openChatRoom");
@@ -295,6 +402,9 @@
 			if($(".controllerDialogBox").hasClass("openChatRoom")){
 				$(".dialogBox").show();
 			}
+			//把滾輪調到最下面
+			let height = $("#chatRoom")[0].scrollHeight;
+			$("#chatRoom").scrollTop(height);
 		}
 		
 		
@@ -311,12 +421,6 @@
 			}
 		}
 		
-		
-		
-		
-		
-		
-		
 //		//重新製作線上離線好友清單
 		function refleshFriendContent(json){
 			var onlineKeyArray = Object.keys(json.onlineFriend);
@@ -330,8 +434,9 @@
 				$(".onlineFriend").append(`
 						<div class="container text-center">
 							<div class="row">
-								<div class="col-3">圖像</div>
-								<div class="col-6">
+								<div class="col-3 circleFather"><div class="onlineCircle"></div></div>
+								<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+onlineKeyArray[i]+`" alt=""></div>
+								<div class="col-3">
 									<span id="`+ onlineKeyArray[i].replace('@','').replace('.','') +`">`+ onlineValueArray[i] +`</span>
 								</div>
 								<div class="col-3">
@@ -347,8 +452,9 @@
 				$(".offlineFriend").append(`
 						<div class="container text-center">
 						<div class="row">
-							<div class="col-3">圖像</div>
-							<div class="col-6">
+							<div class="col-3 circleFather"><div class="offlineCircle"></div></div>
+							<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+offlineKeyArray[i]+`" alt=""></div>
+							<div class="col-3">
 								<span id="`+ offlineKeyArray[i].replace('@','').replace('.','') +`">`+ offlineValueArray[i] +`</span>
 							</div>
 							<div class="col-3">
@@ -402,7 +508,6 @@
 		function removeTag(obj){
 			//用來判斷被關掉的視窗是不是有active，目前正在用的視窗
 			let controll = false;
-			console.log(obj.closest(".chatListTag").id);
 			//我按下的叉叉就是目前的active
 			if( $("#"+obj.closest(".chatListTag").id).hasClass("active") ){
 				controll = true;
@@ -504,10 +609,6 @@
 					let userName = responseArray[responseArray.length-1-i].chatToWhomName;
 					let notReadNum = responseArray[responseArray.length-1-i].notRead;
 					makeChatTag(memberEmail,userName,notReadNum);
-					//第一位要秀畫面
-					if(i == responseArray.length-1){
-						showChatContent(memberEmail);
-					}
 					//除了第一位其他都移除active
 					if(i != responseArray.length-1){
 						$(".chatListTag")[0].classList.remove("active");
@@ -518,7 +619,10 @@
 						showChatContent(memberEmail);
 					}
 				}
-				
+				//active的人要秀畫面
+				changeToActive($(".active")[0].id);
+				//排序完後傳到資料庫
+				updateChatRoomOrder();
 			}).catch(function(error){
 				console.log("上線時製作tag出錯啦",error);
 			}).finally(function(){
@@ -648,19 +752,17 @@
 							$("#chatRoom").append(`
 									<div class="message_row other-message">
 					         			 <div class="message-content">
-					         				<img class="head" src="${root}/img/michael/chatRoom/friends/David.png" alt="">
+					         				<img class="head" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+userEmail+`" alt="">
 					           				<div class="message-text">`+ responseArray[i].text  +`</div>
 					            			<div class="message-time">`+ date.substring(5,16).replace("-","/")  +`</div>
 					          			</div>
 					        		</div>
 									`)
 						}else{ //是貼圖
-							console.log("迴圈的i",i);
-							console.log("顯示右邊貼圖的id",responseArray[i].stickerId);
 							$("#chatRoom").append(`
 					        	<div class="message_row other-message">
 					          		<div class="message-content">
-					          			<img class="head" src="${root}/img/michael/chatRoom/friends/David.png" alt="">
+					          			<img class="head" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+userEmail+`" alt="">
 					            		<img class="ejIcon" src="http://localhost:8080/meeple-masters/sticker/getSticker/`+ responseArray[i].stickerId +`" alt="">
 					            		<div class="message-time">`+ date.substring(5,16).replace("-","/")  +`</div>
 					          		</div>
@@ -669,26 +771,26 @@
 						}
 					}
 				}
+				//把滾輪調到最下面
+				let height = $("#chatRoom")[0].scrollHeight;
+				$("#chatRoom").scrollTop(height);
 			}).catch(function(error){
 				console.log("呼叫聊天紀錄出錯啦");
 				console.log(error);
 			}).finally(function(){
-				//把滾輪調到最下面
-				let height = $("#chatRoom")[0].scrollHeight;
-				$("#chatRoom").scrollTop(height);
+				
 			});
 		}
 		
 //		//製作聊天tag的方法
 		function makeChatTag(memberEmail,userName,notReadNum){
+			console.log("進來製作tag方法");
 			let tagId = changeToIdType(memberEmail)+"tag";
-			console.log(tagId);
-			console.log("未讀訊息數量",notReadNum);
 			//判斷是否有未讀訊息，如果有就顯示
 			if(notReadNum!=0){
 				$("#myChatList").prepend(`
 						<div class="chatListTag active personalMessage" id="`+tagId+`" onclick="changeToActive(this.id)">
-				        	<div class="head"><img src="http://localhost:8080/meeple-masters/sticker/getSticker/1" alt=""></div>
+				        	<div class="head"><img src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+memberEmail+`" alt=""></div>
 				        		<div class="mytext">
 				          			<div class="name">`+userName+`</div>
 				        		</div>
@@ -700,7 +802,7 @@
 			if(notReadNum == 0){
 				$("#myChatList").prepend(`
 						<div class="chatListTag active personalMessage" id="`+tagId+`" onclick="changeToActive(this.id)">
-				        	<div class="head"><img src="http://localhost:8080/meeple-masters/sticker/getSticker/1" alt=""></div>
+				        	<div class="head"><img src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+memberEmail+`" alt=""></div>
 				        		<div class="mytext">
 				          			<div class="name">`+userName+`</div>
 				        		</div>

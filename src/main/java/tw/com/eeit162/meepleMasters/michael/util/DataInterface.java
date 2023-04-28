@@ -86,9 +86,10 @@ public class DataInterface {
 		return response.getBody();
 	}
 	
-	public static void insertWhenSendToOfflineFriend(String json) {
+	public static String insertWhenSendToOfflineFriend(String json) {
 		URI uri = URI.create("http://localhost:8080/meeple-masters/chatRoomOrder/insertWhenSendToOfflineFriend");
 		RequestEntity<String> requset = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).header("Content-Type", "application/json;charset=UTF-8").body(json);
-		ResponseEntity<Void> response = template.exchange(requset, Void.class);
+		ResponseEntity<String> response = template.exchange(requset, String.class);
+		return response.getBody();
 	}
 }

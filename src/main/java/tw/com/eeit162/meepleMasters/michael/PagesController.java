@@ -17,11 +17,6 @@ public class PagesController {
 	}
 	
 	
-	@GetMapping("/michael/testPage")
-	public String testPage() {
-		return "michael/test";
-	}
-	
 	@GetMapping("/michael/testWebsocket")
 	public String testWebsocket(HttpServletRequest request) {
 		HttpSession session = request.getSession();

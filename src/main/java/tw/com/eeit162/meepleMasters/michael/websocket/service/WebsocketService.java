@@ -90,7 +90,79 @@ public class WebsocketService {
 			}
 		}
 		//-------------------------------------------------------------------------------------
-
+		//接到前端傳來說我要與對方解除好友關係
+		if("deleteFriend".equals(action)) {
+			String myself = json.getString("myself");
+			String theOther = json.getString("theOther");
+			for(WebsocketService service :WebsocketUtil.getOnlineClient().values()) {
+				if(theOther.equals(service.getUserEmail())) {
+					JSONObject deleteFriendJson =  new JSONObject();
+					deleteFriendJson.put("action", "someoneDeleteFriendWithYou");
+					deleteFriendJson.put("theOther", myself);
+					WebsocketUtil.sendMessageByUserEmail(theOther, deleteFriendJson.toString());
+				}
+			}
+		}
+		//-------------------------------------------------------------------------------------
+		//接到前端傳來說我要取消邀請
+		if("deleteFriendInvite".equals(action)) {
+			String myself = json.getString("myself");
+			String theOther = json.getString("theOther");
+			for(WebsocketService service :WebsocketUtil.getOnlineClient().values()) {
+				if(theOther.equals(service.getUserEmail())) {
+					JSONObject deleteFriendJson =  new JSONObject();
+					deleteFriendJson.put("action", "someoneDeleteFriendInviteWithYou");
+					deleteFriendJson.put("theOther", myself);
+					WebsocketUtil.sendMessageByUserEmail(theOther, deleteFriendJson.toString());
+				}
+			}
+		}
+		//-------------------------------------------------------------------------------------
+		//前端詢問該好友是否在線
+		if("askIsOnflineFriend".equals(action)) {
+			String myself = json.getString("myself");
+			String theOther = json.getString("theOther");
+			//回傳給自己要更新好友欄畫面
+			boolean isOnline = WebsocketUtil.isOnline(theOther);
+			JSONObject isOnlineJson = new JSONObject();
+			isOnlineJson.put("action", "addFriend");
+			isOnlineJson.put("newFriendEmail", theOther);
+			String newFriendName = DataInterface.getMemberByEmail(theOther).getMemberName();
+			isOnlineJson.put("newFriendName", newFriendName);
+			isOnlineJson.put("isOnline", isOnline);
+			WebsocketUtil.sendMessageByUserEmail(this.userEmail, isOnlineJson.toString());
+			//如果對方在線，告訴對方我加他好友了
+			for(WebsocketService service :WebsocketUtil.getOnlineClient().values()) {
+				if(theOther.equals(service.getUserEmail())) {
+					JSONObject confirmFriendInviteJson =  new JSONObject();
+					confirmFriendInviteJson.put("action", "someoneConcirmFriendInvite");
+					confirmFriendInviteJson.put("theOther", myself);
+					String myselfName = DataInterface.getMemberByEmail(myself).getMemberName();
+					confirmFriendInviteJson.put("theOtherName", myselfName);
+					WebsocketUtil.sendMessageByUserEmail(theOther, confirmFriendInviteJson.toString());
+				}
+			}
+		}
+		//-------------------------------------------------------------------------------------
+		//收到有人送好友邀請給我
+		if("addFriendInvite".equals(action)) {
+			String myself = json.getString("myself");
+			String theOther = json.getString("theOther");
+			for(WebsocketService service :WebsocketUtil.getOnlineClient().values()) {
+				if(theOther.equals(service.getUserEmail())) {
+					JSONObject deleteFriendJson =  new JSONObject();
+					deleteFriendJson.put("action", "someoneAddFriendInviteToYou");
+					deleteFriendJson.put("theOther", myself);
+					WebsocketUtil.sendMessageByUserEmail(theOther, deleteFriendJson.toString());
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		//-------------------------------------------------------------------------------------
 	}
 	
 	

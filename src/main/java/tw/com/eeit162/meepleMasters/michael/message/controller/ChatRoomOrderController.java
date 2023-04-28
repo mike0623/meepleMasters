@@ -1,6 +1,5 @@
 package tw.com.eeit162.meepleMasters.michael.message.controller;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.michael.message.model.ChatRoomOrder;
@@ -88,11 +84,17 @@ public class ChatRoomOrderController {
 	
 	
 	@PostMapping("/chatRoomOrder/insertWhenSendToOfflineFriend")
-	public void insertWhenSendToOfflineFriend(@RequestBody String json) {
+	@ResponseBody
+	public String insertWhenSendToOfflineFriend(@RequestBody String json) {
 		JSONObject body = new JSONObject(json);
-		int fkOwner = body.getInt("fkOwner");
-		int fkChatToWhom = body.getInt("fkChatToWhom");
-		int chatOrderWhenLeave = body.getInt("chatOrderWhenLeave");
+		Integer fkOwner = body.getInt("fkOwner");
+		Integer fkChatToWhom = body.getInt("fkChatToWhom");
+		Integer chatOrderWhenLeave = body.getInt("chatOrderWhenLeave");
+		//如果本來存在就刪掉原本的
+		if(orderService.isExist(fkOwner, fkChatToWhom)) {
+			orderService.deleteByBoth(fkOwner, fkChatToWhom);
+		}
+		
 		ChatRoomOrder chatRoomOrder = new ChatRoomOrder();
 		
 		chatRoomOrder.setFkOwner(fkOwner);
@@ -101,5 +103,8 @@ public class ChatRoomOrderController {
 		
 		
 		orderService.insertChatRoomOrder(chatRoomOrder);
+		return "新增成功";
 	}
+	
+
 }
