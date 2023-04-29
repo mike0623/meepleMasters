@@ -279,11 +279,13 @@
 
                 </div>
                 <!-- /.container-fluid -->
+
+                <!-- 表格參考 -->
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+                    <h1 class="h3 mb-2 text-gray-800">表格</h1>
                     <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
                         For more information about DataTables, please visit the <a target="_blank"
                             href="https://datatables.net">official DataTables documentation</a>.</p>
@@ -414,11 +416,12 @@
                 </div>
                 <!-- /.container-fluid -->
 
+                <!-- 按鈕參考 -->
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-4 text-gray-800">Buttons</h1>
+                    <h1 class="h3 mb-4 text-gray-800">按鈕</h1>
 
                     <div class="row">
 
@@ -600,11 +603,12 @@
                 </div>
                 <!-- /.container-fluid -->
 
+                <!-- Border參考 -->
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-1 text-gray-800">Border Utilities</h1>
+                    <h1 class="h3 mb-1 text-gray-800">Border</h1>
                     <p class="mb-4">Bootstrap's default utility classes can be found on the official <a
                             href="https://getbootstrap.com/docs">Bootstrap Documentation</a> page. The custom utilities
                         below were created to extend this theme past the default utility classes built into Bootstrap's
@@ -721,7 +725,7 @@
 
     </div>
 
-    <!-- 回到頂部的按鈕，有需要可加 -->
+    <!-- 回到最頂的按鈕，有需要可加 -->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fa-solid fa-angle-up" style="line-height: 46px;"></i>
     </a>
