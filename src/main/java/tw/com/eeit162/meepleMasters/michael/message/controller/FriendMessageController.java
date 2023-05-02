@@ -121,5 +121,8 @@ public class FriendMessageController {
 	public Integer findNotRead(@RequestParam("senderId") Integer senderId,@RequestParam("receiverId") Integer receiverId) {
 		return messageService.findNotRead(senderId, receiverId);
 	}
+	
+	
+	
 
 }

@@ -52,12 +52,12 @@
 
 		for (let i = 4; i >= 0; i--) {
 			outputString += `<div class='row container cardContainer justify-content-center' id='card'>`;
-			outputString += "<div class='starDiv'>";
-			outputString += `<img src='${root}/img/lyh/star/star\${i+1}.png' class='star'>`;
+			outputString += "<div class='starDiv' id='starDiv'>";
+			outputString += `<img src='${root}/img/lyh/star/star\${i+1}.png' class='star' id='star'>`;
 			outputString += "</div>";
 
 			for (let item of cardList[i].imgs) {
-				outputString += "<div class='col-3 d-flex' id='cardContent'>";
+				outputString += "<div class='col-3 d-flex d-none' id='cardContent'>";
 				outputString += "<div class='card'>";
 				outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda'>`;
 				outputString += `<figcaption>\${item.name}</figcaption>`;
@@ -66,9 +66,9 @@
 			outputString += "</div>";
 		}
 
-		$("#cardContent").hide();
-
-		$("")
+		$("#starDiv").click(function(){
+			$(this).nextAll().removeClass("d-none");
+		})
 
 		function showCardList() {
 

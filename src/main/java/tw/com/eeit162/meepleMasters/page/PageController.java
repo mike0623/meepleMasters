@@ -21,4 +21,9 @@ public class PageController {
 		return "include/index";
 	}
 	
+	@GetMapping("/admin")
+	public String admin() {
+		return "include/admin";
+	}
+	
 }

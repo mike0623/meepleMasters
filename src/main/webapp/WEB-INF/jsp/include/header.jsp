@@ -1,7 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +22,7 @@
                         <a href="${root}" aria-disabled="true"> 卡片收藏</a>
                         <div>
                             <ul>
-                                <li><a href="${root}/card/mycard/1">我的卡片</a></li>
+                                <li><a href="${root}/card/mycard/">我的卡片</a></li>
                                 <li><a href="#">卡片市集</a></li>
                                 <li><a href="#">收藏記錄</a></li>
                             </ul>

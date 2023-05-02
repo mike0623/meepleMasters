@@ -15,6 +15,7 @@ public class Initialize implements ApplicationListener<ContextRefreshedEvent>{
 		ServletContext servletContext = ((WebApplicationContext) event.getApplicationContext()).getServletContext();
 		servletContext.setAttribute("root", servletContext.getContextPath());
 		servletContext.setAttribute("webName", "米寶大師");
+		servletContext.setAttribute("adminWebName", "米寶大師後台管理系統");
 		
 //		insertDataIntoDB();
 	}

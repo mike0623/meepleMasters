@@ -29,6 +29,17 @@ public class ChatRoomOrderService {
 		return orderDao.findByFkOwner(fkOwner);
 	}
 	
+	public boolean isExist(Integer fkOwner,Integer fkChatToWhom) {
+		ChatRoomOrder chatRoomOrder = orderDao.findByBoth(fkOwner, fkChatToWhom);
+		if(chatRoomOrder != null) {
+			return true;
+		}
+		return false;
+	}
 	
+	@Transactional
+	public void deleteByBoth(Integer fkOwner,Integer fkChatToWhom) {
+		orderDao.deleteByBoth(fkOwner, fkChatToWhom);
+	}
 	
 }
