@@ -10,7 +10,7 @@ prefix="c"%>
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
     <style>
       .gameCardDiv {
-        height: 1500px;
+        height: 1700px;
       }
     </style>
   </head>
@@ -56,12 +56,14 @@ prefix="c"%>
           </div>
         </div>
       </div>
+      <div class="page"></div>
     </div>
     <script>
+      // 進入頁面就執行
       (function init() {
         getProductList();
       })();
-
+      // 透過AJAX取得頁面資料
       function getProductList(page, count) {
         axios
           .get("${root}/mall/productList", {
@@ -72,6 +74,12 @@ prefix="c"%>
           })
           .then((response) => {
             let pList = response.data.content;
+            console.log(response.data.totalPages);
+            for (i = 1; i <= response.data.totalPages; i++) {
+              $(".page").append(
+                "<button class='pageButton'>" + i + "</button>"
+              );
+            }
             renderPage(pList);
           });
       }
@@ -79,7 +87,7 @@ prefix="c"%>
       function renderPage(pList) {
         let outputString = "";
         for (let p of pList) {
-          outputString += '<div class="col-3 d-flex align-items-stretch">';
+          outputString += '<div class="col-4 d-flex align-items-stretch">';
           outputString += '<div class="card">';
           outputString += '<div class="pic">';
           outputString += `<img src="${root}/mall/getPhoto?pId=\${p.productId}">`;
@@ -99,32 +107,31 @@ prefix="c"%>
           outputString += "<li>";
           outputString += `<button class="cartbutton" value="\${p.productId}">加入購物車</button>`;
           outputString += "</li>";
+          outputString += "<li>";
+          outputString += `<button class="deleteButton" value="\${p.productId}">刪除商品</button>`;
+          outputString += "</li>";
           outputString += "</ul></div></div></div></div>";
         }
-
         $("#dataHome").html(outputString);
-      }
 
-      // 用AJAX將商品加入購物車
-      let product = document.getElementsByClassName("cartbutton");
-      for (i = 0; i < product.length; i++) {
-        product[i].addEventListener("click", function () {
-          console.log(this.value);
-          let pId = this.value;
-          let mId = 123;
-          axios
-            .get(
-              "http://localhost:8080/meeple-masters/shoppingCart/insertShoppingCart",
-              {
+        // 用AJAX將商品加入購物車
+        let product = document.getElementsByClassName("cartbutton");
+        for (i = 0; i < product.length; i++) {
+          product[i].addEventListener("click", function () {
+            console.log(this.value);
+            let pId = this.value;
+            let mId = 1;
+            axios
+              .get("${root}/shoppingCart/insertShoppingCart", {
                 params: {
                   productId: pId,
                   memberId: mId,
                 },
-              }
-            )
-            .then((response) => console.log(response), alert("新增成功"))
-            .catch((error) => console.log(error), alert("新增失敗"));
-        });
+              })
+              .then((response) => console.log(response), alert("新增成功"))
+              .catch((error) => console.log(error), alert("新增失敗"));
+          });
+        }
       }
     </script>
     <!-- <jsp:include page="/WEB-INF/jsp/include/footer.jsp" /> -->

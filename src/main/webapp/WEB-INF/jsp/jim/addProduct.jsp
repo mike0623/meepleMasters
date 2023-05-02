@@ -9,8 +9,14 @@
 <title>${webName}</title>
 <jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
 <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
+<style>
+.container {
+	position: relative;
+	top: 80px;
+	height: 600px;
+}
+</style>
 </head>
-
 <body>
 	<jsp:include page="/WEB-INF/jsp/include/header.jsp" />
 	<div class="container">
@@ -21,7 +27,7 @@
 			<input type="text" id="productName" name="productName" />
 			<br>
 			<label for="productPrice">商品價格:</label>
-			<input type="number" id="productPrice" name="productPrice" />
+			<input type="number" id="productPrice" name="productPrice" min="0" />
 			<br>
 			<label for="productDescription">商品描述:</label>
 			<input type="text" id="productDescription" name="productDescription" />
@@ -30,10 +36,12 @@
 			<input type="text" id="productPlayTime" name="productPlayTime" />
 			<br>
 			<label for="productMaxPlayer">建議最多遊玩人數:</label>
-			<input type="number" id="productMaxPlayer" name="productMaxPlayer" />
+			<input type="number" id="productMaxPlayer" name="productMaxPlayer"
+				min="2" />
 			<br>
 			<label for="productMinPlayer">建議最少遊玩人數:</label>
-			<input type="number" id="productMinPlayer" name="productMinPlayer" />
+			<input type="number" id="productMinPlayer" name="productMinPlayer"
+				min="1" />
 			<br>
 			<label for="productDifficulty">上手難度:</label>
 			<input type="text" id="productDifficulty" name="productDifficulty" />
@@ -44,6 +52,7 @@
 			<button>新增</button>
 			<button type="reset">清除</button>
 			<input type="button" value="測試新增資料" id="newTest" />
+			<br>
 			<img alt="" src="#" id="imgPreview">
 		</form:form>
 	</div>

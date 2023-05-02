@@ -56,7 +56,7 @@ public class ProductController {
 			}
 		}
 		pService.addProduct(p);
-		return "/jim/product";
+		return "redirect:/mall/product";
 	}
 
 	// 透過ID刪除商品
