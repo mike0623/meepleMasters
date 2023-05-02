@@ -12,80 +12,7 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="${root}/css/friend/friendList.css" rel="stylesheet">
-<style type="text/css">
-	.friendList{
-		position: fixed;
-        right: 0;
-        top: 0;
-        width: 380px;
-        border: 3px solid black;
-	}
-	.dialogBox{
-		position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 771px;
-        height: 600px;
-        border: 3px solid black;
-        
-	}
-	.controllerDialogBox{
-		position: fixed;
-	}
-	.closedChatRoom{
-		left: 0;
-		bottom: 0;
-		width: 200px;
-		height: 35px;
-		border: 3px solid black;
-		z-index:1;
-	}
-	.openChatRoom{
-		left: 0;
-		bottom: 600;
-		width: 771px;
-		height: 35px;
-		border: 3px solid black;
-	}
-	.getNewMessage>span{
-		color:black;
-	}
-	.getNewMessage{
-		position: fixed;
-		left: 80px;
-		bottom: 0;
-		height: 35px;
-		background-color:red;
-		z-index:0.5;
-	}
-	.xxx{
-		width: 40px;
-    	height: 40px;
-    	line-height: 40px;
-    	border-radius: 50%;
-	}
-	.circleFather{
-		position:relative;
-	}
-	.onlineCircle{
-		width: 10px;
-    	height: 10px;
-    	border-radius: 50%;
-    	background-color:green;
-    	position: absolute;
-    	top:15px;
-    	left:50px;
-	}
-	.offlineCircle{
-		width: 10px;
-    	height: 10px;
-    	border-radius: 50%;
-    	background-color:red;
-    	position: absolute;
-    	top:15px;
-    	left:50px;
-	}
-</style>
+<jsp:include page="friendButtonControll.jsp"></jsp:include>
 </head>
 <body>
 	<button onclick="showFriendList()">朋友列表</button>
@@ -96,6 +23,11 @@
 		<div class="offlineFriend">
 			
 		</div>
+		<div class="showNumberOfFriendInvite" onclick="showFriendInviteList()"><span>顯示好友邀請數量出問題啦</span></div>
+		<div class="unComfirmedInvite">
+			
+		</div>
+		
 	</div>
 	
 	
@@ -168,18 +100,27 @@
 	
 	<script>
 		//直接執行的
+		
+		//製作聊天室tag
 		chatTagWhenLogin();
 		$(".getNewMessage").hide();
+		//製作未確認好友邀請
+		findFriendInvite();
+		var isSelectedPage;
 
 		
 		var ws = new WebSocket("ws://localhost:8080${root}/michael/websocket/${member.memberEmail}");
 		
 		ws.onopen = function(){
 			console.log("friend的${member.memberEmail}");
+			localStorage.setItem("key","value");
+			console.log(localStorage.getItem("key"));
+			
 		}
 		
+		
 		ws.onclose = function(){
-			//ajax也沒用
+			console.log("onclose發動");
 		}
 //		//接收訊息時
 		ws.onmessage = function(message){
@@ -201,7 +142,7 @@
 							<div class="container text-center">
 								<div class="row">
 									<div class="col-3 circleFather"><div class="onlineCircle"></div></div>
-									<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.loginer+`" alt=""></div>
+									<div class="col-3"><img class="memberImg" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.loginer+`" alt=""></div>
 									<div class="col-3">
 										<span id="`+ email +`">`+ name +`</span>
 									</div>
@@ -221,7 +162,7 @@
 						<div class="container text-center">
 						<div class="row">
 							<div class="col-3 circleFather"><div class="offlineCircle"></div></div>
-							<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.logouter+`" alt=""></div>
+							<div class="col-3"><img class="memberImg" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.logouter+`" alt=""></div>
 							<div class="col-3">
 								<span id="`+ email +`">`+ name +`</span>
 							</div>
@@ -303,6 +244,8 @@
 							<button onclick="sendFriendInvite('${member.memberEmail}','`+json.theOther+`')">加好友</button>
 							`);
 				}
+				//更新好友邀請欄
+				findFriendInvite();
 			}
 			//我確認別人的邀請後，回傳對方資料，以製作好友欄
 			if("addFriend" == action){
@@ -314,7 +257,7 @@
 								<div class="container text-center">
 									<div class="row">
 										<div class="col-3 circleFather"><div class="onlineCircle"></div></div>
-										<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.newFriendEmail+`" alt=""></div>
+										<div class="col-3"><img class="memberImg" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.newFriendEmail+`" alt=""></div>
 										<div class="col-3">
 											<span id="`+ email +`">`+ name +`</span>
 										</div>
@@ -333,7 +276,7 @@
 							<div class="container text-center">
 							<div class="row">
 								<div class="col-3 circleFather"><div class="offlineCircle"></div></div>
-								<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.newFriendEmail+`" alt=""></div>
+								<div class="col-3"><img class="memberImg" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.newFriendEmail+`" alt=""></div>
 								<div class="col-3">
 									<span id="`+ email +`">`+ name +`</span>
 								</div>
@@ -345,7 +288,7 @@
 						`);
 				}
 			}
-			//對方確認了我的邀請，更新好友欄，及按鈕
+			//對方確認了我的邀請，更新好友欄、邀請欄，及按鈕
 			if("someoneConcirmFriendInvite" == action){
 				let email = json.theOther;
 				email = email.replace('@','').replace('.','');
@@ -354,7 +297,7 @@
 							<div class="container text-center">
 								<div class="row">
 									<div class="col-3 circleFather"><div class="onlineCircle"></div></div>
-									<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.theOther+`" alt=""></div>
+									<div class="col-3"><img class="memberImg" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+json.theOther+`" alt=""></div>
 									<div class="col-3">
 										<span id="`+ email +`">`+ name +`</span>
 									</div>
@@ -369,6 +312,8 @@
 						<button onclick="pressChatButton('`+buttonTypeName+`','`+idTypeEmail+`')">傳送訊息</button>
 						<button onclick="deleteFriend('${member.memberEmail}','`+json.theOther+`')">刪除好友</button>
 						`)
+				//更新好友邀請欄
+				findFriendInvite();
 			}
 			//有人送好友邀請給我
 			if("someoneAddFriendInviteToYou" == action){
@@ -377,8 +322,11 @@
 					$(".friendButtonDiv").empty();
 					$(".friendButtonDiv").append(`
 							<button onclick="acceptFriendInvite('${member.memberEmail}','`+json.theOther+`')">接受邀請</button>
+							<button onclick="rejectFriendInvite('${member.memberEmail}','`+json.theOther+`')">拒絕邀請</button>
 							`);
 				}
+				//更新好友邀請欄
+				findFriendInvite();
 			}
 			
 			
@@ -409,17 +357,35 @@
 		
 		
 //		//控制好友列表開關
-		var isShow = false;
+		var isFriendListShow = false;
 		$("#friendList").hide();
 		function showFriendList(){
-			if(isShow==false){
+			if(isFriendListShow==false){
 				$("#friendList").show();
-				isShow = true;
+				isFriendListShow = true;
 			}else{
 				$("#friendList").hide();
-				isShow = false;
+				isFriendListShow = false;
 			}
 		}
+		
+		
+//		//顯示好友邀請的開關
+		$(".unComfirmedInvite").hide();
+		var isFriendInviteListShow = false;
+		function showFriendInviteList(){
+			if(isFriendInviteListShow==false){
+				$(".unComfirmedInvite").show();
+				isFriendInviteListShow = true;
+			}else{
+				$(".unComfirmedInvite").hide();
+				isFriendInviteListShow = false;
+			}
+		}
+		
+		
+		
+		
 		
 //		//重新製作線上離線好友清單
 		function refleshFriendContent(json){
@@ -435,7 +401,7 @@
 						<div class="container text-center">
 							<div class="row">
 								<div class="col-3 circleFather"><div class="onlineCircle"></div></div>
-								<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+onlineKeyArray[i]+`" alt=""></div>
+								<div class="col-3"><img class="memberImg" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+onlineKeyArray[i]+`" alt=""></div>
 								<div class="col-3">
 									<span id="`+ onlineKeyArray[i].replace('@','').replace('.','') +`">`+ onlineValueArray[i] +`</span>
 								</div>
@@ -453,7 +419,7 @@
 						<div class="container text-center">
 						<div class="row">
 							<div class="col-3 circleFather"><div class="offlineCircle"></div></div>
-							<div class="col-3"><img class="xxx" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+offlineKeyArray[i]+`" alt=""></div>
+							<div class="col-3"><img class="memberImg" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+offlineKeyArray[i]+`" alt=""></div>
 							<div class="col-3">
 								<span id="`+ offlineKeyArray[i].replace('@','').replace('.','') +`">`+ offlineValueArray[i] +`</span>
 							</div>
@@ -718,7 +684,7 @@
 				return;
 			}
 			axios.get("http://localhost:8080/meeple-masters/friendMessage/findPersonalMessage?sender="+userEmail+"&receiver=${member.memberEmail}",).then(function(response){
-				console.log(response);
+				console.log("顯示右邊畫面",response);
 				let responseArray = response.data;
 				$("#chatRoom >div").remove();
 				for(let i = 0;i<responseArray.length;i++){
@@ -829,6 +795,53 @@
 		}
 		
 
+		
+		
+		
+		
+//		//查看並製作未確認的好又邀請
+		function findFriendInvite(){
+			axios.get("http://localhost:8080/meeple-masters/friendInvite/findByAccepterId/${member.memberEmail}").then(function(response){
+				console.log("查看好友邀請的response",response);
+				let inviterArray = response.data.InviterList;
+				$(".showNumberOfFriendInvite>span").text("未確認好友邀請"+inviterArray.length+"個");
+				$(".unComfirmedInvite").empty();
+				for(let i = 0;i<inviterArray.length;i++){
+					let idType = changeToIdType(inviterArray[i].memberEmail)+"Invite";
+					$(".unComfirmedInvite").append(`
+						<div class="container text-center">
+							<div class="row">
+								<div class="col-6">
+									<div>
+										<img class="memberImg" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+inviterArray[i].memberEmail+`" alt="">
+										<span>`+inviterArray[i].memberName+`</span>
+									</div>
+								</div>
+								<div class="col-3"><button name="`+idType+`" onclick="responseInvite(this.name,'accept')">確認邀請</button></div>
+								<div class="col-3"><button name="`+idType+`" onclick="responseInvite(this.name,'reject')">拒絕邀請</button></div>
+							</div>
+						</div>
+							`)
+				}
+			}).catch(function(error){
+				console.log("查看好友邀請出事啦",error);
+			}).finally(function(){
+				
+			});
+		}
+		
+//		//按下接受或拒絕好友按鈕時
+		function responseInvite(idType,acceptOrReject){
+			let theOther = changeToOriginEmail(idType.replace("Invite",""));
+			//接受時
+			if('accept' == acceptOrReject){
+				acceptFriendInvite("${member.memberEmail}",theOther);
+			}
+			//拒絕時
+			if('reject' == acceptOrReject){
+				rejectFriendInvite("${member.memberEmail}",theOther);
+			}
+		}
 		
 		//將正確的Email轉成Id格式的
 		function changeToIdType(originEmail){

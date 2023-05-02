@@ -3,6 +3,7 @@ package tw.com.eeit162.meepleMasters.michael.message.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import tw.com.eeit162.meepleMasters.michael.message.model.FriendMessage;
 import tw.com.eeit162.meepleMasters.michael.message.model.MessageDto;
 import tw.com.eeit162.meepleMasters.michael.message.service.FriendMessageService;
 import tw.com.eeit162.meepleMasters.michael.util.DataInterface;
+
 
 @Controller
 public class FriendMessageController {
@@ -43,7 +45,11 @@ public class FriendMessageController {
 		if(messageType == 1) {
 			//做文字的事情
 			String messageText = body.getString("messageText");
-			Integer messageTextNewId = DataInterface.getMessageTextNewId(messageText);
+			//安全性保護
+			String safeMessageText = StringEscapeUtils.escapeHtml4(messageText);
+//			String safeMessageText = messageText.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("‘", "&lsquo;").replaceAll("’", "&rsquo;").replaceAll("“", "&ldquo;").replaceAll("”", "&rdquo;");
+//			System.out.println(safeMessageText);
+			Integer messageTextNewId = DataInterface.getMessageTextNewId(safeMessageText);
 			friendMessage.setFkMessageContent(messageTextNewId);
 		}
 		if(messageType == 2) {

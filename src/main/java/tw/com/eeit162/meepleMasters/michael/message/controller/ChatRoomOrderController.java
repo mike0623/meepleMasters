@@ -106,5 +106,11 @@ public class ChatRoomOrderController {
 		return "新增成功";
 	}
 	
+	
+	@GetMapping("/chatRoomOrder/test")
+	@ResponseBody
+	public void test() {
+		System.out.println(123123);
+	}
 
 }
