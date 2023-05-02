@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,14 +18,17 @@
         <!-- Footer -->
         <footer class="text-center text-white" style="background-color: #CA7159;">
             <!-- Grid container -->
+            
             <div class="container p-4 pb-0">
                 <section class="">
+                <c:if test="${member == null}">
                     <p class="d-flex justify-content-center align-items-center">
                         <span class="me-3">免費註冊</span>
                         <button type="button" class="btn btn-outline-light btn-rounded">
                             登入！
                         </button>
                     </p>
+                </c:if>
                 </section>
             </div>
             <!-- Grid container -->

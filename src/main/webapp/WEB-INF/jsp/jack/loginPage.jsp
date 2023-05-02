@@ -65,7 +65,7 @@ include file="../include/common_link.jsp" %>
             <button class="btn btn-outline-secondary" type="button" id="login">Login</button>
           </div>
           <div class="row justify-content-center" style="margin: 20px">
-            <a href="${root}/member/register" class="btn btn-outline-secondary">Register</a>
+            <a href="${root}/register" class="btn btn-outline-secondary">Register</a>
           </div>
           <div class="col align-self-center">
           	Other way to login

@@ -73,7 +73,7 @@ public class MemberController {
 	 * @return Member
 	 */
 	@ResponseBody
-	@PostMapping("/member/login")
+	@PostMapping("/login")
 	public String login(@RequestBody String member, HttpSession session) {
 		
 		Optional<Member> optional = mService.login(member);
@@ -81,7 +81,7 @@ public class MemberController {
 		
 		if (optional.isEmpty()) {
 			// No Member
-			url.put("url", "/member/login");
+			url.put("url", "/login");
 			return url.toString();
 		}
 		session.setAttribute("member", optional.get());
@@ -90,7 +90,7 @@ public class MemberController {
 			url.put("url", "/member/admin");
 			return url.toString();
 		}
-			url.put("url","/member/member");
+			url.put("url","/index");
 		return url.toString();
 	}
 	
@@ -101,7 +101,7 @@ public class MemberController {
 	 */
 	@GetMapping("/member/logout")
 	public String logout(HttpSession session) {
-		
+		Member user = (Member) session.getAttribute("member");
 		session.invalidate();
 		
 		return "redirect:/index";

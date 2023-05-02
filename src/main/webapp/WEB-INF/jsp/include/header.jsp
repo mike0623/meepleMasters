@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,7 +38,24 @@
                         <a href="#">場地預約</a>
                     </li>
                     <li><a href="#">會員中心</a></li>
-                    <li style="background: none;"><a href="${root}/member/login" style="font-size: 16px;">註冊 / 登入</a></li>
+                    <c:if test="${member == null }">
+                    	<li style="background: none;"><a href="${root}/member/login" style="font-size: 16px;">註冊 / 登入</a></li>
+                    </c:if>
+                    <c:if test="${member != null }">
+                    	<li class="" style="background: none;">
+                        <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Hi,${member.memberName}
+                          <img src="${root}/member/findMemberImg/${member.memberId}" alt="" width="32" height="32" class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="#">Game</a></li>
+                          <li><a class="dropdown-item" href="#">Friend</a></li>
+                          <li><a class="dropdown-item" href="${root}/member/profile">Profile</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="${root}/member/logout">Logout</a></li>
+                        </ul>
+                      </li>
+                    </c:if>
                 </ul>
             </nav>
         </header>

@@ -6,13 +6,7 @@ document.querySelector("#login").addEventListener("click",function(e){
         e.preventDefault;
         document.querySelector("#login-error").classList.remove("d-none");
     }else{
-    
-    if (!document.querySelector("#agree").checked) {
-        e.preventDefault();
-        document.querySelector("#checkbox-error").innerText="Please read the terms of service and check the box."
-        document.querySelector("#agree").classList.add("is-invalid");
-      }else{
-        axios.post("/meeple-masters/member/login",{
+		axios.post("/meeple-masters/login",{
             memberEmail:email.value,
             memberPwd:password.value
         })
@@ -21,15 +15,19 @@ document.querySelector("#login").addEventListener("click",function(e){
             var url = res.data.url;
             window.location.href= root+ url;
 
-            if(url === "/member/login"){
-                
-            }
 
         })
         .catch(err => {
             // console.error(err); 
         })
-      }
+    
+//    if (!document.querySelector("#agree").checked) {
+//        e.preventDefault();
+//        document.querySelector("#checkbox-error").innerText="Please read the terms of service and check the box."
+//        document.querySelector("#agree").classList.add("is-invalid");
+//      }else{
+//        
+//      }
     }
 })
 

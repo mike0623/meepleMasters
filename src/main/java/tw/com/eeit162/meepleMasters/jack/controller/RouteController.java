@@ -12,13 +12,13 @@ public class RouteController {
 		return "include/index";
 	}
 	
-	@GetMapping("/member/login")
+	@GetMapping("/login")
 	public String login() {
 		
 		return "jack/loginPage";
 	}
 	
-	@GetMapping("/member/register")
+	@GetMapping("/register")
 	public String register() {
 		
 		return "jack/createMember"; 
@@ -27,7 +27,7 @@ public class RouteController {
 	@GetMapping("/member/admin")
 	public String adminPage() {
 		
-		return "jack/adminPage";
+		return "include/admin";
 	}
 	
 	@GetMapping("/member/member")
