@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +22,7 @@
             <div class="container p-4 pb-0">
                 <section class="">
                     <p class="d-flex justify-content-center align-items-center">
-                        <span class="me-3">免費註冊</span>
+                        <span class="me-3"></span>
                         <button type="button" class="btn btn-outline-light btn-rounded">
                             登入！
                         </button>

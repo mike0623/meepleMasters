@@ -46,7 +46,7 @@
                         <ul class="dropdown-menu">
                           <li><a class="dropdown-item" href="#">Game</a></li>
                           <li><a class="dropdown-item" href="#">Friend</a></li>
-                          <li><a class="dropdown-item" href="#">Profile</a></li>
+                          <li><a class="dropdown-item" href="${root}/member/profile">Profile</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li><a class="dropdown-item" href="${root}/member/logout">Logout</a></li>
                         </ul>

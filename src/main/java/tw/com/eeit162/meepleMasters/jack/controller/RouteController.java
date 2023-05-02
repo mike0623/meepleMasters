@@ -35,5 +35,11 @@ public class RouteController {
 		
 		return "jack/memberPage";
 	}
+	
+	@GetMapping("/member/profile")
+	public String profile() {
+		
+		return "jack/profile";
+	}
 
 }	
