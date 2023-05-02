@@ -13,7 +13,12 @@
 <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
 <title>${webName}</title>
 <style>
-    
+    .container{
+		position: relative;
+		top: 75px;
+		padding-bottom: 105px;
+		height: 100%;
+	}
 
 </style>
 </head>
@@ -37,7 +42,7 @@
 						<div
 							class="d-flex justify-content-between align-items-center mb-3">
 							<h4 class="text-right">Profile Settings</h4>
-							<button type="button" class="btn btn-outline-secondary btn-floating btn-sm">Edit
+							<button type="button" id="edit" class="btn btn-outline-secondary btn-floating btn-sm">Edit
 								<i class="fas fa-magic"></i>
 							  </button>
 						</div>
