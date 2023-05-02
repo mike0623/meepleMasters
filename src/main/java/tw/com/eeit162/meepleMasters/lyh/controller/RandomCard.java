@@ -1,8 +1,15 @@
 package tw.com.eeit162.meepleMasters.lyh.controller;
 
+import java.util.List;
 import java.util.Random;
 
+import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
+import tw.com.eeit162.meepleMasters.lyh.service.CardListService;
+
 public class RandomCard {
+	
+	private CardListService cListService;
+	
 
 	public int cardId() {
 
@@ -54,7 +61,43 @@ public class RandomCard {
 		return card;
 	}
 
+	List<Card> allCard = cListService.findAllCard();
+	List<Integer> card1;
+	List<Integer> card2;
+	List<Integer> card3;
+	List<Integer> card4;
+	List<Integer> card5;
+	
+	
+	public void cardStar() {
+		
+		for (int i = 0; i < allCard.size() ; i++) {
+			Integer star = allCard.get(i).getCardStar();
+
+			switch (star) {
+			case 1:
+				card1.add(allCard.get(i).getCardId());
+				break;
+			case 2:
+				card2.add(allCard.get(i).getCardId());
+				break;
+			case 3:
+				card3.add(allCard.get(i).getCardId());
+				break;
+			case 4:
+				card4.add(allCard.get(i).getCardId());
+				break;
+			case 5:
+				card5.add(allCard.get(i).getCardId());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
 	public int star5() {
+		
 		String[] card = new String[5];
 		int[] cardId = {44, 45, 46, 47, 48};
 
@@ -63,10 +106,11 @@ public class RandomCard {
 		}
 
 		Random random = new Random();
-		int randomNumber = random.nextInt(card.length);
+		int randomNumber = random.nextInt(card5.size());
 
 		System.out.println(card[randomNumber]);
 		System.out.println(cardId[randomNumber]);
+		System.out.println(card5.get(randomNumber));
 		return cardId[randomNumber];
 	}
 
@@ -83,6 +127,7 @@ public class RandomCard {
 
 		System.out.println(card[randomNumber]);
 		System.out.println(cardId[randomNumber]);
+		System.out.println(card4.get(randomNumber));
 		return cardId[randomNumber];
 	}
 
@@ -95,10 +140,11 @@ public class RandomCard {
 		}
 
 		Random random = new Random();
-		int randomNumber = random.nextInt(card.length);
+		int randomNumber = random.nextInt(card3.size());
 
 		System.out.println(card[randomNumber]);
 		System.out.println(cardId[randomNumber]);
+		System.out.println(card3.get(randomNumber));
 		return cardId[randomNumber];
 	}
 
@@ -111,10 +157,11 @@ public class RandomCard {
 		}
 
 		Random random = new Random();
-		int randomNumber = random.nextInt(card.length);
+		int randomNumber = random.nextInt(card2.size());
 
 		System.out.println(card[randomNumber]);
 		System.out.println(cardId[randomNumber]);
+		System.out.println(card2.get(randomNumber));
 		return cardId[randomNumber];
 	}
 
@@ -127,10 +174,11 @@ public class RandomCard {
 		}
 
 		Random random = new Random();
-		int randomNumber = random.nextInt(card.length);
+		int randomNumber = random.nextInt(card1.size());
 
 		System.out.println(card[randomNumber]);
 		System.out.println(cardId[randomNumber]);
+		System.out.println(card1.get(randomNumber));
 		return cardId[randomNumber];
 	}
 

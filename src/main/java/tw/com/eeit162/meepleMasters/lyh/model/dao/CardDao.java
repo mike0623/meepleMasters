@@ -6,6 +6,6 @@ import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
 
 public interface CardDao extends JpaRepository<Card, Integer> {
 	
-	
+
 
 }

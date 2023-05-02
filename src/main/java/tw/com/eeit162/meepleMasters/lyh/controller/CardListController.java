@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -81,7 +82,7 @@ public class CardListController {
 				} 
 			}
 //			model.addAttribute("cardId", cardId);
-			model.addAttribute("cardList", starOrderList);
+			model.addAttribute("cardList", cardList);
 			
 			return "lyh/mycard";
 		}
@@ -104,6 +105,11 @@ public class CardListController {
 		
 	}
 	
+	@PostMapping("/test")
+	@ResponseBody
+	public List<Integer> test(@RequestBody String json){
+		return cListService.ownedCardStarOrder(json);
+	}
 
 
 }

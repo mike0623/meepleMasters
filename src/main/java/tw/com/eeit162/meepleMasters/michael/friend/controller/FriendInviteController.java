@@ -1,5 +1,6 @@
 package tw.com.eeit162.meepleMasters.michael.friend.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -39,26 +40,45 @@ public class FriendInviteController {
 		}
 	}
 	
-	//邀請者取消邀請 受邀者接受邀請(放在friend裡)
+	//邀請者取消邀請 或受邀者拒絕邀請 受邀者接受邀請(放在friend裡)
 	@PostMapping("/friendInvite/delete")
 	@ResponseBody
 	public void deleteFriendInvite(@RequestBody String body) {
 		JSONObject jsonObject = new JSONObject(body);
 		Member myself = DataInterface.getMemberByEmail(jsonObject.getString("myself"));
 		Member theOther = DataInterface.getMemberByEmail(jsonObject.getString("theOther"));
-		
-		
-		FriendInvite friendInvite = inviteService.findFriendInviteByBoth(myself.getMemberId(),theOther.getMemberId());
-		if(friendInvite != null) {
-			inviteService.deleteFriendInvite(friendInvite.getFriendInviteId());
+		String whoIsAccepter = jsonObject.getString("accepter");
+		if("myself".equals(whoIsAccepter)) {
+			FriendInvite friendInvite = inviteService.findFriendInviteByBoth(theOther.getMemberId(),myself.getMemberId());
+			if(friendInvite != null) {
+				inviteService.deleteFriendInvite(friendInvite.getFriendInviteId());
+			}
+		}
+		if("theOther".equals(whoIsAccepter)) {
+			FriendInvite friendInvite = inviteService.findFriendInviteByBoth(myself.getMemberId(),theOther.getMemberId());
+			if(friendInvite != null) {
+				inviteService.deleteFriendInvite(friendInvite.getFriendInviteId());
+			}
 		}
 	}
 	
+	
+	
 	//查看所有邀請
 	@ResponseBody
-	@GetMapping("/friendInvite/findByAccepterId/{AccepterId}")
-	public List<FriendInvite> findFriendInviteByAccepterId(@PathVariable("AccepterId") Integer AccepterId){
-		return inviteService.findFriendInviteByAccepterId(AccepterId);
+	@GetMapping("/friendInvite/findByAccepterId/{AccepterEmail}")
+	public String findFriendInviteByAccepterId(@PathVariable("AccepterEmail") String AccepterEmail){
+		Integer AccepterId = DataInterface.getMemberByEmail(AccepterEmail).getMemberId();
+		List<FriendInvite> list = inviteService.findFriendInviteByAccepterId(AccepterId);
+		List<Member> InviterList = new ArrayList<Member>();
+		for(FriendInvite friendInvite : list) {
+			Member inviter = DataInterface.getMemberByMemberId(friendInvite.getFkInviterId());
+			InviterList.add(inviter);
+		}
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("InviterList", InviterList);
+		return jsonObject.toString();
+		
 	}
 	
 	//後臺管理者修改資料
