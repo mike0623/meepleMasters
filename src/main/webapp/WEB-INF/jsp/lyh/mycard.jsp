@@ -15,32 +15,37 @@
 
 <body>
 	<jsp:include page="../include/header.jsp"></jsp:include>
-	<div class="mycardContainer">
-		<div class="mycardTitle">我的卡片</div>
-		<div class="cardListButtons">
-			<button onclick="showCardList()" class="cardListButton">卡片列表</button>
-			<button onclick="showCardAnime()" class="cardAnimeButton">抽卡動畫</button>
-			<button onclick="drawCard()" class="cardAnimeButton">抽卡</button>
-		</div>
-
-
-		<div class="row container cardContainer justify-content-center">
-
-			<c:forEach var="card" items="${cardList}">
-
-				<div class="col-3 d-flex">
-					<div class="card">
-						<figure><img alt="" src="${root}/card/downloadCard/${card.cardId}" class="hanafuda">
-						<figcaption>${card.cardName}</figcaption>
-						</figure>
+	<div class="bodyContainer">
+		<div class="mycardContainer">
+			<div class="mycardTitle">我的卡片</div>
+			<div class="cardListButtons">
+				<button onclick="showCardList()" class="cardListButton">卡片列表</button>
+				<button onclick="showCardAnime()" class="cardAnimeButton">抽卡動畫</button>
+				<button onclick="drawCard()" class="cardAnimeButton">抽卡</button>
+			</div>
+	
+	
+			<div class="row container cardContainer justify-content-center">
+	
+				<c:forEach var="card" items="${cardList}">
+	
+					<div class="col-3 d-flex">
+						<div class="card">
+							<figure><img alt="" src="${root}/card/downloadCard/${card.cardId}" class="hanafuda">
+							<figcaption>${card.cardName}</figcaption>
+							</figure>
+						</div>
+	
 					</div>
-
-				</div>
-
-			</c:forEach>
+	
+				</c:forEach>
+			</div>
+	
 		</div>
+	
+		<jsp:include page="../include/footer.jsp"></jsp:include>
 	</div>
-
+	
 
 
 	<script src="${root}/json/starcard.js"></script>

@@ -171,7 +171,6 @@
 
 .map {
     width: 600px;
-    ;
     position: relative;
     top: 200px;
     margin: auto;
@@ -180,5 +179,9 @@
 .bodyContainer {
     position: relative;
     top: 75px;
-    padding-bottom: 200px;
+    padding-bottom: 140px;
+}
+
+footer.container {
+    height: 140px;
 }
