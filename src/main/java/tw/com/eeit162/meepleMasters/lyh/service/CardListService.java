@@ -1,11 +1,14 @@
 package tw.com.eeit162.meepleMasters.lyh.service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -171,7 +174,7 @@ public class CardListService {
 	}
 
 	public int star5() {
-		cardStar();
+//		cardStar();
 		Random random = new Random();
 		int randomNumber = random.nextInt(card5.size());
 
@@ -180,7 +183,7 @@ public class CardListService {
 	}
 
 	public int star4() {
-		cardStar();
+//		cardStar();
 		Random random = new Random();
 		int randomNumber = random.nextInt(card4.size());
 
@@ -189,7 +192,7 @@ public class CardListService {
 	}
 
 	public int star3() {
-		cardStar();
+//		cardStar();
 		Random random = new Random();
 		int randomNumber = random.nextInt(card3.size());
 
@@ -198,7 +201,7 @@ public class CardListService {
 	}
 
 	public int star2() {
-		cardStar();
+//		cardStar();
 		Random random = new Random();
 		int randomNumber = random.nextInt(card2.size());
 
@@ -213,6 +216,26 @@ public class CardListService {
 
 		System.out.println(card1.get(randomNumber));
 		return card1.get(randomNumber);
+	}
+	
+	public List<Integer> ownedCardStarOrder(String json) {
+		JSONObject jsonObject = new JSONObject(json);
+		int int1 = jsonObject.getInt("memberId");
+		
+		List<Object[]> ownedCard = cODao.ownedCardStarOrder(int1);
+		List<Integer> list = new ArrayList<>();
+		for(Object[] o :ownedCard) {
+			System.out.println(o.length);
+			JSONObject jsonObject2 = new JSONObject(o[0]);
+			System.out.println("ownedId: "+jsonObject2.getInt("ownedId"));
+			System.out.println("fkCardId: "+jsonObject2.has("fkCardId"));
+			
+			
+			JSONObject jsonObject3 = new JSONObject(o[1]);
+			System.out.println("cardStar: "+jsonObject3.getInt("cardStar"));
+			System.out.println("--------------------------------------------");
+		}
+		return list;
 	}
 
 }
