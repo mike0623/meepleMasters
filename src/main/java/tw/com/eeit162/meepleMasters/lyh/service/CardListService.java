@@ -1,13 +1,14 @@
 package tw.com.eeit162.meepleMasters.lyh.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tw.com.eeit162.meepleMasters.lyh.controller.RandomCard;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 import tw.com.eeit162.meepleMasters.lyh.model.dao.CardDao;
@@ -18,58 +19,200 @@ public class CardListService {
 
 	@Autowired
 	private CardDao cDao;
-	
+
 	@Autowired
 	private CardOwnedDao cODao;
-	
-	RandomCard randomCard = new RandomCard();
-	
+
 	public CardOwned insertCardToList(Integer memberId) {
-		
-		int cardId = randomCard.cardId();
+
+		int cardId = randomCardId();
 //		System.out.println(cardId);
-		
+
 		Optional<Card> option = cDao.findById(cardId);
-		
+
 		if (option.isEmpty()) {
 			return null;
 		}
-		
+
 //		Card card = option.get();
-		
+
 		CardOwned cO = new CardOwned();
-		
+
 		cO.setFkCardId(cardId);
 		cO.setFkMemberId(memberId);
 		cO.setOwnedTime(new Date());
 		cO.setCardStatus(1);
-		
+
 		CardOwned newCard = cODao.save(cO);
-		
+
 		return newCard;
 	}
-	
+
 	public List<CardOwned> listOwnedCard(Integer memberId) {
-		
-		List<CardOwned> option = cODao.findByFkMemberId(memberId);
-		
-		if (option.isEmpty()) {
+
+		List<CardOwned> ownedCard = cODao.findByFkMemberId(memberId);
+
+		if (ownedCard.isEmpty()) {
 			return null;
 		}
-		
-		return option;
-		
+
+		return ownedCard;
+
 	}
-	
+
 	public Card findById(Integer cardId) {
-		
+
 		Optional<Card> option = cDao.findById(cardId);
-		
+
 		if (option.isEmpty()) {
 			return null;
 		}
-		
+
 		return option.get();
 	}
+
+	public List<Card> findAllCard() {
+
+		List<Card> allCard = cDao.findAll();
+
+		if (allCard.isEmpty()) {
+			return null;
+		}
+		return allCard;
+	}
+
 	
+	
+	List<Card> allCard = new ArrayList<>();
+	List<Integer> card1 = new ArrayList<>();
+	List<Integer> card2 = new ArrayList<>();
+	List<Integer> card3 = new ArrayList<>();
+	List<Integer> card4 = new ArrayList<>();
+	List<Integer> card5 = new ArrayList<>();
+	
+
+	public int randomCardId() {
+
+		// 設定每種卡片的機率（以百分比表示）
+		int[] cardProbabilities = { 2, 6, 10, 22, 60 };
+
+		// 計算所有卡片的總機率
+		int totalProbability = 0;
+		for (int i = 0; i < cardProbabilities.length; i++) {
+			totalProbability += cardProbabilities[i];
+		}
+
+		// System.out.println(totalProbability);
+
+		// 生成一個隨機數，表示抽到的卡片星數
+		Random random = new Random();
+		int randomNumber = random.nextInt(totalProbability);
+		System.out.println("randomNumber: " + randomNumber);
+
+		int cumulativeProbability = 0;
+		int[] star = new int[5];
+
+		for (int i = 0; i < cardProbabilities.length; i++) {
+			cumulativeProbability += cardProbabilities[i];
+			star[i] = cumulativeProbability;
+//	            System.out.println(cumulativeProbability);
+		}
+
+		int card = 0;
+
+		// 輸出星數
+		if (randomNumber < (star[0])) {
+			System.out.println("五星");
+			card = star5();
+		} else if (randomNumber < (star[1])) {
+			System.out.println("四星");
+			card = star4();
+		} else if (randomNumber < (star[2])) {
+			System.out.println("三星");
+			card = star3();
+		} else if (randomNumber < (star[3])) {
+			System.out.println("二星");
+			card = star2();
+		} else {
+			System.out.println("一星");
+			card = star1();
+		}
+
+		return card;
+	}
+
+	public void cardStar() {
+		
+		allCard = findAllCard();
+
+		for (int i = 0; i < allCard.size(); i++) {
+			Integer star = allCard.get(i).getCardStar();
+
+			switch (star) {
+			case 1:
+				card1.add(allCard.get(i).getCardId());
+				break;
+			case 2:
+				card2.add(allCard.get(i).getCardId());
+				break;
+			case 3:
+				card3.add(allCard.get(i).getCardId());
+				break;
+			case 4:
+				card4.add(allCard.get(i).getCardId());
+				break;
+			case 5:
+				card5.add(allCard.get(i).getCardId());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	public int star5() {
+		cardStar();
+		Random random = new Random();
+		int randomNumber = random.nextInt(card5.size());
+
+		System.out.println(card5.get(randomNumber));
+		return card5.get(randomNumber);
+	}
+
+	public int star4() {
+		cardStar();
+		Random random = new Random();
+		int randomNumber = random.nextInt(card4.size());
+
+		System.out.println(card4.get(randomNumber));
+		return card4.get(randomNumber);
+	}
+
+	public int star3() {
+		cardStar();
+		Random random = new Random();
+		int randomNumber = random.nextInt(card3.size());
+
+		System.out.println(card3.get(randomNumber));
+		return card3.get(randomNumber);
+	}
+
+	public int star2() {
+		cardStar();
+		Random random = new Random();
+		int randomNumber = random.nextInt(card2.size());
+
+		System.out.println(card2.get(randomNumber));
+		return card2.get(randomNumber);
+	}
+
+	public int star1() {
+		cardStar();
+		Random random = new Random();
+		int randomNumber = random.nextInt(card1.size());
+
+		System.out.println(card1.get(randomNumber));
+		return card1.get(randomNumber);
+	}
+
 }
