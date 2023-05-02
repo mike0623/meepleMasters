@@ -7,19 +7,19 @@
 <meta charset="UTF-8">
 <title>${webName}</title>
 <style>
-    footer {
+    .footer {
             position: relative;
             bottom: 0;
         }
 </style>
 </head>
 <body>
-    <section class="navbar-inverse navbar-fixed-bottom">
+    <section class="navbar-inverse navbar-fixed-bottom footer">
         <!-- Footer -->
         <footer class="text-center text-white" style="background-color: #CA7159;">
             <!-- Grid container -->
             
-            <div class="container p-4 pb-0">
+            <div class="container p-4 pb-0" style="height: 80px;">
                 <section class="">
                     <p class="d-flex justify-content-center align-items-center">
                 <c:if test="${member == null}">
