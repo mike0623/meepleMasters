@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,15 +79,26 @@ public class ProductController {
 		return "刪除失敗";
 	}
 
-	// 透過ID更改商品
-	@PutMapping("/mall/updateProductById")
-	@ResponseBody
-	public String updateProductById(@ModelAttribute Product p, @RequestParam(required = false) MultipartFile pImg) {
-		if (pService.findProductById(p.getProductId()) != null) {
-			pService.updateProductById(p);
-			return "修改成功";
+	// 更新商品
+	@PostMapping("/mall/updateProduct")
+	public String updateProductById(@ModelAttribute Product p, @RequestParam(required = false) MultipartFile pImg)
+			throws IOException {
+		if (pImg.getBytes().length != 0) {
+			try {
+				System.out.println(pImg.getBytes());
+				BufferedInputStream bis = new BufferedInputStream(pImg.getInputStream());
+				p.setProductImg(bis.readAllBytes());
+				bis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return "修改失敗";
+		Integer productId = p.getProductId();
+
+		if (productId != null) {
+			pService.updateProductById(p);
+		}
+		return "redirect:/mall/product";
 	}
 
 	@GetMapping("/mall/getPhoto")

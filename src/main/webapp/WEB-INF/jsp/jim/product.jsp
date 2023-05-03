@@ -1,23 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%> <%@taglib uri="http://java.sun.com/jsp/jstl/core"
-prefix="c"%>
+pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <title>${webName}</title>
-    <jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
-    <style>
-      .gameCardDiv {
-        height: 1900px;
-      }
-    </style>
+    <jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
   </head>
-
   <body>
     <jsp:include page="/WEB-INF/jsp/include/header.jsp" />
-    <div class="container gameCardDiv">
+    <div class="bodyContainer gameCardDiv">
       <div class="gameListTitle">
         遊戲列表
         <div class="link-top"></div>
@@ -59,6 +52,7 @@ prefix="c"%>
 
       <div class="page"></div>
     </div>
+    <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
     <script>
       // 初始化
       (function init() {
@@ -92,7 +86,7 @@ prefix="c"%>
           outputString += "</div>";
           outputString += `<div class="card-header">\${p.productName}</div>`;
           outputString += '<div class="card-body">';
-          outputString += `<h3 class="title">\${p.productPrice}</h3>`;
+          outputString += `<h3 class="title">\${p.productPrice}元</h3>`;
           outputString += "</div>";
           outputString += '<div class="card-footer">';
           outputString += '<div class="text">';
@@ -108,14 +102,20 @@ prefix="c"%>
           outputString += "<li>";
           outputString += `<button class="deleteButton" value="\${p.productId}">刪除商品</button>`;
           outputString += "</li>";
+          outputString += "<li>";
+          outputString += "<form action='${root}/mall/updateProduct' method='GET'>";
+          outputString += `<button class="updateButton" type='submit'>更新商品</button>`;
+          outputString += `<input type='hidden' name='id' value='\${p.productId}'>`;
+          outputString += "</form>";
+          outputString += "</li>";
           outputString += "</ul></div></div></div></div>";
         }
         $("#dataHome").html(outputString);
 
         // 用AJAX將商品加入購物車
-        let cart = document.getElementsByClassName("cartButton");
-        for (i = 0; i < cart.length; i++) {
-          cart[i].addEventListener("click", function () {
+        let cartButton = document.getElementsByClassName("cartButton");
+        for (i = 0; i < cartButton.length; i++) {
+          cartButton[i].addEventListener("click", function () {
             console.log(this.value);
             let pId = this.value;
             let mId = 1;
@@ -126,19 +126,29 @@ prefix="c"%>
                   memberId: mId,
                 },
               })
-              .then((response) => console.log(response), alert("新增成功"))
-              .catch((error) => console.log(error), alert("新增失敗"));
+              .then((response) => console.log(response))
+              .catch((error) => console.log(error));
           });
         }
 
-        //
+        // 用AJAX透過ID刪除資料
         let deleteButton = document.getElementsByClassName("deleteButton");
         for (i = 0; i < deleteButton.length; i++) {
           deleteButton[i].addEventListener("click", function () {
             console.log(this.value);
             let pId = this.value;
 
-            axios.delete("${root}/mall/deleteProductById", { params: {} });
+            axios
+              .delete("${root}/mall/deleteProductById", {
+                params: { id: pId },
+              })
+              .then((response) => {
+                console.log(response);
+                if (response.data == "刪除成功") {
+                  getProductList();
+                }
+              })
+              .catch((error) => console.log(error));
           });
         }
       }
@@ -169,6 +179,5 @@ prefix="c"%>
         document.getElementsByClassName("page")[0].innerHTML = outputString;
       }
     </script>
-    <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
   </body>
 </html>
