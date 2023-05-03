@@ -6,4 +6,5 @@ import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 
 public interface ProductDAO extends JpaRepository<Product, Integer> {
 
+	Product findByProductName(String productName);
 }

@@ -15,6 +15,7 @@ public class ShoppingCartController {
 	@Autowired
 	ShoppingCartService scService;
 
+	// 依照商品ID及會員ID將商品加入購物車
 	@GetMapping("/insertShoppingCart")
 	public void insertShoppingCart(@RequestParam Integer productId, @RequestParam Integer memberId) {
 		scService.insertShoppingCart(productId, memberId);
