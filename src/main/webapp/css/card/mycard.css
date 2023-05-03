@@ -1,6 +1,4 @@
-.cardListButton {
-    position: relative;
-}
+
 
 .mycardContainer {
     position: relative;
@@ -32,4 +30,19 @@ body {
 
 body::-webkit-scrollbar {
     display: none;
+}
+
+.btn-group {
+    padding: 20px;
+}
+
+a {
+    text-decoration:none;
+}
+
+.sellingCard {
+    position: absolute;
+    width: 50px;
+    top:0;
+    left: 0;
 }

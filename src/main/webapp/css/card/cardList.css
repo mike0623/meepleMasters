@@ -100,4 +100,7 @@ figure:hover figcaption {
 	justify-content: center;
 }
 
+.d-none {
+	display: none!important;
+}
 
