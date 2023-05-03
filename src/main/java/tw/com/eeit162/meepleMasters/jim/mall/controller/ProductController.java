@@ -11,6 +11,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,6 +42,15 @@ public class ProductController {
 	@ResponseBody
 	public Product findProductById(@RequestParam Integer id) {
 		return pService.findProductById(id);
+	}
+
+	// 透過商品名稱尋找商品
+	@GetMapping("/mall/findProductByProductName/{productName}")
+	@ResponseBody
+	public Product findProductByProductName(@PathVariable("productName") String productName) {
+		Product product = pService.findProductByProductName(productName);
+
+		return product;
 	}
 
 	// 新增商品

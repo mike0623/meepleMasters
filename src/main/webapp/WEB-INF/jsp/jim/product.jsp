@@ -10,7 +10,7 @@ prefix="c"%>
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
     <style>
       .gameCardDiv {
-        height: 1700px;
+        height: 1900px;
       }
     </style>
   </head>
@@ -56,10 +56,11 @@ prefix="c"%>
           </div>
         </div>
       </div>
+
       <div class="page"></div>
     </div>
     <script>
-      // 進入頁面就執行
+      // 初始化
       (function init() {
         getProductList();
       })();
@@ -73,18 +74,15 @@ prefix="c"%>
             },
           })
           .then((response) => {
-            let pList = response.data.content;
-            console.log(response.data.totalPages);
-            for (i = 1; i <= response.data.totalPages; i++) {
-              $(".page").append(
-                "<button class='pageButton'>" + i + "</button>"
-              );
-            }
-            renderPage(pList);
+            let pageInfo = response.data;
+            console.log(pageInfo.totalPages);
+
+            renderProduct(pageInfo.content);
+            renderPageButton(pageInfo);
           });
       }
-
-      function renderPage(pList) {
+      // 渲染商品列表
+      function renderProduct(pList) {
         let outputString = "";
         for (let p of pList) {
           outputString += '<div class="col-4 d-flex align-items-stretch">';
@@ -105,7 +103,7 @@ prefix="c"%>
           outputString += `<li>\${p.productMinPlayer}~\${p.productMaxPlayer}</li>`;
           outputString += `<li>\${p.productDifficulty}</li>`;
           outputString += "<li>";
-          outputString += `<button class="cartbutton" value="\${p.productId}">加入購物車</button>`;
+          outputString += `<button class="cartButton" value="\${p.productId}">加入購物車</button>`;
           outputString += "</li>";
           outputString += "<li>";
           outputString += `<button class="deleteButton" value="\${p.productId}">刪除商品</button>`;
@@ -115,9 +113,9 @@ prefix="c"%>
         $("#dataHome").html(outputString);
 
         // 用AJAX將商品加入購物車
-        let product = document.getElementsByClassName("cartbutton");
-        for (i = 0; i < product.length; i++) {
-          product[i].addEventListener("click", function () {
+        let cart = document.getElementsByClassName("cartButton");
+        for (i = 0; i < cart.length; i++) {
+          cart[i].addEventListener("click", function () {
             console.log(this.value);
             let pId = this.value;
             let mId = 1;
@@ -132,8 +130,45 @@ prefix="c"%>
               .catch((error) => console.log(error), alert("新增失敗"));
           });
         }
+
+        //
+        let deleteButton = document.getElementsByClassName("deleteButton");
+        for (i = 0; i < deleteButton.length; i++) {
+          deleteButton[i].addEventListener("click", function () {
+            console.log(this.value);
+            let pId = this.value;
+
+            axios.delete("${root}/mall/deleteProductById", { params: {} });
+          });
+        }
+      }
+
+      // 渲染分頁按鈕
+      function renderPageButton(pageInfo) {
+        let outputString = "";
+        outputString += `<ul class="pagination justify-content-center">`;
+        // 在class上加上不可點擊
+        let disabled = pageInfo.number == 0 ? "disabled" : "";
+        outputString += `<li class="page-item ${disabled}">`;
+        outputString += `<button class="page-link">＜</button>`;
+        outputString += `</li>`;
+
+        for (i = 1; i <= pageInfo.totalPages; i++) {
+          // 在class上加上可以點擊
+          let active = i == pageInfo.number + 1 ? "active" : "";
+          outputString += `<li class="page-item ${active}"><button class="page-link">${i}</button></li>`;
+        }
+
+        disabled = pageInfo.number == pageInfo.totalPages - 1 ? "disabled" : "";
+        outputString += `<li class="page-item ${disabled}">`;
+
+        outputString += `<button class="page-link">＞</button>`;
+
+        outputString += `</li>`;
+        outputString += `</ul>`;
+        document.getElementsByClassName("page")[0].innerHTML = outputString;
       }
     </script>
-    <!-- <jsp:include page="/WEB-INF/jsp/include/footer.jsp" /> -->
+    <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
   </body>
 </html>
