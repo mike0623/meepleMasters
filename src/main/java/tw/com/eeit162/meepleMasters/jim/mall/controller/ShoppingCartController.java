@@ -13,7 +13,7 @@ import tw.com.eeit162.meepleMasters.jim.mall.service.ShoppingCartService;
 public class ShoppingCartController {
 
 	@Autowired
-	ShoppingCartService scService;
+	private ShoppingCartService scService;
 
 	// 依照商品ID及會員ID將商品加入購物車
 	@GetMapping("/shoppingCart/addShoppingCart")
