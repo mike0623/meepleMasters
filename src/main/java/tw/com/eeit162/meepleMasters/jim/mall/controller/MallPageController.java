@@ -33,4 +33,9 @@ public class MallPageController {
 
 		return "jim/updateProduct";
 	}
+
+	@GetMapping("/mall/adminProduct")
+	public String adminProduct() {
+		return "jim/adminProduct";
+	}
 }

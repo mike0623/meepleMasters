@@ -15,7 +15,6 @@ prefix="form"%>
     <div class="bodyContainer">
       <h1>更新商品</h1>
       <form
-        id="updateForm"
         action="${root}/mall/updateProduct"
         method="post"
         enctype="multipart/form-data"
@@ -23,17 +22,11 @@ prefix="form"%>
         <input type="hidden" value="${product.productId}" name="productId" />
         <input type="hidden" value="${product.addedTime}" name="addedTime" />
         <label for="productName">商品名稱:</label>
-        <input
-          type="text"
-          id="productName"
-          name="productName"
-          value="${product.productName}"
-        />
+        <input type="text" name="productName" value="${product.productName}" />
         <br />
         <label for="productPrice">商品價格:</label>
         <input
           type="number"
-          id="productPrice"
           name="productPrice"
           min="0"
           value="${product.productPrice}"
@@ -42,7 +35,6 @@ prefix="form"%>
         <label for="productDescription">商品描述:</label>
         <input
           type="text"
-          id="productDescription"
           name="productDescription"
           value="${product.productDescription}"
         />
@@ -50,7 +42,6 @@ prefix="form"%>
         <label for="productPlayTime">遊玩時間:</label>
         <input
           type="text"
-          id="productPlayTime"
           name="productPlayTime"
           value="${product.productPlayTime}"
         />
@@ -58,7 +49,6 @@ prefix="form"%>
         <label for="productMaxPlayer">建議最多遊玩人數:</label>
         <input
           type="number"
-          id="productMaxPlayer"
           name="productMaxPlayer"
           min="2"
           value="${product.productMaxPlayer}"
@@ -67,7 +57,6 @@ prefix="form"%>
         <label for="productMinPlayer">建議最少遊玩人數:</label>
         <input
           type="number"
-          id="productMinPlayer"
           name="productMinPlayer"
           min="1"
           value="${product.productMinPlayer}"
@@ -76,18 +65,12 @@ prefix="form"%>
         <label for="productDifficulty">上手難度:</label>
         <input
           type="text"
-          id="productDifficulty"
           name="productDifficulty"
           value="${product.productDifficulty}"
         />
         <br />
         <label for="productImg">商品圖片:</label>
-        <input
-          type="file"
-          name="pImg"
-          id="productImg"
-          src="${root}/mall/getPhoto?pId=${product.productId}"
-        />
+        <input type="file" name="pImg" id="productImg" />
         <br />
         <button>更新</button>
         <img
