@@ -12,7 +12,7 @@ public class ShoppingCartService {
 	@Autowired
 	ShoppingCartDAO scDAO;
 
-	public ShoppingCart insertShoppingCart(Integer productId, Integer memberId) {
+	public ShoppingCart addShoppingCart(Integer productId, Integer memberId) {
 
 		ShoppingCart shoppingCartItem = new ShoppingCart();
 

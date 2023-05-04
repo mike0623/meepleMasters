@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
@@ -21,7 +20,7 @@ public class ProductService {
 
 	public Page<Product> findAllProduct(Integer page, Integer count) {
 
-		PageRequest pageRequest = PageRequest.of(page - 1, count, Sort.Direction.ASC, "productId");
+		PageRequest pageRequest = PageRequest.of(page - 1, count);
 
 		Page<Product> productPage = pDAO.findAll(pageRequest);
 
@@ -33,6 +32,15 @@ public class ProductService {
 
 		if (op.isPresent()) {
 			return op.get();
+		}
+		return null;
+	}
+
+	public Product findProductByProductName(String productName) {
+		Product product = pDAO.findByProductName(productName);
+
+		if (product != null) {
+			return product;
 		}
 		return null;
 	}
