@@ -83,24 +83,25 @@ public class ProductController {
 	@PostMapping("/mall/updateProduct")
 	public String updateProductById(@ModelAttribute Product p, @RequestParam(required = false) MultipartFile pImg)
 			throws IOException {
-		if (pImg.getBytes().length != 0) {
+		Integer productId = p.getProductId();
+		if (!pImg.isEmpty()) {
 			try {
-				System.out.println(pImg.getBytes());
 				BufferedInputStream bis = new BufferedInputStream(pImg.getInputStream());
 				p.setProductImg(bis.readAllBytes());
 				bis.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		} else {
+			byte[] productImg = pService.findProductById(productId).getProductImg();
+			p.setProductImg(productImg);
 		}
-		Integer productId = p.getProductId();
+		pService.updateProductById(p);
 
-		if (productId != null) {
-			pService.updateProductById(p);
-		}
 		return "redirect:/mall/product";
 	}
 
+	// 取得圖片
 	@GetMapping("/mall/getPhoto")
 	@ResponseBody
 	public byte[] getProductPhoto(@RequestParam Integer pId) throws IOException {

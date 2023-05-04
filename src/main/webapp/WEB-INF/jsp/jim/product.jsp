@@ -87,23 +87,31 @@ pageEncoding="UTF-8"%>
           outputString += `<div class="card-header">\${p.productName}</div>`;
           outputString += '<div class="card-body">';
           outputString += `<h3 class="title">\${p.productPrice}元</h3>`;
-          outputString += "</div>";
-          outputString += '<div class="card-footer">';
-          outputString += '<div class="text">';
+
           outputString += "<ul>";
           outputString += `<li>\${p.addedTime}</li>`;
           outputString += `<li>\${p.productDescription}</li>`;
           outputString += `<li>\${p.productPlayTime}</li>`;
           outputString += `<li>\${p.productMinPlayer}~\${p.productMaxPlayer}</li>`;
           outputString += `<li>\${p.productDifficulty}</li>`;
+          outputString += "</ul>";
+
+          outputString += "</div>";
+          outputString += '<div class="card-footer">';
+          outputString += '<div class="text">';
+          outputString += "<ul>";
           outputString += "<li>";
           outputString += `<button class="cartButton" value="\${p.productId}">加入購物車</button>`;
+          outputString += "</li>";
+          outputString += "<li>";
+          outputString += `<button class="faviroteButton" value="\${p.productId}">加入最愛</button>`;
           outputString += "</li>";
           outputString += "<li>";
           outputString += `<button class="deleteButton" value="\${p.productId}">刪除商品</button>`;
           outputString += "</li>";
           outputString += "<li>";
-          outputString += "<form action='${root}/mall/updateProduct' method='GET'>";
+          outputString +=
+            "<form action='${root}/mall/updateProduct' method='GET'>";
           outputString += `<button class="updateButton" type='submit'>更新商品</button>`;
           outputString += `<input type='hidden' name='id' value='\${p.productId}'>`;
           outputString += "</form>";
@@ -120,13 +128,42 @@ pageEncoding="UTF-8"%>
             let pId = this.value;
             let mId = 1;
             axios
-              .get("${root}/shoppingCart/insertShoppingCart", {
+              .get("${root}/shoppingCart/addShoppingCart", {
                 params: {
                   productId: pId,
                   memberId: mId,
                 },
               })
-              .then((response) => console.log(response))
+              .then((response) => {
+                console.log(response);
+                if (response.status == 200) {
+                  alert("加入成功");
+                }
+              })
+              .catch((error) => console.log(error));
+          });
+        }
+
+        // 用AJAX將商品加入最愛
+        let faviroteButton = document.getElementsByClassName("faviroteButton");
+        for (i = 0; i < faviroteButton.length; i++) {
+          faviroteButton[i].addEventListener("click", function () {
+            console.log(this.value);
+            let pId = this.value;
+            let mId = 1;
+            axios
+              .get("${root}/favoriteGame/addFavoriteGame", {
+                params: {
+                  productId: pId,
+                  memberId: mId,
+                },
+              })
+              .then((response) => {
+                console.log(response);
+                if (response.status == 200) {
+                  alert("加入成功");
+                }
+              })
               .catch((error) => console.log(error));
           });
         }
@@ -143,7 +180,6 @@ pageEncoding="UTF-8"%>
                 params: { id: pId },
               })
               .then((response) => {
-                console.log(response);
                 if (response.data == "刪除成功") {
                   getProductList();
                 }
