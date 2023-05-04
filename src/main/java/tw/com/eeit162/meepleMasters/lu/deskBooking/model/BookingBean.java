@@ -41,7 +41,19 @@ public class BookingBean {
 	
 	@Column(name = "bookTime")
 	private String bookTime;
-
+	
+	
+	public BookingBean() {
+		
+	}
+	
+	public void onCreate() {
+		if (createdAt == null) {
+			createdAt = new Date();
+		}
+	}
+	
+	
 	public Integer getDeskId() {
 		return deskId;
 	}
