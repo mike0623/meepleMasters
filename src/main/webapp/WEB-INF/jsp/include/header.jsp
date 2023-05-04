@@ -18,7 +18,7 @@
             <nav role="navigation">
                 <ul>
                     <li>
-                        <a href="/">遊戲列表</a>
+                        <a href="${root}/mall/product">遊戲列表</a>
                     </li>
                     <li>
                         <a href="${root}" aria-disabled="true"> 卡片收藏</a>

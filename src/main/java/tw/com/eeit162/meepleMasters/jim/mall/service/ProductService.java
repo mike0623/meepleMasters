@@ -37,6 +37,15 @@ public class ProductService {
 		return null;
 	}
 
+	public Product findProductByProductName(String productName) {
+		Product product = pDAO.findByProductName(productName);
+
+		if (product != null) {
+			return product;
+		}
+		return null;
+	}
+
 	public Product addProduct(Product p) {
 		return pDAO.save(p);
 	}

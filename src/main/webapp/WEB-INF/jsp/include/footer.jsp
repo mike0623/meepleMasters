@@ -21,14 +21,14 @@
             
             <div class="container p-4 pb-0" style="height: 80px;">
                 <section class="">
-                <c:if test="${member == null}">
                     <p class="d-flex justify-content-center align-items-center">
+                <c:if test="${member == null}">
                         <span class="me-3">免費註冊</span>
                         <button type="button" class="btn btn-outline-light btn-rounded">
                             登入！
                         </button>
-                    </p>
                 </c:if>
+                    </p>
                 </section>
             </div>
             <!-- Grid container -->

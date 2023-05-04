@@ -1,89 +1,219 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <title>${webName}</title>
+    <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
     <jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
-    <style>
-      .container {
-        top: 75px;
-        position: relative;
-        height: 600px;
-      }
-    </style>
   </head>
   <body>
     <jsp:include page="/WEB-INF/jsp/include/header.jsp" />
-    <div class="container">
-      <h1>商品列表</h1>
-      <hr />
-      <table>
-        <thead>
-          <tr>
-            <th>商品名稱</th>
-            <th>商品價格</th>
-            <th>上架日期</th>
-            <th>商品描述</th>
-            <th>遊玩時間</th>
-            <th>建議人數</th>
-            <th>上手難度</th>
-            <th>商品圖片</th>
-          </tr>
-        </thead>
-        <tbody>
-          <c:forEach items="${productPage.content}" var="product">
-            <tr>
-              <td>${product.productName}</td>
-              <td>${product.productPrice}</td>
-              <td>${product.addedTime}</td>
-              <td>${product.productDescription}</td>
-              <td>${product.productPlayTime}</td>
-              <td>${product.productMinPlayer}~${product.productMaxPlayer}</td>
-              <td>${product.productDifficulty}</td>
-              <td>${product.productImg}</td>
-              <td>
-                <button class="cartbutton" value="${product.productId}">
-                  加入購物車
-                </button>
-              </td>
-            </tr>
-          </c:forEach>
-        </tbody>
-      </table>
-      <c:forEach var="number" begin="1" step="1" end="${productPage.totalPages}">
-        <c:choose>
-          <c:when test="${productPage.number+1 != number}">
-            <a href="${root}/mall/productList?page=${number}">${number}</a>
-          </c:when>
-          <c:otherwise> ${number} </c:otherwise>
-        </c:choose>
-      </c:forEach>
-    </div>
-    <script>
-      let product = document.getElementsByClassName("cartbutton");
+    <div class="bodyContainer gameCardDiv">
+      <div class="gameListTitle">
+        遊戲列表
+        <div class="link-top"></div>
+      </div>
 
-      for (i = 0; i < product.length; i++) {
-        product[i].addEventListener("click", function () {
-          console.log(this.value);
-          let pId = this.value;
-          let mId = 123;
-          axios
-            .get(
-              "http://localhost:8080/meeple-masters/shoppingCart/insertShoppingCart",
-              {
+      <div class="row px-4 pt-4 justify-content-center" id="dataHome">
+        <div class="col-3 d-flex align-items-stretch">
+          <div class="card">
+            <div class="pic">
+              <img src="https://picsum.photos/300/?random=10" />
+            </div>
+            <div class="card-header">${product.productName}</div>
+
+            <div class="card-body">
+              <h3 class="title">${product.productPrice}</h3>
+            </div>
+
+            <div class="card-footer">
+              <div class="text">
+                <ul>
+                  <li>${product.addedTime}</li>
+                  <li>${product.productDescription}</li>
+                  <li>${product.productPlayTime}</li>
+                  <li>
+                    ${product.productMinPlayer}~${product.productMaxPlayer}
+                  </li>
+                  <li>${product.productDifficulty}</li>
+                  <li>
+                    <button class="cartbutton" value="${product.productId}">
+                      加入購物車
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page"></div>
+    </div>
+    <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
+    <script>
+      // 初始化
+      (function init() {
+        getProductList();
+      })();
+      // 透過AJAX取得頁面資料
+      function getProductList(page, count) {
+        axios
+          .get("${root}/mall/productList", {
+            params: {
+              page: page,
+              count: count,
+            },
+          })
+          .then((response) => {
+            let pageInfo = response.data;
+            console.log(pageInfo.totalPages);
+
+            renderProduct(pageInfo.content);
+            renderPageButton(pageInfo);
+          });
+      }
+      // 渲染商品列表
+      function renderProduct(pList) {
+        let outputString = "";
+        for (let p of pList) {
+          outputString += '<div class="col-4 d-flex align-items-stretch">';
+          outputString += '<div class="card">';
+          outputString += '<div class="pic">';
+          outputString += `<img src="${root}/mall/getPhoto?pId=\${p.productId}">`;
+          outputString += "</div>";
+          outputString += `<div class="card-header">\${p.productName}</div>`;
+          outputString += '<div class="card-body">';
+          outputString += `<h3 class="title">\${p.productPrice}元</h3>`;
+
+          outputString += "<ul>";
+          outputString += `<li>\${p.addedTime}</li>`;
+          outputString += `<li>\${p.productDescription}</li>`;
+          outputString += `<li>\${p.productPlayTime}</li>`;
+          outputString += `<li>\${p.productMinPlayer}~\${p.productMaxPlayer}</li>`;
+          outputString += `<li>\${p.productDifficulty}</li>`;
+          outputString += "</ul>";
+
+          outputString += "</div>";
+          outputString += '<div class="card-footer">';
+          outputString += '<div class="text">';
+          outputString += "<ul>";
+          outputString += "<li>";
+          outputString += `<button class="cartButton" value="\${p.productId}">加入購物車</button>`;
+          outputString += "</li>";
+          outputString += "<li>";
+          outputString += `<button class="faviroteButton" value="\${p.productId}">加入最愛</button>`;
+          outputString += "</li>";
+          outputString += "<li>";
+          outputString += `<button class="deleteButton" value="\${p.productId}">刪除商品</button>`;
+          outputString += "</li>";
+          outputString += "<li>";
+          outputString +=
+            "<form action='${root}/mall/updateProduct' method='GET'>";
+          outputString += `<button class="updateButton" type='submit'>更新商品</button>`;
+          outputString += `<input type='hidden' name='id' value='\${p.productId}'>`;
+          outputString += "</form>";
+          outputString += "</li>";
+          outputString += "</ul></div></div></div></div>";
+        }
+        $("#dataHome").html(outputString);
+
+        // 用AJAX將商品加入購物車
+        let cartButton = document.getElementsByClassName("cartButton");
+        for (i = 0; i < cartButton.length; i++) {
+          cartButton[i].addEventListener("click", function () {
+            console.log(this.value);
+            let pId = this.value;
+            let mId = 1;
+            axios
+              .get("${root}/shoppingCart/addShoppingCart", {
                 params: {
                   productId: pId,
                   memberId: mId,
                 },
-              }
-            )
-            .then((response) => console.log(response))
-            .catch((error) => console.log(error));
-        });
+              })
+              .then((response) => {
+                console.log(response);
+                if (response.status == 200) {
+                  alert("加入成功");
+                }
+              })
+              .catch((error) => console.log(error));
+          });
+        }
+
+        // 用AJAX將商品加入最愛
+        let faviroteButton = document.getElementsByClassName("faviroteButton");
+        for (i = 0; i < faviroteButton.length; i++) {
+          faviroteButton[i].addEventListener("click", function () {
+            console.log(this.value);
+            let pId = this.value;
+            let mId = 1;
+            axios
+              .get("${root}/favoriteGame/addFavoriteGame", {
+                params: {
+                  productId: pId,
+                  memberId: mId,
+                },
+              })
+              .then((response) => {
+                console.log(response);
+                if (response.status == 200) {
+                  alert("加入成功");
+                }
+              })
+              .catch((error) => console.log(error));
+          });
+        }
+
+        // 用AJAX透過ID刪除資料
+        let deleteButton = document.getElementsByClassName("deleteButton");
+        for (i = 0; i < deleteButton.length; i++) {
+          deleteButton[i].addEventListener("click", function () {
+            console.log(this.value);
+            let pId = this.value;
+
+            axios
+              .delete("${root}/mall/deleteProductById", {
+                params: { id: pId },
+              })
+              .then((response) => {
+                if (response.data == "刪除成功") {
+                  getProductList();
+                }
+              })
+              .catch((error) => console.log(error));
+          });
+        }
+      }
+
+      // 渲染分頁按鈕
+      function renderPageButton(pageInfo) {
+        let outputString = "";
+        outputString += `<ul class="pagination justify-content-center">`;
+        // 在class上加上不可點擊
+        let disabled = pageInfo.number == 0 ? "disabled" : "";
+        outputString += `<li class="page-item ${disabled}">`;
+        outputString += `<button class="page-link">＜</button>`;
+        outputString += `</li>`;
+
+        for (i = 1; i <= pageInfo.totalPages; i++) {
+          // 在class上加上可以點擊
+          let active = i == pageInfo.number + 1 ? "active" : "";
+          outputString += `<li class="page-item ${active}"><button class="page-link">${i}</button></li>`;
+        }
+
+        disabled = pageInfo.number == pageInfo.totalPages - 1 ? "disabled" : "";
+        outputString += `<li class="page-item ${disabled}">`;
+
+        outputString += `<button class="page-link">＞</button>`;
+
+        outputString += `</li>`;
+        outputString += `</ul>`;
+        document.getElementsByClassName("page")[0].innerHTML = outputString;
       }
     </script>
-    <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
   </body>
 </html>
