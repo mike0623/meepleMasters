@@ -1,5 +1,7 @@
 package tw.com.eeit162.meepleMasters.jim.mall.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +23,7 @@ public class FavoriteGameService {
 		return fgDAO.save(favoriteGame);
 	}
 
+	public List<FavoriteGame> findFavoriteGameList(Integer memberId) {
+		return fgDAO.findByFkMemberId(memberId);
+	}
 }

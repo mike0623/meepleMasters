@@ -49,17 +49,17 @@ pageEncoding="UTF-8"%>
           </div>
         </div>
       </div>
-
-      <div class="page"></div>
+      <div class="pageButton"></div>
     </div>
     <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
     <script>
       // 初始化
+      let pageButton = document.getElementsByClassName("pageButton")[0];
       (function init() {
         getProductList();
       })();
       // 透過AJAX取得頁面資料
-      function getProductList(page, count) {
+      function getProductList(page = 1, count = 6) {
         axios
           .get("${root}/mall/productList", {
             params: {
@@ -68,11 +68,8 @@ pageEncoding="UTF-8"%>
             },
           })
           .then((response) => {
-            let pageInfo = response.data;
-            console.log(pageInfo.totalPages);
-
-            renderProduct(pageInfo.content);
-            renderPageButton(pageInfo);
+            renderProduct(response.data.content);
+            renderPageButton(response.data);
           });
       }
       // 渲染商品列表
@@ -87,7 +84,6 @@ pageEncoding="UTF-8"%>
           outputString += `<div class="card-header">\${p.productName}</div>`;
           outputString += '<div class="card-body">';
           outputString += `<h3 class="title">\${p.productPrice}元</h3>`;
-
           outputString += "<ul>";
           outputString += `<li>\${p.addedTime}</li>`;
           outputString += `<li>\${p.productDescription}</li>`;
@@ -95,7 +91,6 @@ pageEncoding="UTF-8"%>
           outputString += `<li>\${p.productMinPlayer}~\${p.productMaxPlayer}</li>`;
           outputString += `<li>\${p.productDifficulty}</li>`;
           outputString += "</ul>";
-
           outputString += "</div>";
           outputString += '<div class="card-footer">';
           outputString += '<div class="text">';
@@ -106,27 +101,22 @@ pageEncoding="UTF-8"%>
           outputString += "<li>";
           outputString += `<button class="faviroteButton" value="\${p.productId}">加入最愛</button>`;
           outputString += "</li>";
-          outputString += "<li>";
-          outputString += `<button class="deleteButton" value="\${p.productId}">刪除商品</button>`;
-          outputString += "</li>";
-          outputString += "<li>";
-          outputString +=
-            "<form action='${root}/mall/updateProduct' method='GET'>";
-          outputString += `<button class="updateButton" type='submit'>更新商品</button>`;
-          outputString += `<input type='hidden' name='id' value='\${p.productId}'>`;
-          outputString += "</form>";
-          outputString += "</li>";
+
           outputString += "</ul></div></div></div></div>";
         }
         $("#dataHome").html(outputString);
 
-        // 用AJAX將商品加入購物車
+        addCartButton();
+        addFaviroteButton();
+      }
+
+      // 用AJAX將商品加入購物車
+      function addCartButton() {
         let cartButton = document.getElementsByClassName("cartButton");
         for (i = 0; i < cartButton.length; i++) {
           cartButton[i].addEventListener("click", function () {
-            console.log(this.value);
             let pId = this.value;
-            let mId = 1;
+            let mId = "${member.memberId}";
             axios
               .get("${root}/shoppingCart/addShoppingCart", {
                 params: {
@@ -135,7 +125,6 @@ pageEncoding="UTF-8"%>
                 },
               })
               .then((response) => {
-                console.log(response);
                 if (response.status == 200) {
                   alert("加入成功");
                 }
@@ -143,14 +132,15 @@ pageEncoding="UTF-8"%>
               .catch((error) => console.log(error));
           });
         }
+      }
 
-        // 用AJAX將商品加入最愛
+      // 用AJAX將商品加入最愛
+      function addFaviroteButton() {
         let faviroteButton = document.getElementsByClassName("faviroteButton");
         for (i = 0; i < faviroteButton.length; i++) {
           faviroteButton[i].addEventListener("click", function () {
-            console.log(this.value);
             let pId = this.value;
-            let mId = 1;
+            let mId = "${member.memberId}";
             axios
               .get("${root}/favoriteGame/addFavoriteGame", {
                 params: {
@@ -159,29 +149,8 @@ pageEncoding="UTF-8"%>
                 },
               })
               .then((response) => {
-                console.log(response);
                 if (response.status == 200) {
                   alert("加入成功");
-                }
-              })
-              .catch((error) => console.log(error));
-          });
-        }
-
-        // 用AJAX透過ID刪除資料
-        let deleteButton = document.getElementsByClassName("deleteButton");
-        for (i = 0; i < deleteButton.length; i++) {
-          deleteButton[i].addEventListener("click", function () {
-            console.log(this.value);
-            let pId = this.value;
-
-            axios
-              .delete("${root}/mall/deleteProductById", {
-                params: { id: pId },
-              })
-              .then((response) => {
-                if (response.data == "刪除成功") {
-                  getProductList();
                 }
               })
               .catch((error) => console.log(error));
@@ -193,27 +162,46 @@ pageEncoding="UTF-8"%>
       function renderPageButton(pageInfo) {
         let outputString = "";
         outputString += `<ul class="pagination justify-content-center">`;
-        // 在class上加上不可點擊
         let disabled = pageInfo.number == 0 ? "disabled" : "";
-        outputString += `<li class="page-item ${disabled}">`;
+        outputString += `<li class="page-item \${disabled}">`;
         outputString += `<button class="page-link">＜</button>`;
         outputString += `</li>`;
 
-        for (i = 1; i <= pageInfo.totalPages; i++) {
-          // 在class上加上可以點擊
+        for (let i = 1; i <= pageInfo.totalPages; i++) {
           let active = i == pageInfo.number + 1 ? "active" : "";
-          outputString += `<li class="page-item ${active}"><button class="page-link">${i}</button></li>`;
+          outputString += `<li class="page-item \${active}"><button class="page-link">\${i}</button></li>`;
         }
 
         disabled = pageInfo.number == pageInfo.totalPages - 1 ? "disabled" : "";
-        outputString += `<li class="page-item ${disabled}">`;
+        outputString += `<li class="page-item \${disabled}">`;
 
         outputString += `<button class="page-link">＞</button>`;
 
         outputString += `</li>`;
         outputString += `</ul>`;
-        document.getElementsByClassName("page")[0].innerHTML = outputString;
+        pageButton.innerHTML = outputString;
       }
+
+      // 分頁點擊換頁
+      pageButton.addEventListener("click", function (e) {
+        if (e.target.tagName != "BUTTON") {
+          return;
+        }
+        let page = e.target.innerText;
+        page =
+          page == "＜"
+            ? parseInt(
+                pageButton.getElementsByClassName("active")[0].innerText
+              ) - 1
+            : page;
+        page =
+          page == "＞"
+            ? parseInt(
+                pageButton.getElementsByClassName("active")[0].innerText
+              ) + 1
+            : page;
+        getProductList(page, 6);
+      });
     </script>
   </body>
 </html>

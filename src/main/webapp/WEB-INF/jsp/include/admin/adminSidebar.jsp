@@ -72,7 +72,7 @@
 				data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<h6 class="collapse-header">商品管理系統</h6>
-					<a class="collapse-item" href="/">商品管理</a> <a class="collapse-item"
+					<a class="collapse-item" href="${root}/mall/adminProduct">商品管理</a> <a class="collapse-item"
 						href="/">訂單管理</a>
 				</div>
 			</div></li>

@@ -1,5 +1,7 @@
 package tw.com.eeit162.meepleMasters.jim.mall.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,4 +23,12 @@ public class FavoriteGameController {
 		return fgService.addFavoriteGame(productId, memberId);
 	}
 
+	@GetMapping("/favoriteGame/favoriteGameList")
+	@ResponseBody
+	public List<FavoriteGame> favoriteGameList(@RequestParam Integer memberId) {
+		List<FavoriteGame> fgList = fgService.findFavoriteGameList(memberId);
+
+
+		return fgList;
+	}
 }
