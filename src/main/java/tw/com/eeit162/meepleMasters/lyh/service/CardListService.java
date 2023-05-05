@@ -27,22 +27,13 @@ public class CardListService {
 	public CardOwned insertCardToList(Integer memberId) {
 
 		int cardId = randomCardId();
-//		System.out.println(cardId);
-
-		Optional<Card> option = cDao.findById(cardId);
-
-		if (option.isEmpty()) {
-			return null;
-		}
-
-//		Card card = option.get();
 
 		CardOwned cO = new CardOwned();
 
 		cO.setFkCardId(cardId);
 		cO.setFkMemberId(memberId);
 		cO.setOwnedTime(new Date());
-		cO.setCardStatus(3);
+		cO.setCardStatus(1);
 
 		CardOwned newCard = cODao.save(cO);
 
@@ -111,7 +102,7 @@ public class CardListService {
 	public int randomCardId() {
 
 		// 設定每種卡片的機率（以百分比表示）
-		int[] cardProbabilities = { 2, 6, 10, 22, 60 };
+		int[] cardProbabilities = {2, 6, 10, 22, 60};
 
 		// 計算所有卡片的總機率
 		int totalProbability = 0;
@@ -123,7 +114,7 @@ public class CardListService {
 
 		// 生成一個隨機數，表示抽到的卡片星數
 		Random random = new Random();
-		int randomNumber = random.nextInt(totalProbability);
+		int randomNumber = random.nextInt(totalProbability-1)+1;
 		System.out.println("randomNumber: " + randomNumber);
 
 		int cumulativeProbability = 0;

@@ -1,12 +1,9 @@
-
-
 .mycardContainer {
-    position: relative;
-    top: 75px;
+
     text-align: center;
     width: 1000px;
     margin: auto;
-    padding-bottom: 150px;
+
 }
 
 .mycardTitle {
@@ -18,7 +15,7 @@
     margin: 20px;
 }
 
-body {
+html, body {
 	margin: 0;
 	padding: 0;
 	display: grid;
@@ -26,6 +23,7 @@ body {
 	font-family: 微軟正黑體;
 	height: 100%;
     background-color: #F0EBE2;
+    padding-right: 0 !important;
 }
 
 body::-webkit-scrollbar {
@@ -45,4 +43,69 @@ a {
     width: 50px;
     top:0;
     left: 0;
+}
+
+.swal-gift {
+    width: 350px !important;
+}
+
+.newCardContainer {
+    width: 500px;
+    height: 500px;
+    background-color: #dfa661;
+    text-align: center;
+    padding: 50px;
+    color: #e0ccc5;
+}
+
+.newCardImg {
+    width: 200px;
+}
+.newCardTitle {
+    margin: 20px;
+    font-size: xx-large;
+    font-weight: 600;
+}
+
+.ribbonAnime {
+    position: absolute;
+    top: 0;
+    left: 50px;
+}
+
+.newIcon {
+    position: absolute;
+    top: -20px;
+    left: 20px;
+    width: 100px;
+}
+
+.newCardImgDiv {
+    position: relative;
+    margin: auto;
+    width: 300px;
+}
+
+.cardListContainer {
+    position: relative;
+    top: 75px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 150px;
+    background-color: #F0EBE2;
+}
+
+body {
+    display: grid;
+    grid-template-rows: 1fr auto;
+}
+
+.swal2-content {
+    max-height: 80vh;  /* 最大高度 */
+    overflow: auto;    /* 滾動條 */
+}
+
+.swal-newCard {
+    width: 600px !important;
 }
