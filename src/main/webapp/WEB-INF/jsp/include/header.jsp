@@ -20,18 +20,25 @@
                     <li>
                         <a href="${root}/mall/product">遊戲列表</a>
                     </li>
-                    <li>
-                        <a href="${root}" aria-disabled="true"> 卡片收藏</a>
-                        <div>
-                            <ul>
-
-                                    <li><a href="${root}/card/mycard/1">我的卡片</a></li>
+                    <c:if test="${member == null }">
+                        <li>
+                            <a href="${root}/member/login" aria-disabled="true">卡片收藏</a>
+                        </li>
+                    </c:if>
+                    <c:if test="${member != null }">
+                        <li>
+                            <a href="javascript:void(0);" onclick="js_method()">卡片收藏</a>
+                            <div>
+                                <ul>
+    
+                                    <li><a href="${root}/card/mycard/${member.memberId}">我的卡片</a></li>
                                     <li><a href="#">卡片市集</a></li>
                                     <li><a href="#">收藏記錄</a></li>
-
-                            </ul>
-                        </div>
-                    </li>
+    
+                                </ul>
+                            </div>
+                        </li>
+                    </c:if>
                     <li>
                         <a href="#">遊戲討論</a>
                     </li>
