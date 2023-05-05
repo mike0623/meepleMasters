@@ -17,9 +17,9 @@ public class MailConfig {
 	private String password;
 	@Value("${mail.protocol}")
 	private String protocol;
-	@Value("{mail.smtp.auth}")
+	@Value("${mail.smtp.auth}")
 	private boolean authEnabled;
-	@Value("{mail.smtp.starttls.enable}")
+	@Value("${mail.smtp.starttls.enable}")
 	private boolean starttlsEnabled;
 	
 	public String getHost() {
