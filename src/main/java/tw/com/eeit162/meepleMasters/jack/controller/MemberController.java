@@ -48,7 +48,7 @@ public class MemberController {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@PostMapping("/member/createMember")
+	@PostMapping("/createMember")
 	public boolean createMember(@RequestBody String body) throws IOException {
 		JSONObject newMember = new JSONObject(body);
 		Member email = mService.findMemberByEmail(newMember.getString("memberEmail")) ;
@@ -60,14 +60,12 @@ public class MemberController {
 		return false;
 	}
 	
-//	public String memberAuth() {
-//		
-//		mService.memberAuth();
-//		
-//		return "";
-//		
-//	}
-	
+	@GetMapping("/auth/{token}")
+	public String activeAccount(@PathVariable("token") String token) {
+		mService.activeAccount(token);
+		return "redirect:/login";
+		
+	}
 	
 	/**
 	 * 會員登入
@@ -87,7 +85,7 @@ public class MemberController {
 			url.put("url", "/login");
 			return url.toString();
 		}
-		session.setMaxInactiveInterval(0);
+		session.setMaxInactiveInterval(-1);
 		session.setAttribute("member", optional.get());
 		if(optional.get().getMemberLevel().contentEquals("管理員")) {
 			System.out.println("管理員");
@@ -98,6 +96,8 @@ public class MemberController {
 		return url.toString();
 	}
 	
+	
+	
 	/**
 	 * 登出
 	 * @param session
@@ -105,7 +105,7 @@ public class MemberController {
 	 */
 	@GetMapping("/member/logout")
 	public String logout(HttpSession session) {
-		Member user = (Member) session.getAttribute("member");
+//		Member user = (Member) session.getAttribute("member");
 		session.invalidate();
 		
 		return "redirect:/index";
@@ -188,15 +188,17 @@ public class MemberController {
 	 * @return Http status
 	 */
 	@ResponseBody
-	@GetMapping("/member/checkMemberByEmail")
+	@GetMapping("/checkMemberByEmail")
 	public ResponseEntity<Member> checkMemberByEmail(@RequestParam("memberEmail") String memberEmail) {
 		
 		Member member = mService.findMemberByEmail(memberEmail);
 		
 		if(member != null) {
+			System.out.println("ok");
 			return new ResponseEntity<Member>(member, HttpStatus.OK);
 		}
 		
+		System.out.println("no_content");
 		return new ResponseEntity<Member>(member, HttpStatus.NO_CONTENT);
 	}
 	
