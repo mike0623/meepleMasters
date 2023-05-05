@@ -1,7 +1,5 @@
 package tw.com.eeit162.meepleMasters.lyh.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,15 +27,6 @@ public class CardListService {
 	public CardOwned insertCardToList(Integer memberId) {
 
 		int cardId = randomCardId();
-//		System.out.println(cardId);
-
-		Optional<Card> option = cDao.findById(cardId);
-
-		if (option.isEmpty()) {
-			return null;
-		}
-
-//		Card card = option.get();
 
 		CardOwned cO = new CardOwned();
 
@@ -58,9 +47,25 @@ public class CardListService {
 		if (ownedCard.isEmpty()) {
 			return null;
 		}
-
 		return ownedCard;
-
+	}
+	
+	public List<CardOwned> listCardOrderByStarDESC(Integer memberId) {
+		List<CardOwned> ownedCard = cODao.ownedCardStarOrderDESC(memberId);
+		
+		if (ownedCard.isEmpty()) {
+			return null;
+		}
+		return ownedCard;
+	}
+	
+	public List<CardOwned> listCardOrderByStarASC(Integer memberId) {
+		List<CardOwned> ownedCard = cODao.ownedCardStarOrderASC(memberId);
+		
+		if (ownedCard.isEmpty()) {
+			return null;
+		}
+		return ownedCard;
 	}
 
 	public Card findById(Integer cardId) {
@@ -97,7 +102,7 @@ public class CardListService {
 	public int randomCardId() {
 
 		// 設定每種卡片的機率（以百分比表示）
-		int[] cardProbabilities = { 2, 6, 10, 22, 60 };
+		int[] cardProbabilities = {2, 6, 10, 22, 60};
 
 		// 計算所有卡片的總機率
 		int totalProbability = 0;
@@ -109,7 +114,7 @@ public class CardListService {
 
 		// 生成一個隨機數，表示抽到的卡片星數
 		Random random = new Random();
-		int randomNumber = random.nextInt(totalProbability);
+		int randomNumber = random.nextInt(totalProbability-1)+1;
 		System.out.println("randomNumber: " + randomNumber);
 
 		int cumulativeProbability = 0;
@@ -218,11 +223,11 @@ public class CardListService {
 		return card1.get(randomNumber);
 	}
 	
-	public List<Integer> ownedCardStarOrder(String json) {
+	public List<Integer> ownedCardStar(String json) {
 		JSONObject jsonObject = new JSONObject(json);
 		int int1 = jsonObject.getInt("memberId");
 		
-		List<Object[]> ownedCard = cODao.ownedCardStarOrder(int1);
+		List<Object[]> ownedCard = cODao.ownedCardStar(int1);
 		List<Integer> list = new ArrayList<>();
 		for(Object[] o :ownedCard) {
 			System.out.println(o.length);

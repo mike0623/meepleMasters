@@ -1,6 +1,31 @@
 const email = document.querySelector("#email");
 const password = document.querySelector("#password");
 
+// admin按鈕
+document.querySelector("#admin").addEventListener("click", function () {
+    email.value = "AAA@gmail.com",
+    password.value = "1234"
+  });
+
+// member1按鈕
+document.querySelector("#member1").addEventListener("click", function () {
+    email.value = "BBB@gmail.com",
+    password.value = "1234"
+  });
+
+// member2按鈕
+document.querySelector("#member2").addEventListener("click", function () {
+    email.value = "CCC@gmail.com",
+    password.value = "1234"
+  });
+  
+  // reset按鈕
+  document.querySelector("#reset").addEventListener("click", function () {
+    email.value = "",
+    password.value = ""
+  });
+
+// login
 document.querySelector("#login").addEventListener("click",function(e){
     if(email.value ==="" || password.value ===""){
         e.preventDefault;

@@ -16,6 +16,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "product")
 public class Product implements Serializable {
@@ -33,6 +35,7 @@ public class Product implements Serializable {
 	@Column(name = "productPrice")
 	private Integer productPrice;
 
+	@JsonIgnore
 	@Column(name = "productImg")
 	private byte[] productImg;
 

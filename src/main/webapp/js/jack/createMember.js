@@ -8,15 +8,7 @@ const tel = document.querySelector("#tel");
 const address = document.querySelector("#address")
 
 const inputs = [memberName, email, password, confirmPwd, age, gender, tel, address];
-      //      let data = {
-      //     "memberName":document.querySelector('#name').value,
-      //     "memberEmail":document.querySelector('#email').value,
-      //     "memberPwd":document.querySelector('#password').value,
-      //     "memberAge":document.querySelector('#age').value,
-      //     "memberGender":document.querySelector('#gender').value,
-      //     "memberTel":document.querySelector('#tel').value,
-      //     "memberAddress":document.querySelector('#address').value
-      // };
+      
 
       document.querySelector("#member").addEventListener("click", function () {
         memberName.value = "Test",
@@ -27,6 +19,7 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
         gender.value = "男",
         tel.value = "0900111222",
         address.value = "台北市"
+        
       });
 
       document.querySelector("#reset").addEventListener("click", function () {
@@ -52,7 +45,7 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
             document.querySelector("#email-error").innerText="Please check your email format.";
             email.classList.add("is-invalid");
         }
-        axios.get("/meeple-masters/member/checkMemberByEmail?memberEmail="+email.value)
+        axios.get("/meeple-masters/checkMemberByEmail?memberEmail="+email.value)
         .then(res => {
             console.log(res)
             if (res.status == 200) {
@@ -67,10 +60,6 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
             // console.error(err); 
         })
       })
-
-    //   email.addEventListener("blur", function () {
-        
-    //   });
       
       
       password.addEventListener("blur", function () {
@@ -97,18 +86,6 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
         });
     });
 
-      // document.querySelector("#email").addEventListener("blur",function(){
-      //   console.log(document.querySelector('#email').value)
-      //   axios.get("/meeple-masters/findMemberByEmail")
-      //   .then(res => {
-      //     console.log(res)
-      //     document.querySelector("#email").classList.add("is-invalid");
-      //   })
-      //   .catch(err => {
-      //     document.querySelector("#email").classList.remove("is-invalid");
-      //   }
-      // )});
-
       document
         .querySelector("#confirm")
         .addEventListener("click", function (e) {
@@ -126,8 +103,9 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
             document.querySelector("#confirm-error").innerText="Please check your information."
             document.querySelector("#confirm").classList.add("is-invalid");
           }else {
+            $('#modal-loading').modal('show');
             axios
-              .post("/meeple-masters/member/createMember", {
+              .post("/meeple-masters/createMember", {
                 memberName: memberName.value,
                 memberEmail: email.value,
                 memberPwd: password.value,
@@ -137,8 +115,9 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
                 memberAddress: address.value === ""?null: address.value
               })
               .then((res) => {
-                console.log(res);
-                console.log(data);
+                // console.log(res);
+                // console.log(data);
+                window.location.href = root+"/login";
               })
               .catch((err) => {
                 // console.error(err);

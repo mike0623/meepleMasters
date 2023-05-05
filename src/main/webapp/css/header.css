@@ -50,6 +50,8 @@ body {
     height: 100%;
     line-height: 1.6rem;
     min-height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
 }
 
 /*NAV*/
@@ -84,6 +86,7 @@ ul {
 
 a:hover {
     color: #fff;
+    text-decoration: none;
 }
 
 header>nav>ul {
@@ -110,6 +113,7 @@ header>nav>ul>li:hover {
     background: #F3D18E;
     height: 75px;
     color: #fff;
+    text-decoration: none;
 }
 
 header>nav>ul>li a+div {
