@@ -55,14 +55,14 @@ document.querySelector("#save").addEventListener("click", function () {
 let theImg = document.querySelector("#theImg");
 let previewImg = document.querySelector("#memberImg");
 
-theImg.addEventListener("change", async function () {
+theImg.addEventListener("change", function () {
   let f = this.files[0];
   let tempSrc = URL.createObjectURL(f);
   previewImg.src = tempSrc;
 
   let fileReader = new FileReader();
   fileReader.readAsDataURL(f);
-  fileReader.onload = async function () {
+  fileReader.onload = function () {
     console.log(fileReader.result);
     const config = { headers: { "Content-Type": "application/json" } };
 
@@ -78,7 +78,7 @@ theImg.addEventListener("change", async function () {
         console.log("content after ajax: " + fileReader.result);
       })
       .catch((err) => {
-        // console.error(err);
+         console.error(err);
       });
   };
 });
