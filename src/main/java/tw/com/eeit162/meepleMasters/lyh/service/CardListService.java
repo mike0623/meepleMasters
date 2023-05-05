@@ -1,7 +1,5 @@
 package tw.com.eeit162.meepleMasters.lyh.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +42,7 @@ public class CardListService {
 		cO.setFkCardId(cardId);
 		cO.setFkMemberId(memberId);
 		cO.setOwnedTime(new Date());
-		cO.setCardStatus(1);
+		cO.setCardStatus(3);
 
 		CardOwned newCard = cODao.save(cO);
 
@@ -58,9 +56,25 @@ public class CardListService {
 		if (ownedCard.isEmpty()) {
 			return null;
 		}
-
 		return ownedCard;
-
+	}
+	
+	public List<CardOwned> listCardOrderByStarDESC(Integer memberId) {
+		List<CardOwned> ownedCard = cODao.ownedCardStarOrderDESC(memberId);
+		
+		if (ownedCard.isEmpty()) {
+			return null;
+		}
+		return ownedCard;
+	}
+	
+	public List<CardOwned> listCardOrderByStarASC(Integer memberId) {
+		List<CardOwned> ownedCard = cODao.ownedCardStarOrderASC(memberId);
+		
+		if (ownedCard.isEmpty()) {
+			return null;
+		}
+		return ownedCard;
 	}
 
 	public Card findById(Integer cardId) {
@@ -218,11 +232,11 @@ public class CardListService {
 		return card1.get(randomNumber);
 	}
 	
-	public List<Integer> ownedCardStarOrder(String json) {
+	public List<Integer> ownedCardStar(String json) {
 		JSONObject jsonObject = new JSONObject(json);
 		int int1 = jsonObject.getInt("memberId");
 		
-		List<Object[]> ownedCard = cODao.ownedCardStarOrder(int1);
+		List<Object[]> ownedCard = cODao.ownedCardStar(int1);
 		List<Integer> list = new ArrayList<>();
 		for(Object[] o :ownedCard) {
 			System.out.println(o.length);
