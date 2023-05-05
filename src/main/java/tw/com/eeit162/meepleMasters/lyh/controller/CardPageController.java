@@ -21,5 +21,10 @@ public class CardPageController {
 		return "lyh/cardReleased";
 	}
 	
+	@GetMapping("/newRelease")
+	public String newCardReleased() {
+		return "lyh/newCardRelease";
+	}
+	
 	
 }

@@ -70,5 +70,12 @@ public class CardReleasedService {
 		
 		return releaseList;
 	}
+	
+	public String updateCardStatusToSell(Integer ownedId) {
+		
+		 cODao.updateCardStatusToSell(ownedId);
+		
+		 return "";
+	}
 
 }

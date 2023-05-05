@@ -11,12 +11,16 @@
 	<title>${webName}</title>
 	<link rel="stylesheet" type="text/css" href="${root}/css/card/cardList.css">
 	<link rel="stylesheet" type="text/css" href="${root}/css/card/mycard.css">
+	<style>
+
+	</style>
+
 </head>
+
 
 <body>
 	<jsp:include page="../include/header.jsp"></jsp:include>
-	<div class="bodyContainer">
-		<div  hidden></div>
+	<div class="cardListContainer">
 		<div class="mycardContainer">
 			<div class="mycardTitle">我的卡片</div>
 			<div class="cardListButtons">
@@ -33,9 +37,11 @@
 				<ul class="dropdown-menu">
 					<li class="dropdown-item" id="order">獲得順序</li>
 					<li class="dropdown-item" id="starOrderDESC">星數　
-						<i class="fa-solid fa-arrow-down-wide-short"></i></li>
+						<i class="fa-solid fa-arrow-down-wide-short"></i>
+					</li>
 					<li class="dropdown-item" id="starOrderASC">星數　
-						<i class="fa-solid fa-arrow-up-short-wide"></i></li>
+						<i class="fa-solid fa-arrow-up-short-wide"></i>
+					</li>
 				</ul>
 			</div>
 
@@ -60,15 +66,13 @@
 					</div>
 				</c:forEach>
 			</div>
-
 		</div>
-
-		<jsp:include page="../include/footer.jsp"></jsp:include>
 	</div>
-
+	<jsp:include page="../include/footer.jsp"></jsp:include>
 
 
 	<script src="${root}/json/starcard.js"></script>
+	<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 	<script type="text/javascript">
 
 		let outputString = "<div class='cardStarTableDiv'><table class='cardStarTable'><tr><td colspan='2'>總機率</td></tr><tr><td><img src='${root}/img/lyh/star/star5.png'class='cardStarlabel'></td><td>2%</td></tr><tr><td><img src='${root}/img/lyh/star/star4.png'class='cardStarlabel'></td><td>6%</td></tr><tr><td><img src='${root}/img/lyh/star/star3.png'class='cardStarlabel'></td><td>10%</td></tr><tr><td><img src='${root}/img/lyh/star/star2.png'class='cardStarlabel'></td><td>22%</td></tr><tr><td><img src='${root}/img/lyh/star/star1.png'class='cardStarlabel'></td><td>60%</td></tr></table></div>";
@@ -113,27 +117,32 @@
 		})
 
 		$("#showCardAnime").click(function () {
-			Swal.fire({
-				imageUrl: '${root}/img/lyh/gift-box.gif',
-				imageHeight: "300px",
-				timer: '1500',
-				showCloseButton: false,
-				showConfirmButton: false,
-				customClass: 'swal-gift'
-			})
+			// Swal.fire({
+			// 	imageUrl: '${root}/img/lyh/gift-box.gif',
+			// 	imageHeight: "300px",
+			// 	timer: '1500',
+			// 	showCloseButton: false,
+			// 	showConfirmButton: false,
+			// 	customClass: 'swal-gift'
+			// })
+
+			// console.log(member)
 		})
 
 		function showCardAnime() {
 			Swal.fire({
 				imageUrl: '${root}/img/lyh/gift-box.gif',
 				imageHeight: 300,
-				timer: '1500',
 				showCloseButton: false,
 				showConfirmButton: false
 			})
+
+			setTimeout(function () {
+				Swal.close();
+			}, 3000);
 		}
 
-		$("#order").click(function(){
+		$("#order").click(function () {
 			axios.get("${root}/card/mycard/${member.memberId}/getOrder").then(function (response) {
 				console.log(response.data.cardList[0].cardId)
 
@@ -160,7 +169,7 @@
 			}).finally()
 		})
 
-		$("#starOrderDESC").click(function(){
+		$("#starOrderDESC").click(function () {
 			axios.get("${root}/card/mycard/${member.memberId}/starOrderDESC").then(function (response) {
 				console.log(response.data.cardList[0].cardId)
 
@@ -187,7 +196,7 @@
 			}).finally()
 		})
 
-		$("#starOrderASC").click(function(){
+		$("#starOrderASC").click(function () {
 			axios.get("${root}/card/mycard/${member.memberId}/starOrderASC").then(function (response) {
 				console.log(response.data.cardList[0].cardId)
 
@@ -217,18 +226,24 @@
 
 		})
 
-				
 
-		$("#drawCard").click(function(){
+
+		$("#drawCard").click(function () {
+			
+			// if (${member == null}) {
+			// 	console.log("null")
+			// }
+
+
 			let newCardString = "";
 			let isNew = false;
 			axios.post("${root}/card/getNewCard").then(response => {
 				var str = response.data.newCard;
 				var cardId = str.split("cardId=")[1].split(",")[0];
 				var cardName = str.split("cardName=")[1].split(",")[0];
-				newCardString += `<div class="container newCardContainer"><div class="newCardImgDiv"><img src="${root}/card/downloadCard/\${cardId}" class="newCardImg"><img src="${root}/img/lyh/pop_new.png" class="newIcon d-none"></div><div class="newCardTitle">\${cardName}</div><div class="ribbonAnime"><lottie-player src="https://assets2.lottiefiles.com/packages/lf20_GVUsGHgg4H.json"  background="transparent" speed="1" style="width: 500px; height: 600px;" loop autoplay></lottie-player></div></div>`;
-				
-				
+				newCardString += `<div class="container newCardContainer"><div class="newCardImgDiv"><img src="${root}/card/downloadCard/\${cardId}" class="newCardImg"><img src="${root}/img/lyh/pop_new.png" class="newIcon d-none"></div><div class="newCardTitle">\${cardName}</div><div class="ribbonAnime"><lottie-player src="${root}/json/123225-ribbon.json"  background="transparent" speed="1" style="width: 500px; height: 600px;" loop autoplay></lottie-player></div></div>`;
+
+
 				Swal.fire({
 					title: '',
 					html: newCardString,
@@ -236,19 +251,44 @@
 					showCloseButton: true,
 					focusConfirm: false,
 					background: '#dfa661',
-					confirmButtonColor: '#dfa661'
+					confirmButtonColor: '#CA7159',
+					customClass: 'swal-newCard'
 				});
 
-				if (response.data.isNew == "true") {
+				if (response.data.isNew == true) {
+					// console.log("isNew is true.");
 					$(".newIcon").removeClass("d-none");
 				}
 				console.log(response.data.isNew)
-			})
-			.catch(error => {
-				console.error(error); 
-			})
 
+				axios.get("${root}/card/mycard/${member.memberId}/getOrder").then(function (response) {
+					console.log(response.data.cardList[0].cardId)
 
+					let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
+					for (let i = 0; i < response.data.cardList.length; i++) {
+						ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+						ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.cardList[i].cardId}" class="hanafuda">`;
+						ajaxString += `<figcaption>\${response.data.cardList[i].cardName}</figcaption>`;
+						ajaxString += `</figure></div></div>`;
+					}
+
+					for (let i = 0; i < response.data.sellList.length; i++) {
+						ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+						ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.sellList[i].cardId}" class="hanafuda">`;
+						ajaxString += `<figcaption>\${response.data.sellList[i].cardName}</figcaption>`;
+						ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
+					}
+					ajaxString += `</div>`;
+
+					$(".cardContainer").remove();
+					$(".mycardContainer").append(ajaxString);
+				}).catch(function (error) {
+					console.log("排序時錯誤", error);
+				}).finally()
+			})
+				.catch(error => {
+					console.error(error);
+				})
 		})
 
 		// $("#drawCard").click(function(){

@@ -102,7 +102,7 @@ public class CardListService {
 	public int randomCardId() {
 
 		// 設定每種卡片的機率（以百分比表示）
-		int[] cardProbabilities = { 2, 6, 10, 22, 60 };
+		int[] cardProbabilities = {2, 6, 10, 22, 60};
 
 		// 計算所有卡片的總機率
 		int totalProbability = 0;
@@ -114,7 +114,7 @@ public class CardListService {
 
 		// 生成一個隨機數，表示抽到的卡片星數
 		Random random = new Random();
-		int randomNumber = random.nextInt(totalProbability);
+		int randomNumber = random.nextInt(totalProbability-1)+1;
 		System.out.println("randomNumber: " + randomNumber);
 
 		int cumulativeProbability = 0;
