@@ -235,24 +235,17 @@ public class MemberController {
 	@PutMapping("/member/updateMemberImg/{id}")
 	public ResponseEntity<byte[]> updateImgById(@PathVariable("id") Integer memberId, @RequestBody String memberImg){
 			
-//			JSONObject imgJson = new JSONObject(memberImg);
-//			String imgString = imgJson.getString("data");
-			System.out.println(memberImg);
+			  System.out.println(memberImg);
 			
 			  String encodedImg = memberImg.split(",")[1];
 			  String imgString = encodedImg.replace("\"", "");
 			  System.out.println(imgString);
 			  byte[] decodedBytes = Base64.getDecoder().decode(imgString.getBytes(StandardCharsets.UTF_8));
-//			  byte[] decode =imgString.getBytes();
 			
 			  mService.updateImg(memberId, decodedBytes);
 			  HttpHeaders headers = new HttpHeaders();
 			  headers.setContentType(MediaType.IMAGE_PNG);
 			  return new ResponseEntity<byte[]>(decodedBytes, headers, HttpStatus.OK);
-//			  return null;
-			
-			
-			
 		
 		
 	}
