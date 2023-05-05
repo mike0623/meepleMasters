@@ -15,7 +15,7 @@
 		<!-- Sidebar - Brand -->
 		<a
 			class="sidebar-brand d-flex align-items-center justify-content-center"
-			href="index.html">
+			href="${root}/">
 			<div class="sidebar-brand-icon">
 				<img src="${root}/img/favicon.png" class="iconImg">
 			</div>
