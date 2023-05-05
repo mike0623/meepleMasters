@@ -149,8 +149,12 @@ pageEncoding="UTF-8"%>
                 },
               })
               .then((response) => {
-                if (response.status == 200) {
-                  alert("加入成功");
+                console.log(response);
+                if (response.data == "like") {
+                  alert("新增成功");
+                }
+                if (response.data == "dislike") {
+                  alert("刪除");
                 }
               })
               .catch((error) => console.log(error));
