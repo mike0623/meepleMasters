@@ -73,9 +73,40 @@ include file="../include/common_link.jsp" %>
           <div class="row justify-content-center" style="margin: 20px">
             <a href="#" class="btn btn-outline-secondary">Google</a>
         </div>
-        <a href="#" class="" style="text-decoration: none; color: #8a513f"
-              >Terms of service</a
-            >
+        <a href="#" class="" style="text-decoration: none; color: #8a513f">
+          Terms of service
+        </a>
+        <div>
+
+        <button
+          class="btn btn-outline-primary btn-sm"
+          type="button"
+          id="admin"
+        >
+          admin
+        </button>
+        <button
+            class="btn btn-outline-primary btn-sm"
+            type="button"
+            id="member1"
+          >
+            Member1
+          </button>
+          <button
+            class="btn btn-outline-primary btn-sm"
+            type="button"
+            id="member2"
+          >
+            Member2
+          </button>
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            type="button"
+            id="reset"
+          >
+            Reset
+          </button>
+        </div>
         </div>
       </div>
         </form>

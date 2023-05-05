@@ -17,14 +17,19 @@ public interface MemberDao extends JpaRepository<Member, Integer> {
 	Member findMemberByEmailandPassword(String memberEmail, String memberPwd);
 	
 	@Transactional
-	@Modifying
+	@Modifying(clearAutomatically = true)
 	@Query(value="update Member set memberPwd = :memberPwd where memberId = :memberId")
 	Integer updatePasswordById(@Param(value = "memberId") Integer memberId, @Param(value = "memberPwd") String memberPwd); 
 	
 	@Transactional
-	@Modifying
+	@Modifying(clearAutomatically = true)
 	@Query(value="update Member set memberName = :memberName, memberAge = :memberAge, memberGender = :memberGender, memberTel = :memberTel, memberAddress = :memberAddress where memberId = :memberId")
 	Integer updateMemberById(@Param(value = "memberId") Integer memberId, @Param(value = "memberName") String memberName, 
 			@Param(value = "memberAge") Integer memberAge, @Param(value = "memberGender") String memberGender, 
 			@Param(value = "memberTel") String memberTel, @Param(value = "memberAddress") String memberAddress);
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value="update Member set memberImg = :memberImg where memberId = :memberId")
+	Integer updateImgById(@Param(value = "memberId") Integer memberId, @Param(value = "memberImg") byte[] memberImg);
 }

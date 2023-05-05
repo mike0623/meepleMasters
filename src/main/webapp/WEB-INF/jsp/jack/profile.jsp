@@ -19,6 +19,21 @@
 		padding-bottom: 105px;
 		height: 100%;
 	}
+	.editIcon{
+		position: absolute;
+		bottom: 0;
+		right: 10;
+	}
+	.imgLabel{
+		position: relative;
+		overflow: hidden;
+		
+	}
+	/* .imgLabel img{
+		position: absolute;
+	} */
+
+	
 
 </style>
 </head>
@@ -30,8 +45,15 @@
 				<div class="col-md-6 border-right" >
 					<div
 						class="d-flex flex-column align-items-center text-center p-3 py-5" >
-						<img class="rounded-circle mt-5" width="150px"
-							src="${root}/member/findMemberImg/${member.memberId}"/>
+						<div class="imgLabel">
+						<label for="theImg">
+							<img class="rounded-circle mt-5" width="150px" 
+							src="${root}/member/findMemberImg/${member.memberId}" id="memberImg" accept=".png, .jpg, .jpeg"/>
+							<input type="file" id="theImg" style="display: none">
+							<i class="fa-regular fa-pen-to-square editIcon"></i>
+						</label>
+						</div>
+							
                             <span class="font-weight-bold">${member.memberName}</span>
                             <span class="text-black-50">${member.memberEmail}</span>
                             <span> </span>
@@ -45,29 +67,46 @@
 							<button type="button" id="edit" class="btn btn-outline-secondary btn-floating btn-sm">Edit
 								<i class="fas fa-magic"></i>
 							  </button>
+							  <button type="button" id="save" class="btn btn-outline-secondary btn-floating btn-sm d-none">Save
+								<i class="fa-solid fa-check"></i>
+							  </button>
 						</div>
 						<div class="row mt-2">
 							<div class="col-md-6">
 								<label class="labels">Name</label>
                                 <input type="text"
-									class="form-control" value="${member.memberName}" id="name" readonly>
+									class="form-control" value="${member.memberName}" id="memberName" readonly>
 							</div>
 						</div>
 						<div class="row mt-3">
 							<div class="col-md-12">
+								<label class="labels">Age</label>
+                                <input type="text"
+									class="form-control" value="${member.memberAge}" id="memberAge" readonly>
+							</div>
+							<div class="col-md-12">
 								<label class="labels">Address</label>
                                 <input type="text"
-									class="form-control" value="${member.memberAddress}" id="address" readonly>
+									class="form-control" value="${member.memberAddress}" id="memberAddress" readonly>
 							</div>
 							<div class="col-md-12">
 								<label class="labels">phone</label>
                                 <input type="text"
-									class="form-control" value="${member.memberTel}" id="tel" readonly>
+									class="form-control" value="${member.memberTel}" id="memberTel" readonly>
 							</div>
 							<div class="col-md-12">
 								<label class="labels">Gender</label>
-                                <input type="text"
-									class="form-control" value="${member.memberGender}" id="gender" readonly>
+								<select
+								class="form-select"
+								id="memberGender"
+								value = "${member.memberGender}"
+								aria-label="Default select example"
+								disabled
+							  >	
+								<option value="男" selected>男</option>
+								<option value="女">女</option>
+								<option value="其他">其他</option>
+							  </select>
 							</div>
 						</div>
 						<!-- <div class="row mt-3">
@@ -100,13 +139,11 @@
 	
 	<jsp:include page="../include/footer.jsp"></jsp:include>
 	<script>
-		if (performance.navigation.type == 2) {
-			console.log("Doing reload");
-			location.reload(true);
-			console.log("Done with reload");
-		}
-		console.log("Script loaded.")
-	</script>
+		const dbId = "${member.memberId}";
+		const dbName = "${member.memberName}";
+		document.querySelector("option[value=${member.memberGender}]").selected = 'selected'
+		</script>
+	<script type="text/javascript" src="${root}/js/jack/profile.js"></script>
 
 </body>
 </html>

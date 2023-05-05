@@ -117,7 +117,7 @@ public class MemberService {
 		return memberDao.updatePasswordById(id, password);
 
 	}
-
+	
 	public Integer updateMember(Integer id, String json) {
 		JSONObject jObject = new JSONObject(json);
 
@@ -128,13 +128,27 @@ public class MemberService {
 		Integer age = jObject.isNull("memberAge") ? member.getMemberAge() : jObject.getInt("memberAge");
 		String gender = jObject.isNull("memberGender") ? member.getMemberGender() : jObject.getString("memberGender");
 		String tel = jObject.isNull("memberTel") ? member.getMemberTel() : jObject.getString("memberTel");
-		String address = jObject.isNull("memberAddress") ? member.getMemberAddress()
-				: jObject.getString("memberAddress");
+		String address = jObject.isNull("memberAddress") ? member.getMemberAddress() : jObject.getString("memberAddress");
 
 		System.out.println(member);
-
+		
 		return memberDao.updateMemberById(id, name, age, gender, tel, address);
+		
+		
 
+	}
+	
+	public Integer updateImg(Integer id, byte[] memberImg) {
+		
+		Optional<Member> memberData = memberDao.findById(id);
+		Member member = memberData.get();
+		
+		if(member!=null) {
+			member.setMemberImg(memberImg);		
+			return memberDao.updateImgById(id, memberImg);
+		}
+		
+		return null;
 	}
 
 	public Member findMemberById(Integer id) {

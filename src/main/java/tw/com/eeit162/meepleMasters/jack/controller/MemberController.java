@@ -1,11 +1,14 @@
 package tw.com.eeit162.meepleMasters.jack.controller;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 
+import org.apache.tomcat.jni.File;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -84,6 +87,7 @@ public class MemberController {
 			url.put("url", "/login");
 			return url.toString();
 		}
+		session.setMaxInactiveInterval(0);
 		session.setAttribute("member", optional.get());
 		if(optional.get().getMemberLevel().contentEquals("管理員")) {
 			System.out.println("管理員");
@@ -136,11 +140,14 @@ public class MemberController {
 	 */
 	@ResponseBody
 	@PutMapping("/member/updateMember/{id}")
-	public String updateMember(@PathVariable(name = "id") Integer id, @RequestBody String body) {
+	public String updateMember(@PathVariable(name = "id") Integer id, @RequestBody String body, HttpSession session) {
 		
 		Integer memberUpdate = mService.updateMember(id, body);
+		Member member = mService.findMemberById(id);
+		System.out.println(member);
 		if(memberUpdate!=0) {
-			
+			session.setAttribute("member", member);
+			System.out.println("123");
 			return "success";
 		}
 		
@@ -198,8 +205,8 @@ public class MemberController {
 	 * @param memberId
 	 * @return byte[]
 	 */
-	@GetMapping("/member/findMemberImg/{id}")
 	@ResponseBody
+	@GetMapping("/member/findMemberImg/{id}")
 	public ResponseEntity<byte[]> findMemberImg(@PathVariable("id") Integer memberId) {
 		byte[] memberImg = mService.findMemberImg(memberId);
 		HttpHeaders headers = new HttpHeaders();
@@ -213,8 +220,8 @@ public class MemberController {
 	 * @param memberId
 	 * @return byte[]
 	 */
-	@GetMapping("/member/emailFindMemberImg/{email}")
 	@ResponseBody
+	@GetMapping("/member/emailFindMemberImg/{email}")
 	public ResponseEntity<byte[]> findMemberImg(@PathVariable("email") String memberEmail) {
 		byte[] memberImg = mService.findMemberImg(memberEmail);
 		HttpHeaders headers = new HttpHeaders();
@@ -224,4 +231,29 @@ public class MemberController {
 	}
 	
 	
+	@ResponseBody
+	@PutMapping("/member/updateMemberImg/{id}")
+	public ResponseEntity<byte[]> updateImgById(@PathVariable("id") Integer memberId, @RequestBody String memberImg){
+			
+//			JSONObject imgJson = new JSONObject(memberImg);
+//			String imgString = imgJson.getString("data");
+			System.out.println(memberImg);
+			
+			  String encodedImg = memberImg.split(",")[1];
+			  String imgString = encodedImg.replace("\"", "");
+			  System.out.println(imgString);
+			  byte[] decodedBytes = Base64.getDecoder().decode(imgString.getBytes(StandardCharsets.UTF_8));
+//			  byte[] decode =imgString.getBytes();
+			
+			  mService.updateImg(memberId, decodedBytes);
+			  HttpHeaders headers = new HttpHeaders();
+			  headers.setContentType(MediaType.IMAGE_PNG);
+			  return new ResponseEntity<byte[]>(decodedBytes, headers, HttpStatus.OK);
+//			  return null;
+			
+			
+			
+		
+		
+	}
 }
