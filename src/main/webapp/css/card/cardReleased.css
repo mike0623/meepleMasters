@@ -1,0 +1,8 @@
+.releasedContainer {
+    position: relative;
+    top: 75px;
+    text-align: center;
+    width: 1000px;
+    margin: auto;
+    padding-bottom: 150px;
+}

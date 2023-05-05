@@ -27,22 +27,13 @@ public class CardListService {
 	public CardOwned insertCardToList(Integer memberId) {
 
 		int cardId = randomCardId();
-//		System.out.println(cardId);
-
-		Optional<Card> option = cDao.findById(cardId);
-
-		if (option.isEmpty()) {
-			return null;
-		}
-
-//		Card card = option.get();
 
 		CardOwned cO = new CardOwned();
 
 		cO.setFkCardId(cardId);
 		cO.setFkMemberId(memberId);
 		cO.setOwnedTime(new Date());
-		cO.setCardStatus(3);
+		cO.setCardStatus(1);
 
 		CardOwned newCard = cODao.save(cO);
 

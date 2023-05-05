@@ -1,5 +1,3 @@
-
-
 .mycardContainer {
     position: relative;
     top: 75px;
@@ -45,4 +43,44 @@ a {
     width: 50px;
     top:0;
     left: 0;
+}
+
+.swal-gift {
+    width: 350px !important;
+}
+
+.newCardContainer {
+    width: 500px;
+    height: 500px;
+    background-color: #dfa661;
+    text-align: center;
+    padding: 50px;
+    color: #FFF;
+}
+
+.newCardImg {
+    width: 200px;
+}
+.newCardTitle {
+    margin: 20px;
+    font-size: xx-large;
+    font-weight: 600;
+}
+
+.ribbonAnime {
+    position: absolute;
+    top: 0;
+}
+
+.newIcon {
+    position: absolute;
+    top: -20px;
+    left: 20px;
+    width: 100px;
+}
+
+.newCardImgDiv {
+    position: relative;
+    margin: auto;
+    width: 300px;
 }

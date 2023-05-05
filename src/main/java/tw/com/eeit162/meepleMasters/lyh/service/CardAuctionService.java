@@ -17,13 +17,16 @@ public class CardAuctionService {
 	private CardOwnedDao cODao;
 	private CardAuctionDao cADao;
 	
-	public CardAuction insertNewAuction(Integer ownedId) {
+	public CardAuction insertNewAuction(Integer memberId, Integer ownedId) {
 		
-		Optional<CardOwned> ownedCard = cODao.findById(ownedId);
+		Optional<CardOwned> ownedCard = cODao.findById(memberId);
 		
 		if (ownedCard.isEmpty()) {
 			return null;
 		}
+		
+		CardAuction ca = new CardAuction();
+		
 		
 		
 		

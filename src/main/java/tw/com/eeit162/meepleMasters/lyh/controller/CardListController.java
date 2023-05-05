@@ -3,6 +3,8 @@ package tw.com.eeit162.meepleMasters.lyh.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,8 +18,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 import tw.com.eeit162.meepleMasters.lyh.service.CardListService;
@@ -29,21 +33,43 @@ public class CardListController {
 	@Autowired
 	private CardListService cListService;
 
-	@PostMapping("/getNewCard/{memberId}")
-	public String getNewCard(@PathVariable(name = "memberId") Integer memberId) {
+	@PostMapping("/getNewCard")
+	@ResponseBody
+	public String getNewCard(HttpSession session) {
 
+		Card card = new Card();
+		
+		Member member = (Member)session.getAttribute("member");
+		Integer memberId = member.getMemberId();
+		
 		CardOwned newCard = cListService.insertCardToList(memberId);
+		List<CardOwned> oldCardList = cListService.listOwnedCard(memberId);
 
 		if (newCard != null) {
-			return newCard.toString();
+			card = cListService.findById(newCard.getFkCardId());
+			JSONObject jsonObject = new JSONObject();
+			
+			for (int i = 0; i < oldCardList.size(); i++) {
+				if (oldCardList.get(i).getFkCardId() == newCard.getFkCardId()) {
+					jsonObject.put("isNew", false);
+					break;
+				} else {
+					jsonObject.put("isNew", true);
+				}
+			}
+			
+			jsonObject.put("newCard", card);
+			return jsonObject.toString();
 		}
 
-		return "抽卡失敗";
+		return null;
 	}
 
 	@GetMapping("/mycard/{memberId}")
 	public String listOwnedCard(@PathVariable(name = "memberId") Integer memberId, Model model) {
 
+		
+		
 		List<CardOwned> list = cListService.listOwnedCard(memberId);
 
 		ArrayList<Card> cardList = new ArrayList<>();
@@ -65,7 +91,7 @@ public class CardListController {
 			return "lyh/mycard";
 		}
 
-		return null;
+		return "lyh/mycard";
 	}
 	
 	@GetMapping("/mycard/{memberId}/getOrder")
