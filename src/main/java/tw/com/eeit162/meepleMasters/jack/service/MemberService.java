@@ -26,8 +26,10 @@ import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
 public class MemberService {
 	@Autowired
 	private MemberDao memberDao;
-//	@Autowired
-//	private JavaMail javaMail;
+	@Autowired
+	private JwtService jwtService;
+	@Autowired
+	private MailService mailService;
 
 	public void testMember(Member member) {
 		Member member1 = new Member();
@@ -36,11 +38,6 @@ public class MemberService {
 
 		memberDao.save(member1);
 
-	}
-
-	public void verify() {
-		JavaMail javaMail = new JavaMail();
-		javaMail.sendMail();
 	}
 
 	public Member createMember(String json) throws IOException {
@@ -63,6 +60,7 @@ public class MemberService {
 		member.setMemberGender(gender);
 		member.setMemberTel(tel);
 		member.setMemberAddress(address);
+		member.setMemberCoin(500);
 		member.setMemberActive(0);
 		member.setCreateTime(new Date());
 
@@ -75,18 +73,41 @@ public class MemberService {
 
 		bis.close();
 		fis.close();
-
+		
 		memberDao.save(member);
-
-		System.out.println("ok");
+		
+		sendVerificationEmail(member);
+		
 		return member;
 	}
+	
+	public void sendVerificationEmail(Member member) {
+		System.out.println("已寄出");
+		String token = jwtService.generateToken(member);
+		String subject = "MeepleMasters會員信箱驗證";
+		String url = "http://localhost:8080/meeple-masters/auth/"+token;
+		String content = "您好! 歡迎您加入Meeple Masters，<br/>" + 
+				 "這封信是由Meeple Masters的會員註冊系統所寄出，<br/>" + 
+				 "<h4>請點選下面的連結來進行註冊的下一個步驟：<br/></h4>" + 
+				 "<h3><a href=\"" + url + "\">"+"驗證連結"+"</a></h3>"+ "<br/>" + 
+				 "※ 如果您無法連結信中網址，請讓我們知道。<br/>"+ 
+				 "<br/>" + 
+				 "Meeple Masters團隊 敬上<br/>";
+		mailService.sendEmail(member.getMemberEmail(), subject, content);
+	}
+	
+	public void activeAccount(String token) {
+		if(jwtService.validateToken(token)) {
+			String email = jwtService.extractEmail(token);
+			Member member = findMemberByEmail(email);
+			if(member!=null) {
+				member.setMemberActive(1);
+				memberDao.save(member);
+			}
+		}
+	}
 
-//	public String memberAuth() {
-//		javaMail.sendMail();
-//		
-//		return "success";
-//	}
+
 
 	public Optional<Member> login(String json) {
 		JSONObject member = new JSONObject(json);

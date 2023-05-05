@@ -15,7 +15,6 @@
 <style>
     .container{
 		position: relative;
-		top: 75px;
 		padding-bottom: 105px;
 		height: 100%;
 	}
@@ -33,6 +32,13 @@
 		position: absolute;
 	} */
 
+	body{
+		display: grid;
+		grid-template-rows: 1fr auto;
+	}
+	.profile{
+		margin-top: 50px;
+	}
 	
 
 </style>
@@ -41,7 +47,7 @@
 	<jsp:include page="../include/header.jsp"></jsp:include>
 	
 		<div class="container rounded mt-5 mb-5"  >
-			<div class="row">
+			<div class="row profile">
 				<div class="col-md-6 border-right" >
 					<div
 						class="d-flex flex-column align-items-center text-center p-3 py-5" >

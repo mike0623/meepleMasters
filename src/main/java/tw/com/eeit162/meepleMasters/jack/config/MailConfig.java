@@ -17,10 +17,10 @@ public class MailConfig {
 	private String password;
 	@Value("${mail.protocol}")
 	private String protocol;
-	@Value("{mail.smtp.auth}")
+	@Value("${mail.smtp.auth}")
 	private boolean authEnabled;
-	@Value("{mail.smtp.starttls.enable}")
-	private boolean starttlsEnable;
+	@Value("${mail.smtp.starttls.enable}")
+	private boolean starttlsEnabled;
 	
 	public String getHost() {
 		return host;
@@ -40,8 +40,8 @@ public class MailConfig {
 	public boolean isAuthEnabled() {
 		return authEnabled;
 	}
-	public boolean isStarttlsEnable() {
-		return starttlsEnable;
+	public boolean isStarttlsEnabled() {
+		return starttlsEnabled;
 	}
 
 	

@@ -14,7 +14,7 @@ public class FilterConfig {
 		FilterRegistrationBean<MemberLoginFilter> registration = new FilterRegistrationBean<>();
 		registration.setFilter(new MemberLoginFilter());
 		
-		registration.addUrlPatterns("/member/*");
+		registration.addUrlPatterns("/member/*","/admin");
 		registration.setOrder(0);
 		return registration;
 	}
