@@ -27,4 +27,11 @@ public class MessageStickerController {
 	public Integer findById(@PathVariable("id") Integer id) {
 		return stickerService.findById(id);
 	}
+
+	//測試join
+//	@PostMapping("/t/t")
+//	@ResponseBody
+//	public void tt(@RequestBody String json) {
+//		stickerService.findStickerByxxx(json);
+//	}
 }

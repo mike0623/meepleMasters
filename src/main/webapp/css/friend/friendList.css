@@ -406,8 +406,9 @@ input:focus {
 	position: fixed;
 	right: 0;
 	top: 0;
-	width: 380px;
+	width: 400px;
 	border: 3px solid black;
+	z-index:1;
 }
 
 .dialogBox {
@@ -417,6 +418,7 @@ input:focus {
 	width: 771px;
 	height: 600px;
 	border: 3px solid black;
+	z-index:1;
 }
 
 .controllerDialogBox {

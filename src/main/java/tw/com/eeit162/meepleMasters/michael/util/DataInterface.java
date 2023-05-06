@@ -1,20 +1,35 @@
 package tw.com.eeit162.meepleMasters.michael.util;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
+import tw.com.eeit162.meepleMasters.michael.game.degree.model.GameDegree;
 
 public class DataInterface {
 	
 	//資料介接用
 	private static RestTemplate template = new RestTemplate();
 	
+//	public static HttpSession getSession() {
+//	    ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+//	    RequestContextHolder.setRequestAttributes(attr, true);
+//	    return attr.getRequest().getSession(true); // true == allow create
+//	}
 	
 	public static Member getMemberByMemberId(Integer memberId) {
 		Member member = new Member();
@@ -33,17 +48,25 @@ public class DataInterface {
 		member.setMemberTel(memberJson.getString("memberTel"));
 		member.setMemberAddress(memberJson.getString("memberAddress"));
 		
+		
 		return member;
 	}
 	
 	public static Member getMemberByEmail(String memberEmail) {
 		Member member = new Member();
+//		HttpHeaders headers = new HttpHeaders();
+//		List<String> cookieList = new ArrayList<>();
+//		cookieList.add("JSESSIONID=D015807F88976F585371CB105A335E99");
+//		headers.put(HttpHeaders.COOKIE, cookieList);
+		//.headers(headers)
+//		headers.add("Cookie", "SESSION=D015807F88976F585371CB105A335E99");
+	
 		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/member/findMemberByEmail?memberEmail="+memberEmail);
 		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<String> response = template.exchange(requset, String.class);
 		JSONObject memberJson = new JSONObject(response.getBody());
-		
+
 		member.setMemberId(memberJson.getInt("memberId"));
 		member.setMemberEmail(memberJson.getString("memberEmail"));
 		member.setMemberPwd(memberJson.getString("memberPwd"));
@@ -92,4 +115,20 @@ public class DataInterface {
 		ResponseEntity<String> response = template.exchange(requset, String.class);
 		return response.getBody();
 	}
+	
+	public static Product getProductByProductName(String productName) {
+		URI uri = URI.create("http://localhost:8080/meeple-masters/mall/findProductByProductName/"+productName);
+		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<Product> response = template.exchange(requset, Product.class);
+		return response.getBody();
+	}
+	
+	
+	public static GameDegree getGameDegree(Integer memberId,Integer productId) {
+		URI uri = URI.create("http://localhost:8080/meeple-masters/GameDegree/findGameDegree/"+memberId+"/"+productId);
+		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<GameDegree> response = template.exchange(requset, GameDegree.class);
+		return response.getBody();
+	}
+	
 }
