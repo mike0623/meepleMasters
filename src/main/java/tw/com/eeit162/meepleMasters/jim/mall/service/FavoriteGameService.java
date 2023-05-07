@@ -14,13 +14,21 @@ public class FavoriteGameService {
 	@Autowired
 	private FavoriteGameDAO fgDAO;
 
-	public FavoriteGame addFavoriteGame(Integer productId, Integer memberId) {
-		FavoriteGame favoriteGame = new FavoriteGame();
+	public String addFavoriteGame(Integer productId, Integer memberId) {
 
+		FavoriteGame fg = fgDAO.findByFkMemberIdAndFkProductId(memberId, productId);
+
+		if (fg != null) {
+			fgDAO.deleteById(fg.getFavoriteGameId());
+			return "dislike";
+		}
+
+		FavoriteGame favoriteGame = new FavoriteGame();
 		favoriteGame.setFkProductId(productId);
 		favoriteGame.setFkMemberId(memberId);
+		fgDAO.save(favoriteGame);
 
-		return fgDAO.save(favoriteGame);
+		return "like";
 	}
 
 	public List<FavoriteGame> findFavoriteGameList(Integer memberId) {
