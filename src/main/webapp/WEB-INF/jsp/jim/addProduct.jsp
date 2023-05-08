@@ -41,7 +41,6 @@ prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
                     class="img-fluid px-3 px-sm-4 mt-3 mb-4"
                     style="width: 25rem"
                     src="${root}/img/example/cat-Happy.jpg"
-                    alt="..."
                     id="imgPreview"
                   />
                 </div>
@@ -76,19 +75,16 @@ prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
                       name="productPlayTime"
                     />
                     <br />
-                    <label for="productMaxPlayer">建議最多遊玩人數:</label>
-                    <input
-                      type="number"
-                      id="productMaxPlayer"
-                      name="productMaxPlayer"
-                      min="2"
-                    />
-                    <br />
-                    <label for="productMinPlayer">建議最少遊玩人數:</label>
+                    <label for="productPlayer">建議遊玩人數:</label>
                     <input
                       type="number"
                       id="productMinPlayer"
                       name="productMinPlayer"
+                      min="1"
+                    />~<input
+                      type="number"
+                      id="productMaxPlayer"
+                      name="productMaxPlayer"
                       min="1"
                     />
                     <br />
@@ -138,7 +134,7 @@ prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
         imgPreview.attr("src", tempSrc);
       });
 
-      $("#resetButton").on("click")
+      $("#resetButton").on("click");
     </script>
   </body>
 </html>

@@ -8,8 +8,12 @@ import java.util.Random;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 import tw.com.eeit162.meepleMasters.lyh.model.dao.CardDao;
@@ -23,8 +27,31 @@ public class CardListService {
 
 	@Autowired
 	private CardOwnedDao cODao;
+	
+	@Autowired
+	private MemberDao mDao;
+	
+	public Member findMember(Integer memberId) {
+		Optional<Member> member = mDao.findById(memberId);
+		
+		if (!member.isEmpty()) {
+			return member.get();
+		} 
+		
+		return null;
+		
+	}
 
+	@Transactional
 	public CardOwned insertCardToList(Integer memberId) {
+		
+		Integer memberCoin = mDao.findById(memberId).get().getMemberCoin();
+		
+		if (memberCoin < 100) {
+			return null;
+		}
+		
+		mDao.updateMemberCoin(memberId, memberCoin-100);
 
 		int cardId = randomCardId();
 
@@ -114,7 +141,7 @@ public class CardListService {
 
 		// 生成一個隨機數，表示抽到的卡片星數
 		Random random = new Random();
-		int randomNumber = random.nextInt(totalProbability-1)+1;
+		int randomNumber = (random.nextInt(Math.abs(totalProbability)+1))-1;
 		System.out.println("randomNumber: " + randomNumber);
 
 		int cumulativeProbability = 0;
@@ -179,36 +206,36 @@ public class CardListService {
 	}
 
 	public int star5() {
-//		cardStar();
+		cardStar();
 		Random random = new Random();
-		int randomNumber = random.nextInt(card5.size());
+		int randomNumber = (random.nextInt(Math.abs(card5.size())+1))-1;
 
 		System.out.println(card5.get(randomNumber));
 		return card5.get(randomNumber);
 	}
 
 	public int star4() {
-//		cardStar();
+		cardStar();
 		Random random = new Random();
-		int randomNumber = random.nextInt(card4.size());
+		int randomNumber = (random.nextInt(Math.abs(card4.size())+1))-1;
 
 		System.out.println(card4.get(randomNumber));
 		return card4.get(randomNumber);
 	}
 
 	public int star3() {
-//		cardStar();
+		cardStar();
 		Random random = new Random();
-		int randomNumber = random.nextInt(card3.size());
+		int randomNumber = (random.nextInt(Math.abs(card3.size())+1))-1;
 
 		System.out.println(card3.get(randomNumber));
 		return card3.get(randomNumber);
 	}
 
 	public int star2() {
-//		cardStar();
+		cardStar();
 		Random random = new Random();
-		int randomNumber = random.nextInt(card2.size());
+		int randomNumber = (random.nextInt(Math.abs(card2.size()))+1)-1;
 
 		System.out.println(card2.get(randomNumber));
 		return card2.get(randomNumber);
@@ -217,7 +244,7 @@ public class CardListService {
 	public int star1() {
 		cardStar();
 		Random random = new Random();
-		int randomNumber = random.nextInt(card1.size());
+		int randomNumber = (random.nextInt(Math.abs(card1.size()))+1)-1;
 
 		System.out.println(card1.get(randomNumber));
 		return card1.get(randomNumber);

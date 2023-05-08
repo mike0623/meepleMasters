@@ -1,5 +1,7 @@
 package tw.com.eeit162.meepleMasters.jim.mall.service;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.jim.mall.model.dao.ProductDAO;
@@ -54,8 +57,31 @@ public class ProductService {
 	}
 
 	@Transactional
-	public Product updateProductById(Product p) {
-		return pDAO.save(p);
+	public Product updateProductById(Product p, MultipartFile pImg) {
+
+		Optional<Product> op = pDAO.findById(p.getProductId());
+
+		if (op.isPresent()) {
+			Product product = op.get();
+			product.setProductDescription(p.getProductDescription());
+			product.setProductDifficulty(p.getProductDifficulty());
+			product.setProductMaxPlayer(p.getProductMaxPlayer());
+			product.setProductMinPlayer(p.getProductMinPlayer());
+			product.setProductName(p.getProductName());
+			product.setProductPlayTime(p.getProductPlayTime());
+			product.setProductPrice(p.getProductPrice());
+			if (!pImg.isEmpty()) {
+				try {
+					BufferedInputStream bis = new BufferedInputStream(pImg.getInputStream());
+					product.setProductImg(bis.readAllBytes());
+					bis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return product;
+		}
+		return null;
 	}
 
 }

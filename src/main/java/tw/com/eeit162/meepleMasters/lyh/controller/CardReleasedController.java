@@ -16,13 +16,15 @@ public class CardReleasedController {
 	@Autowired
 	private CardReleasedService cRService;
 	
+	@GetMapping("/new")
+//	public String
 	
 	
-	@PostMapping("/new")
-	public String newRelease(@RequestParam("123") Integer memberId) {
+	@PostMapping("/insertCardReleased")
+	public String insertCardReleased(@RequestParam("123") Integer memberId) {
 		
 		
-		cRService.insertNewRelease(null, null, null);
+		cRService.insertCardReleased(null, null, null);
 		
 		return "";
 	}

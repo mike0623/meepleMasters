@@ -28,17 +28,18 @@
                                 <label for="email">Email</label>
                                 <input type="email" name="email">
                             </div>
+                            <div class="field field-checkbox padding-bottom--24 flex-flex align-center">
+                                <label for="type">
+                                    <input type="radio" name="type"> 直購
+                                </label>
+                            </div>
                             <div class="field padding-bottom--24">
                                 <div class="grid--50-50">
                                     <label for="password">Password</label>
                                 </div>
                                 <input type="password" name="password">
                             </div>
-                            <div class="field field-checkbox padding-bottom--24 flex-flex align-center">
-                                <label for="checkbox">
-                                    <input type="checkbox" name="checkbox"> Stay signed in for a week
-                                </label>
-                            </div>
+                            
                             <div class="field padding-bottom--24">
                                 <input type="submit" name="submit" value="Continue">
                             </div>

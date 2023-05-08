@@ -11,11 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -39,9 +36,8 @@ public class Product implements Serializable {
 	@Column(name = "productImg")
 	private byte[] productImg;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@Column(name = "addedTime")
+	@JsonFormat(pattern ="yyyy-MM-dd" )
+	@Column(name = "addedTime", columnDefinition = "DATE")
 	private Date addedTime;
 
 	@Column(name = "productDescription")
