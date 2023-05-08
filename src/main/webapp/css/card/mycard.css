@@ -6,22 +6,32 @@
 
 }
 
-.mycardTitle {
+h2 {
     margin-top: 50px;
-    font-size:xx-large;
+    color: #47322d;
+    font-weight: 600;
 }
 
-.cardListButton, .cardAnimeButton, .cardAnimeButton {
+.myCoinDiv {
+    position: relative;
+    margin-top: 60px;
+    margin-bottom: 20px;
+}
+
+.myCoinTitle {
     margin: 20px;
+    font-size: 30px;
+    color: #47322d;
 }
 
-html, body {
-	margin: 0;
-	padding: 0;
-	display: grid;
-	grid-auto-flow: column;
-	font-family: 微軟正黑體;
-	height: 100%;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-auto-flow: column;
+    font-family: 微軟正黑體;
+    height: 100%;
     background-color: #F0EBE2;
     padding-right: 0 !important;
 }
@@ -35,13 +45,13 @@ body::-webkit-scrollbar {
 }
 
 a {
-    text-decoration:none;
+    text-decoration: none;
 }
 
 .sellingCard {
     position: absolute;
     width: 50px;
-    top:0;
+    top: 0;
     left: 0;
 }
 
@@ -61,10 +71,12 @@ a {
 .newCardImg {
     width: 200px;
 }
+
 .newCardTitle {
     margin: 20px;
     font-size: xx-large;
     font-weight: 600;
+    color: #fff;
 }
 
 .ribbonAnime {
@@ -102,10 +114,93 @@ body {
 }
 
 .swal2-content {
-    max-height: 80vh;  /* 最大高度 */
-    overflow: auto;    /* 滾動條 */
+    max-height: 80vh;
+    /* 最大高度 */
+    overflow: auto;
+    /* 滾動條 */
 }
 
 .swal-newCard {
+    width: 600px !important;
+}
+
+.confirmAlert {
+    width: 450px !important;
+}
+
+.cardListButtons {
+    display: flex;
+    justify-content: center;
+}
+
+/* drawBtn */
+
+.button-19 {
+    appearance: button;
+    background-color: #da9255;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: din-round, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin: 0;
+    outline: none;
+    overflow: visible;
+    padding: 13px 16px;
+    text-align: center;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    transition: filter .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 100px;
+}
+
+.button-19:after {
+    background-clip: padding-box;
+    background-color: #dfa661;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+}
+
+.button-19:main,
+.button-19:focus {
+    user-select: auto;
+}
+
+.button-19:hover:not(:disabled) {
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
+}
+
+.button-19:disabled {
+    cursor: auto;
+}
+
+.sellingNote {
+    margin: 20px;
+    font-size: large;
+    font-weight: 600;
+}
+
+.Swal-coinInfo {
     width: 600px !important;
 }

@@ -31,7 +31,7 @@ public class FavoriteGameController {
 
 	@GetMapping("/favoriteGame/addFavoriteGame")
 	@ResponseBody
-	public FavoriteGame addFavoriteGame(@RequestParam Integer productId, @RequestParam Integer memberId) {
+	public String addFavoriteGame(@RequestParam Integer productId, @RequestParam Integer memberId) {
 		return fgService.addFavoriteGame(productId, memberId);
 	}
 
