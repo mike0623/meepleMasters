@@ -21,12 +21,12 @@ public class MallPageController {
 	}
 
 	@GetMapping("/mall/product")
-	public String product() {
+	public String productPage() {
 		return "jim/product";
 	}
 
 	@GetMapping("/mall/updateProduct")
-	public String updateProduct(@RequestParam Integer id, Model model) {
+	public String updateProductPage(@RequestParam Integer id, Model model) {
 		Product product = pService.findProductById(id);
 
 		model.addAttribute("product", product);
@@ -35,7 +35,12 @@ public class MallPageController {
 	}
 
 	@GetMapping("/mall/adminProduct")
-	public String adminProduct() {
+	public String adminProductPage() {
 		return "jim/adminProduct";
+	}
+
+	@GetMapping("/mall/shoppingCart")
+	public String shoppingCartPage() {
+		return "jim/shoppingCart";
 	}
 }
