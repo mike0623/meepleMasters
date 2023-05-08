@@ -2,7 +2,9 @@
 
         .newReleaseIcon {
             height: auto;
-            width: 100%;
+            width: 50%;
+            display: block;
+            margin: auto;
         }
 
         input[type=submit] {
@@ -45,6 +47,11 @@
                 position: relative;
                 width: 40%;
             }
+        }
+
+        picture {
+            height: 500px;
+            display: flex;
         }
 
         form {

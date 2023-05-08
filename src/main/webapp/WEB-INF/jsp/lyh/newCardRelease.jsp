@@ -18,7 +18,7 @@
     <main>
         <figure>
             <picture>
-                <img src="${root}/img/favicon.png" alt="Citymap illustration" class="newReleaseIcon"/>
+                <img src="${root}/img/logo.png" alt="Citymap illustration" class="newReleaseIcon" />
             </picture>
         </figure>
 
@@ -28,14 +28,15 @@
             </span>
             <span class="form-group mb-3" style="position: relative; top: -20;">
                 <label for="ownedId" class="text-small-uppercase form-label" style="width: 100%;">選擇卡片
-                <select class="text-body form-control form-select" id="ownedId" name="ownedId" type="text" required>
-                    
-                </select>
-            </label>
+                    <select class="text-body form-control form-select" id="ownedId" name="ownedId" type="text" required>
+                        <option id="notSelect">請選擇卡片</option>
+                    </select>
+                </label>
             </span>
             <span class="form-group mb-3">
                 <label for="price" class="text-small-uppercase form-label">售出價</label>
-                <input class="text-body" id="price" name="price" type="text" onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" required>
+                <input class="text-body" id="price" name="price" type="text"
+                    onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" required>
             </span>
             <span class="form-group mb-3">
                 <label for="city" class="text-small-uppercase form-label">結束時間</label>
@@ -62,41 +63,48 @@
 
         let card = [];
 
-        $.get("${root}/released/ownedCard", function(data){
-            
+        $.get("${root}/released/ownedCard", function (data) {
+
             function compare(a, b) {
                 if (a.id < b.id) {
-                return -1;
+                    return -1;
                 }
                 if (a.id > b.id) {
-                return 1;
+                    return 1;
                 }
                 return 0;
             }
-            
-            for (i = 0; i < data.cardList.length; i++) {
-                function compare(a, b) {
+
+            function compare(a, b) {
                 if (a.fkCardId < b.fkCardId) {
-                return -1;
+                    return -1;
                 }
                 if (a.fkCardId > b.fkCardId) {
-                return 1;
+                    return 1;
                 }
                 return 0;
             }
-                (data.cardList).sort(compare)
+            (data.cardList).sort(compare)
+            for (i = 0; i < data.cardList.length; i++) {
                 card.push(data.cardList[i]);
             }
 
+            let cardIdArray = []
+
             for (i = 0; i < card.length; i++) {
-                $.get(`${root}/released/getCard/\${card[i].fkCardId}`, function(cardData){
-                        // console.log(`\${cardData.card}`)
-                        $("#ownedId").append(`<option value="\${cardData.cardId}">\${cardData.cardName}</option>`)
-                    })
+                let cardid = card[i].fkCardId;
+                cardIdArray.push(cardid)
+                $.get(`${root}/released/getCard/\${cardid}`, function (cardData) {
+                    console.log(cardData.card.cardId)
+                    $("#ownedId").append(`<option value="\${cardData.card.cardId}">\${cardData.card.cardName}</option>`)
+                })
             }
 
-            
-            console.log(card);
+            $("#ownedId").change(function() {
+
+            })
+
+
         })
 
         var inputs = document.querySelectorAll('input[type=text], input[type=email]');
