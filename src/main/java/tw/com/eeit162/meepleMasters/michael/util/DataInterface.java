@@ -1,13 +1,6 @@
 package tw.com.eeit162.meepleMasters.michael.util;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
@@ -34,8 +27,11 @@ public class DataInterface {
 	public static Member getMemberByMemberId(Integer memberId) {
 		Member member = new Member();
 		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/member/findMemberById?id="+memberId);
-		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<String> response = template.exchange(requset, String.class);
 		JSONObject memberJson = new JSONObject(response.getBody());
 		
@@ -60,10 +56,11 @@ public class DataInterface {
 //		headers.put(HttpHeaders.COOKIE, cookieList);
 		//.headers(headers)
 //		headers.add("Cookie", "SESSION=D015807F88976F585371CB105A335E99");
-	
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
 		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/member/findMemberByEmail?memberEmail="+memberEmail);
-		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<String> response = template.exchange(requset, String.class);
 		JSONObject memberJson = new JSONObject(response.getBody());
 
@@ -81,52 +78,73 @@ public class DataInterface {
 	}
 	
 	public static Integer getNotRead(Integer senderId,Integer receiverId) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/friendMessage/findNotRead?senderId="+senderId+"&receiverId="+receiverId);
-		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<Integer> response = template.exchange(requset, Integer.class);
 		return response.getBody();
 	}
 	
 	public static Integer getMessageTextNewId(String messageText) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/messageText/insertMessageText");
-		RequestEntity<String> requset = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).header("Content-Type", "application/json;charset=UTF-8").body(messageText);
+		RequestEntity<String> requset = RequestEntity.post(uri).headers(headers).accept(MediaType.APPLICATION_JSON).header("Content-Type", "application/json;charset=UTF-8").body(messageText);
 		ResponseEntity<Integer> response = template.exchange(requset, Integer.class);
 		return response.getBody();
 	}
 	
 	public static Integer getMessageStickerNewId(Integer messageSticker) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/messageSticker/insertMessageSticker");
-		RequestEntity<Integer> requset = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).header("Content-Type", "application/json;charset=UTF-8").body(messageSticker);
+		RequestEntity<Integer> requset = RequestEntity.post(uri).headers(headers).accept(MediaType.APPLICATION_JSON).header("Content-Type", "application/json;charset=UTF-8").body(messageSticker);
 		ResponseEntity<Integer> response = template.exchange(requset, Integer.class);
 		return response.getBody();
 	}
 	
 	
 	public static Integer getMessageStickerFkStickerIdById(Integer messageStickerId) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/messageSticker/findById/"+messageStickerId);
-		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<Integer> response = template.exchange(requset, Integer.class);
 		return response.getBody();
 	}
 	
 	public static String insertWhenSendToOfflineFriend(String json) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/chatRoomOrder/insertWhenSendToOfflineFriend");
-		RequestEntity<String> requset = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).header("Content-Type", "application/json;charset=UTF-8").body(json);
+		RequestEntity<String> requset = RequestEntity.post(uri).headers(headers).accept(MediaType.APPLICATION_JSON).header("Content-Type", "application/json;charset=UTF-8").body(json);
 		ResponseEntity<String> response = template.exchange(requset, String.class);
 		return response.getBody();
 	}
 	
 	public static Product getProductByProductName(String productName) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/mall/findProductByProductName/"+productName);
-		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<Product> response = template.exchange(requset, Product.class);
 		return response.getBody();
 	}
 	
 	
 	public static GameDegree getGameDegree(Integer memberId,Integer productId) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/GameDegree/findGameDegree/"+memberId+"/"+productId);
-		RequestEntity<Void> requset = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<GameDegree> response = template.exchange(requset, GameDegree.class);
 		return response.getBody();
 	}
