@@ -77,6 +77,23 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
         }
       });
       
+      function formatPhoneNumber(phoneNumberString) {
+        // 移除字串中的所有非數字字元
+        let cleaned = phoneNumberString.replace(/\D/g, '-');
+      
+        // 將字串分成三部分並添加空格
+        let formatted = cleaned.replace(/^(\d{4})(\d{3})(\d{3})$/, '$1 $2 $3');
+      
+        return formatted;
+      }
+
+      tel.addEventListener("blur",function(){
+        if(tel.value.length == 10 || tel.value ==  /^[0-9]+$/){
+          document.querySelector("#tel-error").innerText="Please check your phone number."
+          tel.classList.add("is-invalid");
+        }
+        tel.value = formatPhoneNumber(tel.value);
+      })
       
       inputs.forEach(function (input) {
         input.addEventListener("input", function (e) {

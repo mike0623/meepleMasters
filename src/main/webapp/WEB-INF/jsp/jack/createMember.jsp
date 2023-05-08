@@ -91,6 +91,8 @@
                       <input type="text" class="form-control" id="tel" placeholder="09xxxxxxxx"
                         style="background-color: rgb(250, 240, 217)" />
                       <label for="tel">Phone</label>
+                      <div id="tel-error" class="invalid-feedback">
+                      </div>
                     </div>
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="address" placeholder="Address"
@@ -129,7 +131,7 @@
                       </div>
                     </div>
                   </div>
-                  
+
 
                 </div>
               </div>
