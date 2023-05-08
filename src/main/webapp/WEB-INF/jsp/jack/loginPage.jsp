@@ -52,7 +52,7 @@ include file="../include/common_link.jsp" %>
             <label for="password">Password</label>
           </div>
           <span>
-            <input type="checkbox" name="agree" id="agree" />Remember me.&nbsp;&nbsp;&nbsp;   
+            <input type="checkbox" name="agree" id="remember" />Remember me.&nbsp;&nbsp;&nbsp;   
             
             <div id="checkbox-error" class="invalid-feedback">
 
