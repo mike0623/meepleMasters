@@ -65,7 +65,7 @@ public class ProductController {
 			}
 		}
 		pService.addProduct(p);
-		return "redirect:/mall/product";
+		return "redirect:/mall/adminProduct";
 	}
 
 	// 透過ID刪除商品
@@ -83,22 +83,10 @@ public class ProductController {
 	@PostMapping("/mall/updateProduct")
 	public String updateProductById(@ModelAttribute Product p, @RequestParam(required = false) MultipartFile pImg)
 			throws IOException {
-		Integer productId = p.getProductId();
-		if (!pImg.isEmpty()) {
-			try {
-				BufferedInputStream bis = new BufferedInputStream(pImg.getInputStream());
-				p.setProductImg(bis.readAllBytes());
-				bis.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			byte[] productImg = pService.findProductById(productId).getProductImg();
-			p.setProductImg(productImg);
-		}
-		pService.updateProductById(p);
 
-		return "redirect:/mall/product";
+		pService.updateProductById(p, pImg);
+
+		return "redirect:/mall/adminProduct";
 	}
 
 	// 取得圖片

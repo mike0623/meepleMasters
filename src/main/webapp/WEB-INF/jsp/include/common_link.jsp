@@ -34,7 +34,6 @@
 <link href="${root}/css/admin/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 <!-- admin用JS -->
-<script src="${root}/js/admin/jquery.min.js"></script>
 <script src="${root}/js/admin/bootstrap.bundle.min.js"></script>
 <script src="${root}/js/admin/jquery.easing.min.js"></script>
 <script src="${root}/js/admin/sb-admin-2.min.js"></script>
