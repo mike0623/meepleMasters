@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>座位選擇</title>
+<title>${webName}</title>
 
 <style>
 
@@ -57,7 +57,7 @@
 		
 	  <input type="submit" value="送出">
 	</form>
-	
+
 	<script>
 		let mId = "${member.memberId}";
 

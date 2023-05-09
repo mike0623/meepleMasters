@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>座位選擇</title>
+<title>${webName}</title>
 
 <style>
 

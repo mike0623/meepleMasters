@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>訂位清單</title>
+<title>${webName}</title>
 <link rel="stylesheet" type="text/css" href="${root}/css/index.css">
 <style>
 
