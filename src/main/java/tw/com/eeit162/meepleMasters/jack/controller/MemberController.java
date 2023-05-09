@@ -91,8 +91,14 @@ public class MemberController {
 			System.out.println("管理員");
 			url.put("url", "/member/admin");
 			return url.toString();
+		}else {
+			if(optional.get().getMemberActive() == 1) {
+				
+				url.put("url","/index");
+				return url.toString();
+			}
 		}
-			url.put("url","/index");
+		url.put("url", "/login");
 		return url.toString();
 	}
 	
