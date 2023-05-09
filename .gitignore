@@ -32,3 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
+### JavaMail ###
+mail.properties
+
+### GoogleOauth2###
+google-oauth2.properties

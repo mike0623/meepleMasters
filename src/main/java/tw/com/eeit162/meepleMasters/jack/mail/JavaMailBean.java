@@ -4,7 +4,7 @@ public class JavaMailBean {
 	
 	private String userMail = "blingw1031@gmail.com";
 	
-	private String password = "wdxgwzveuccposfm";
+	private String password = "";
 	
 	private String memberMail = "meeplemasters@gmail.com";
 	
