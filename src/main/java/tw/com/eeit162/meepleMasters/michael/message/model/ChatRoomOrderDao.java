@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface ChatRoomOrderDao extends JpaRepository<ChatRoomOrder, Integer> {
 	
 	@Modifying
-	@Query("delete ChatRoomOrder where :fkOwner = fkOwner")
+	@Query("delete ChatRoomOrder where fkOwner = :fkOwner")
 	void deleteByFkOwner(@Param("fkOwner") Integer fkOwner);
 	
 	@Query("from ChatRoomOrder where fkOwner = :fkOwner order by chatOrderWhenLeave,createdDate")

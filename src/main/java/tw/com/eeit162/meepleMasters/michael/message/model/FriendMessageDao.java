@@ -1,5 +1,6 @@
 package tw.com.eeit162.meepleMasters.michael.message.model;
 
+import java.sql.ResultSet;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +23,6 @@ public interface FriendMessageDao extends JpaRepository<FriendMessage, Integer> 
 	Integer findNotRead(@Param("fkSenderId") Integer fkSenderId, @Param("fkReceiverId") Integer fkReceiverId);
 	
 	
+
 	
 }

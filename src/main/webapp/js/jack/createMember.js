@@ -17,7 +17,7 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
         confirmPwd.value = "123123123",
         age.value = 20,
         gender.value = "男",
-        tel.value = "0900111222",
+        tel.value = "0912345678",
         address.value = "台北市"
         
       });
@@ -41,7 +41,7 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
       
       email.addEventListener("blur",function(){
         
-        if (!email.value.includes("@"&&".")){
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){
             document.querySelector("#email-error").innerText="Please check your email format.";
             email.classList.add("is-invalid");
         }
@@ -63,10 +63,10 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
       
       
       password.addEventListener("blur", function () {
-        if (!password.value){
-            document.querySelector("#password-error").innerText="Your password shouldn't be empty."
+        if(!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password.value)){
+            document.querySelector("#password-error").innerText="Your password must contain letter and number at least 8 characters long."
             password.classList.add("is-invalid");
-        }
+          }
       });
       
       
@@ -77,6 +77,23 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
         }
       });
       
+      function formatPhoneNumber(phoneNumberString) {
+        // 移除字串中的所有非數字字元
+        let cleaned = phoneNumberString.replace(/\D/g, '');
+      
+        // 將字串分成三部分並添加空格
+        let formatted = cleaned.replace(/^(\d{4})(\d{3})(\d{3})$/, '$1-$2-$3');
+      
+        return formatted;
+      }
+
+      tel.addEventListener("blur",function(){
+        tel.value = formatPhoneNumber(tel.value);
+        if(!/^\d{4}-\d{3}-\d{3}$/.test(tel.value)){
+          document.querySelector("#tel-error").innerText="Please check your phone number."
+          tel.classList.add("is-invalid");
+        }
+      })
       
       inputs.forEach(function (input) {
         input.addEventListener("input", function (e) {
@@ -95,13 +112,16 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
             document.querySelector("#agree").classList.add("is-invalid");
           } 
           if(memberName.value==""||
-             !email.value.includes("@")||
+             !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)||
+             !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password.value)||
              password.value==""||
              confirmPwd.value==""||
-             password.value!=confirmPwd.value
+             password.value!=confirmPwd.value||
+             tel.value!=""||
+             !/^\d{4}-\d{3}-\d{3}$/.test(tel.value)
           ){
-            document.querySelector("#confirm-error").innerText="Please check your information."
-            document.querySelector("#confirm").classList.add("is-invalid");
+            document.querySelector("#confirm-error").classList.remove("d-none");
+            document.querySelector("#confirm-error").innerHTML = "請檢查輸入資訊是否有誤";
           }else {
             $('#modal-loading').modal('show');
             axios
@@ -120,7 +140,7 @@ const inputs = [memberName, email, password, confirmPwd, age, gender, tel, addre
                 window.location.href = root+"/login";
               })
               .catch((err) => {
-                // console.error(err);
+                console.error(err);
               });
           }
         });

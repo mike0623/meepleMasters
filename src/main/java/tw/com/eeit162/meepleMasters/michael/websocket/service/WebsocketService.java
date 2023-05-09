@@ -157,7 +157,18 @@ public class WebsocketService {
 				}
 			}
 		}
-		
+		//-------------------------------------------------------------------------------------
+		//詢問在線好友已邀請加入遊戲
+		if("getOnlineFriends".equals(action)) {
+			String onlineOfflineFriend = WebsocketUtil.getOnlineFriend(this.userEmail); //取得在線好友與非在線好友
+			JSONObject onOfflineJsonObject = new JSONObject(onlineOfflineFriend);
+			Object object = onOfflineJsonObject.get("onlineFriend");
+			JSONObject forGameInviteJson =  new JSONObject();
+			forGameInviteJson.put("action", "onlineFriendForGameInvite");
+			forGameInviteJson.put("onlineFriend", object);
+			//跟自己的前端說目前在線好友有誰，用來渲染頁面
+			WebsocketUtil.sendMessageByUserEmail(this.userEmail, forGameInviteJson.toString()); 
+		}
 		
 		
 		
