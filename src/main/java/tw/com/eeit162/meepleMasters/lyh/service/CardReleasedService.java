@@ -27,7 +27,7 @@ public class CardReleasedService {
 	@Autowired
 	private CardReleasedDao cRDao;
 	
-	public List<CardOwned> showOwnedCard(Integer memberId) {
+	public List<CardOwned> showMyCard(Integer memberId) {
 		
 		List<CardOwned> ownedCard = cODao.ownedCardStarOrderASC(memberId);
 //		System.out.println(ownedCard.toString());

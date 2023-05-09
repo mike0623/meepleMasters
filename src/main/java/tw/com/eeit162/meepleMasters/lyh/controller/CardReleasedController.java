@@ -41,7 +41,7 @@ public class CardReleasedController {
 		Member member = (Member)session.getAttribute("member");
 		Integer memberId = member.getMemberId();
 		
-		List<CardOwned> ownedCard = cRService.showOwnedCard(memberId);
+		List<CardOwned> ownedCard = cRService.showMyCard(memberId);
 //		System.out.println(ownedCard.toString());
 		
 		JSONObject jsonObject = new JSONObject();
@@ -154,6 +154,24 @@ public class CardReleasedController {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
 		if (dataArray != null && !dataArray.isEmpty()) {
+			return new ResponseEntity<>(jsonObject.toMap(), headers, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+	}
+	
+	@GetMapping("/owned/{ownedId}")
+	public ResponseEntity<?> showOwnedCard(@PathVariable("ownedId") Integer ownedId) {
+		CardOwned showOnwedDetail = cRService.showOnwedDetail(ownedId);
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("showOnwedDetail", showOnwedDetail);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		if (jsonObject != null && !jsonObject.isEmpty()) {
 			return new ResponseEntity<>(jsonObject.toMap(), headers, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

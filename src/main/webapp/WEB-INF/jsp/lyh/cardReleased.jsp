@@ -11,6 +11,7 @@
 <title>${webName}</title>
 <link rel="stylesheet" type="text/css" href="${root}/css/card/cardReleased.css">
 <link rel="stylesheet" type="text/css" href="${root}/css/card/cardList.css">
+<link rel="stylesheet" type="text/css" href="${root}/css/card/mycard.css">
 </head>
 <body>
 
@@ -41,8 +42,54 @@
         function getAllList() {
             return axios.get("${root}/released/all")
             .then(res => {
-                let htmlstr;
-                console.log(res.data.cardList)
+                let htmlstr = "";
+                
+                let onwedIdArray = [];
+
+                for (i = 0; i < res.data.cardList.length; i++) {
+                    // console.log(res.data.cardList[i])
+                    onwedIdArray.push($.get(`${root}/released/owned/\${res.data.cardList[i].fkOwnedId}`))    
+                }
+
+                let cardArray = [];
+
+                Promise.all(onwedIdArray).then(function(ownedRes) {
+                    
+                    for(i = 0; i < ownedRes.length; i++) {
+                        // console.log(ownedRes[i].showOnwedDetail)
+                        cardArray.push($.get(`${root}/released/getCard/\${ownedRes[i].showOnwedDetail.fkCardId}`))
+                    }
+
+                    let cardDetailImg = [];
+                    let cardName = [];
+                    
+                    Promise.all(cardArray).then(function(cardRes) {
+                        
+                        for (i = 0; i < cardRes.length; i++) {
+                            cardDetailImg.push(`${root}/card/downloadCard/\${cardRes[i].card.cardId}`)
+                            cardName.push(`\${cardRes[i].card.cardName}`)
+                            console.log(cardRes[i].card.cardName)
+                        }
+                        
+                        Promise.all(cardDetailImg).then(function(results){
+
+                            console.log(cardName)
+                            for (i = 0; i < cardName.length; i++) {
+                                htmlstr += `<div class="col-3 d-flex"><div class="card">`;
+                                htmlstr += `<figure><img alt="" src="\${results[i]}" class="hanafuda">`;
+                                htmlstr += `<figcaption>\${cardName[i]}</figcaption>`;
+                                htmlstr += `</figure></div></div>`;
+                            }
+
+                            
+                            console.log("htmlstr" + htmlstr);
+                            $("#cardContainer").append(htmlstr);
+
+                        })
+                    })
+                })
+                
+                
             })
             .catch(err => {
                 console.error(err); 
