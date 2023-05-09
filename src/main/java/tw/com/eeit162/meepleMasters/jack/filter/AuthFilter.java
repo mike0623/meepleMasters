@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+
 public class AuthFilter extends OncePerRequestFilter {
 
 	@Override
@@ -17,7 +19,14 @@ public class AuthFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String contextPath = request.getContextPath();
-		session.getAttribute("member");
+		Member attribute = (Member)session.getAttribute("member");
+		System.out.println(attribute.getMemberActive());
+		if((attribute.getMemberActive())==0) {
+			response.sendRedirect(contextPath + "/login");
+		}else {
+			 filterChain.doFilter(request, response);
+		}
+		
 	}
 
 }

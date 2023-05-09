@@ -14,45 +14,148 @@
 
 <body>
     <jsp:include page="../include/header.jsp"></jsp:include>
-    <div class="login-root">
-        <div class="box-root flex-flex flex-direction--column" style="flex-grow: 1;">
-            <div class="box-root padding-top--48 padding-bottom--24 flex-flex flex-justifyContent--center">
-                <h1>卡片上架</h1>
+    <div class="newReleaseContainer"></div>
+    <main>
+        <figure>
+            <picture>
+                <img src="${root}/img/logo.png" alt="Citymap illustration" class="newReleaseIcon" />
+            </picture>
+        </figure>
+
+        <form>
+            <span class="headline">
+                <h2 class="text-headline">卡片上架</h2>
+            </span>
+            <span class="form-group mb-3" style="position: relative; top: -20;">
+                <label for="ownedId" class="text-small-uppercase form-label" style="width: 100%;">選擇卡片
+                    <select class="text-body form-control form-select" id="ownedId" name="ownedId" type="text" required>
+                        <option id="notSelect">請選擇卡片</option>
+                    </select>
+                </label>
+            </span>
+            <span class="form-group mb-3">
+                <label for="price" class="text-small-uppercase form-label">售出價</label>
+                <input class="text-body" id="price" name="price" type="text"
+                    onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" required>
+            </span>
+            <span class="form-group mb-3">
+                <label for="city" class="text-small-uppercase form-label">結束時間</label>
+                <input class="text-body" id="city" name="city" type="text" required>
+            </span>
+            <div class="wrapper form-group mb-3">
+                <input type="radio" name="select" id="option-1" checked>
+                <input type="radio" name="select" id="option-2">
+                <label for="option-1" class="option option-1 form-label">
+                    <div class="dot"></div>
+                    <span>直接出價</span>
+                </label>
+                <!-- <label for="option-2" class="option option-2">
+                    <div class="dot"></div>
+                    <span>Teacher</span>
+                </label> -->
             </div>
-            <div class="formbg-outer">
-                <div class="formbg">
-                    <div class="formbg-inner padding-horizontal--48">
-                        <span class="padding-bottom--15">卡片上架</span>
-                        <form id="stripe-login">
-                            <div class="field padding-bottom--24">
-                                <label for="email">Email</label>
-                                <input type="email" name="email">
-                            </div>
-                            <div class="field padding-bottom--24">
-                                <div class="grid--50-50">
-                                    <label for="password">Password</label>
-                                </div>
-                                <input type="password" name="password">
-                            </div>
-                            <div class="field field-checkbox padding-bottom--24 flex-flex align-center">
-                                <label for="checkbox">
-                                    <input type="checkbox" name="checkbox"> Stay signed in for a week
-                                </label>
-                            </div>
-                            <div class="field padding-bottom--24">
-                                <input type="submit" name="submit" value="Continue">
-                            </div>
-
-                        </form>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-
-    </div>
+            <input class="text-small-uppercase" id="submit" type="submit" value="上架">
+        </form>
+    </main>
     <jsp:include page="../include/footer.jsp"></jsp:include>
+
+    <script>
+
+        let card = [];
+
+        $.get("${root}/released/ownedCard", function (data) {
+
+            function compare(a, b) {
+                if (a.id < b.id) {
+                    return -1;
+                }
+                if (a.id > b.id) {
+                    return 1;
+                }
+                return 0;
+            }
+
+            function compare(a, b) {
+                if (a.fkCardId < b.fkCardId) {
+                    return -1;
+                }
+                if (a.fkCardId > b.fkCardId) {
+                    return 1;
+                }
+                return 0;
+            }
+            (data.cardList).sort(compare)
+            for (i = 0; i < data.cardList.length; i++) {
+                card.push(data.cardList[i]);
+            }
+
+            let cardIdArray = []
+
+            for (i = 0; i < card.length; i++) {
+                let cardid = card[i].fkCardId;
+                cardIdArray.push(cardid)
+                $.get(`${root}/released/getCard/\${cardid}`, function (cardData) {
+                    console.log(cardData.card.cardId)
+                    $("#ownedId").append(`<option value="\${cardData.card.cardId}">\${cardData.card.cardName}</option>`)
+                })
+            }
+
+            $("#ownedId").change(function() {
+
+            })
+
+
+        })
+
+        var inputs = document.querySelectorAll('input[type=text], input[type=email]');
+        for (i = 0; i < inputs.length; i++) {
+            var inputEl = inputs[i];
+            if (inputEl.value.trim() !== '') {
+                inputEl.parentNode.classList.add('input--filled');
+            }
+            inputEl.addEventListener('focus', onFocus);
+            inputEl.addEventListener('blur', onBlur);
+        }
+
+        function onFocus(ev) {
+            ev.target.parentNode.classList.add('inputs--filled');
+        }
+
+        function onBlur(ev) {
+            if (ev.target.value.trim() === '') {
+                ev.target.parentNode.classList.remove('inputs--filled');
+            } else if (ev.target.checkValidity() == false) {
+                ev.target.parentNode.classList.add('inputs--invalid');
+                ev.target.addEventListener('input', liveValidation);
+            } else if (ev.target.checkValidity() == true) {
+                ev.target.parentNode.classList.remove('inputs--invalid');
+                ev.target.addEventListener('input', liveValidation);
+            }
+        }
+
+        function liveValidation(ev) {
+            if (ev.target.checkValidity() == false) {
+                ev.target.parentNode.classList.add('inputs--invalid');
+            } else {
+                ev.target.parentNode.classList.remove('inputs--invalid');
+            }
+        }
+
+        var submitBtn = document.querySelector('input[type=submit]');
+        submitBtn.addEventListener('click', onSubmit);
+
+        function onSubmit(ev) {
+            var inputsWrappers = ev.target.parentNode.querySelectorAll('span');
+            for (i = 0; i < inputsWrappers.length; i++) {
+                input = inputsWrappers[i].querySelector('input[type=text], input[type=email]');
+                if (input.checkValidity() == false) {
+                    inputsWrappers[i].classList.add('inputs--invalid');
+                } else if (input.checkValidity() == true) {
+                    inputsWrappers[i].classList.remove('inputs--invalid');
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>

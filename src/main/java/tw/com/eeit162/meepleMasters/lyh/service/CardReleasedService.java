@@ -2,10 +2,12 @@ package tw.com.eeit162.meepleMasters.lyh.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardReleased;
 import tw.com.eeit162.meepleMasters.lyh.model.dao.CardDao;
@@ -26,7 +28,8 @@ public class CardReleasedService {
 	
 	public List<CardOwned> showOwnedCard(Integer memberId) {
 		
-		List<CardOwned> ownedCard = cODao.findByFkMemberId(memberId);
+		List<CardOwned> ownedCard = cODao.ownedCardStarOrderASC(memberId);
+//		System.out.println(ownedCard.toString());
 		
 		if (ownedCard.isEmpty()) {
 			return null;
@@ -35,8 +38,19 @@ public class CardReleasedService {
 		return ownedCard;
 	}
 	
+	public Card findCardById(Integer cardId) {
+		Optional<Card> card = cDao.findById(cardId);
+		
+		if (card.isEmpty()) {
+			return null;
+		}
+		
+		return card.get();
+	}
 	
-	public CardReleased insertNewRelease(Integer ownedId, Integer type, Date endTime) {
+	
+	
+	public CardReleased insertCardReleased(Integer ownedId, Integer type, Date endTime) {
 		
 		CardReleased cr = new CardReleased();
 		

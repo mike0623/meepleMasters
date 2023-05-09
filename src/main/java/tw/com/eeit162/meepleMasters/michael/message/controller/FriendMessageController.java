@@ -66,6 +66,37 @@ public class FriendMessageController {
 		
 		messageService.insertFriendMessage(friendMessage);
 	}
+	
+	//一樣傳訊息記錄到資料庫，但是是安全的來源，所以不做安全性保護
+	@PostMapping("/friendMessage/insertFriendMessageFromSystem")
+	@ResponseBody
+	public void insertFriendMessageFromSystem(@RequestBody String json) {
+		FriendMessage friendMessage = new FriendMessage();
+		JSONObject body = new JSONObject(json);
+		Integer senderId = DataInterface.getMemberByEmail(body.getString("sender")).getMemberId();
+		Integer receiverId = DataInterface.getMemberByEmail(body.getString("receiver")).getMemberId();
+		Integer messageType = body.getInt("messageType");
+
+		if(messageType == 1) {
+			//做文字的事情
+			String messageText = body.getString("messageText");
+			Integer messageTextNewId = DataInterface.getMessageTextNewId(messageText);
+			friendMessage.setFkMessageContent(messageTextNewId);
+		}
+		if(messageType == 2) {
+			//做貼圖的事情
+			Integer messageSticker = body.getInt("messageSticker");
+			Integer messageStickerNewId = DataInterface.getMessageStickerNewId(messageSticker);
+			friendMessage.setFkMessageContent(messageStickerNewId);
+		}
+		friendMessage.setFkSenderId(senderId);
+		friendMessage.setFkReceiverId(receiverId);
+		friendMessage.setMessageType(messageType);
+		friendMessage.setHaveRead(0);
+		
+		
+		messageService.insertFriendMessage(friendMessage);
+	}
 
 	@PostMapping("/friendMessage/updateHaveRead")
 	public ResponseEntity<Void> updateHaveRead(@RequestBody String json) {

@@ -45,23 +45,34 @@ public class CardListController {
 		List<CardOwned> oldCardList = cListService.listOwnedCard(memberId);
 		CardOwned newCard = cListService.insertCardToList(memberId);
 		
-		
-		System.out.println("newCard: "+newCard.toString());
-		System.out.println("oldCardList: "+oldCardList.toString());
+//		System.out.println("newCard: "+newCard.toString());
+//		System.out.println("oldCardList: "+oldCardList.toString());
 
 		card = cListService.findById(newCard.getFkCardId());
+		
 		JSONObject jsonObject = new JSONObject();
-		for (int i = 0; i < oldCardList.size(); i++) {
-			if (newCard.getFkCardId().equals(oldCardList.get(i).getFkCardId())) {
-				jsonObject.put("isNew", false);
-				System.out.println(newCard.getFkCardId());
-				System.out.println(oldCardList.get(i).getFkCardId());
-				break;
-			} else {
-				jsonObject.put("isNew", true);
+		if (oldCardList != null) {
+			for (int i = 0; i < oldCardList.size(); i++) {
+				if (newCard.getFkCardId().equals(oldCardList.get(i).getFkCardId())) {
+					jsonObject.put("isNew", false);
+					System.out.println(newCard.getFkCardId());
+					System.out.println(oldCardList.get(i).getFkCardId());
+					break;
+				} else {
+					jsonObject.put("isNew", true);
+				}
 			}
+		} else {
+			jsonObject.put("isNew", true);
 		}
+		
+		member = cListService.findMember(memberId);
+		session.setAttribute("member", member);
+		Integer memberCoin = member.getMemberCoin();
+		System.out.println(member.getMemberCoin());
+		
 		jsonObject.put("newCard", card);
+		jsonObject.put("memberCoin", memberCoin);
 		return jsonObject.toString();
 	}
 

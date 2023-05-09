@@ -117,6 +117,10 @@ public class FriendMessage implements Serializable{
 		this.fkMessageContent = fkMessageContent;
 	}
 
+
+	
+	
+
 	
 	
 

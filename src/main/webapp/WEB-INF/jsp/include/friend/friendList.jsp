@@ -125,7 +125,7 @@
 //		//接收訊息時
 		ws.onmessage = function(message){
 			console.log("有收到訊息:",message);
-			var json = JSON.parse(message.data)
+			var json = JSON.parse(message.data);
 			var action = json.action;
 //			if(新增刪除好友){
 //				refleshFriendContent();
@@ -328,12 +328,82 @@
 				//更新好友邀請欄
 				findFriendInvite();
 			}
+			//--------------------以下為遊戲相關
+			//邀請加入遊戲，取得在線好友
+			if("onlineFriendForGameInvite" == action){
+				console.log(json.onlineFriend);
+				let onlineKeyArray = Object.keys(json.onlineFriend);
+				let onlineValueArray = Object.values(json.onlineFriend);
+				$(".inviteFriendToGame").show();
+				$(".inviteFriendToGame").empty();
+				if(onlineValueArray.length == 0){
+					$(".inviteFriendToGame").append(`<h4>好友均不在線</h4>`);
+				}
+				for(let i = 0;i<onlineValueArray.length;i++){
+					console.log(onlineValueArray[i]);
+					$(".inviteFriendToGame").append(`
+						<div class="container text-center">
+							<div class="row">
+								<div class="col-4"><img class="memberImg" src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+onlineKeyArray[i]+`" alt=""></div>
+								<div class="col-4">
+									<span>`+ onlineValueArray[i] +`</span>
+								</div>
+								<div class="col-4">
+									<button name="`+ onlineKeyArray[i].replace('@','').replace('.','') +`" onclick="inviteFriendToTheGame(this.name)">邀請</button>
+								</div>
+							</div>
+						</div>
+							`);
+				}
+			}
+			//有玩家加入遊戲房間時
+			if("someoneJoinGame" == action && true == isRoomPage){
+				//有空時改成直接調整畫面，以確認重新整理沒問題
+				window.location.reload();
+			}
+			//有玩家離開房間時
+			if("someoneLeaveGame" == action && true == isRoomPage){
+				//有空時改成直接調整畫面，以確認重新整理沒問題
+				window.location.reload();
+			}
+			//當有房間開放時，若我在Lobby頁面，且該遊戲的顯示是展開的
+			if("gameIsOpening" == action && true == isGameLobbyPage){
+				let gameName = json.gameName;
+				console.log(gameName);
+				if("收合" == $("#"+gameName).text()){
+					showExistGameArea(gameName);//關閉
+					showExistGameArea(gameName);//然後立刻打開，重新渲染
+				}
+			}
+			//當房主離開房間
+			if("hostCloseGame" == action && true == isRoomPage){
+				alert("房主離開房間了");
+				window.location.href = "${root}/game/playGameLobby";
+			}
+			//當被房主踢掉時
+			if("youHaveBeenKickOutOfTheRoom" == action && true == isRoomPage){
+				window.location.href = "${root}/game/playGameLobby";
+				alert("您已被房主踢除房間");
+			}
+			//當遊戲開始時
+			if("gameStart" == action){
+				alert("遊戲開始了");
+				let gameName = json.gameName;
+				let tableCode = json.tableCode;
+				window.location.href = "${root}/game/enterGameView/"+gameName+"/"+tableCode+"/${member.memberEmail}";
+			}
 			
 			
 			
 			
 			
+
 			
+			
+			
+//			//--------------------------------------------------------------
+//			//--------------------------------------------------------------
+//			//以上為onmessage
 		}
 
 		
