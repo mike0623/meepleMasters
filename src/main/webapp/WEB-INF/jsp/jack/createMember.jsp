@@ -111,7 +111,8 @@
                       <button class="btn btn-outline-secondary btn-sm" type="button" id="confirm">
                         確認
                       </button>
-                      <div id="confirm-error" class="invalid-feedback"></div>
+                      <div id="confirm-error" class="d-none alert alert-danger alert-dismissible fade show" role="alert" style="text-align:center;">
+                      </div>
                     </div>
                   </form>
                   <button class="btn btn-outline-primary btn-sm" type="button" id="member">

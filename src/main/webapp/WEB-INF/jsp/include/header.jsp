@@ -32,7 +32,7 @@
                                 <ul>
     
                                     <li><a href="${root}/card/mycard/${member.memberId}">我的卡片</a></li>
-                                    <li><a href="#">卡片市集</a></li>
+                                    <li><a href="${root}/card/releasedList">卡片市集</a></li>
                                     <li><a href="#">收藏記錄</a></li>
     
                                 </ul>

@@ -40,10 +40,12 @@ document.querySelector("#login").addEventListener("click",function(e){
             var url = res.data.url;
             window.location.href= root+ url;
 
+            
+
 
         })
         .catch(err => {
-            // console.error(err); 
+            console.error(err); 
         })
     
 //    if (!document.querySelector("#agree").checked) {
@@ -64,6 +66,47 @@ password.addEventListener("focus", function(){
     document.querySelector("#login-error").classList.add("d-none");
 })
 
-document.querySelector("#agree").addEventListener("change", function () {
-    document.querySelector("#agree").classList.remove("is-invalid")
+document.querySelector("#remember").addEventListener("change", function () {
+    document.querySelector("#remember").classList.remove("is-invalid")
   });
+
+// Remember me
+// document.querySelector("#login").addEventListener("click",function(){
+
+// // 獲取當前時間
+// const now = new Date();
+
+// // 當前時間加上兩周時間
+// const twoWeeksLater = new Date(now.getTime() + (14 * 24 * 60 * 60 * 1000));
+
+// // 將時間轉為GMT String
+// const expires = twoWeeksLater.toUTCString();
+
+// if (document.querySelector("#remember").checked) {
+//   document.cookie = `email=${member.memberEmail}; expires=${expires}; path=/`;
+//   document.cookie = `password=${member.memberPwd}; expires=${expires}; path=/`;
+// }
+
+// window.addEventListener("load", function() {
+//   const cookieEmail = getCookie(email);
+//   const cookiePwd = getCookie(password);
+//   console.log(cookieEmail)
+//   console.log(cookiePwd)
+//   if (cookieEmail && cookiePwd) {
+//     email.value = cookieEmail;
+//     password.value = cookiePwd;
+//     rememberMeCheckbox.checked = true;
+//   }
+// });
+
+// function getCookie(name) {
+//   const cookies = document.cookie.split("; ");
+//   for (const cookie of cookies) {
+//     const [cookieName, cookieValue] = cookie.split("=");
+//     if (cookieName === name) {
+//       return cookieValue;
+//     }
+//   }
+//   return null;
+// }
+// })

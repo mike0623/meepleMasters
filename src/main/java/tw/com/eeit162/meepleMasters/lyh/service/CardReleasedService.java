@@ -28,7 +28,8 @@ public class CardReleasedService {
 	
 	public List<CardOwned> showOwnedCard(Integer memberId) {
 		
-		List<CardOwned> ownedCard = cODao.findByFkMemberId(memberId);
+		List<CardOwned> ownedCard = cODao.ownedCardStarOrderASC(memberId);
+//		System.out.println(ownedCard.toString());
 		
 		if (ownedCard.isEmpty()) {
 			return null;

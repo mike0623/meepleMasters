@@ -49,6 +49,7 @@ public class CardListController {
 //		System.out.println("oldCardList: "+oldCardList.toString());
 
 		card = cListService.findById(newCard.getFkCardId());
+		
 		JSONObject jsonObject = new JSONObject();
 		if (oldCardList != null) {
 			for (int i = 0; i < oldCardList.size(); i++) {
