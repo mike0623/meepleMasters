@@ -27,6 +27,12 @@ public class CardReleased {
 	@Column(name = "fk_ownedId")
 	private Integer fkOwnedId;
 	
+	@Column(name = "directPrice")
+	private Integer directPrice;
+	
+	@Column(name = "startPrice")
+	private Integer startPrice;
+	
 	@Column(name = "type")
 	private Integer type;
 	
@@ -41,6 +47,9 @@ public class CardReleased {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "endTime")
 	private Date endTime;
+	
+	@Column(name = "releasedStatus")
+	private Integer releasedStatus;
 
 	public CardReleased() {
 	}
@@ -84,5 +93,40 @@ public class CardReleased {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
+	
+	public Integer getDirectPrice() {
+		return directPrice;
+	}
 
+	public void setDirectPrice(Integer directPrice) {
+		this.directPrice = directPrice;
+	}
+
+	public Integer getStartPrice() {
+		return startPrice;
+	}
+
+	public void setStartPrice(Integer startPrice) {
+		this.startPrice = startPrice;
+	}
+
+	public Integer getReleasedStatus() {
+		return releasedStatus;
+	}
+
+	public void setReleasedStatus(Integer releasedStatus) {
+		this.releasedStatus = releasedStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "CardReleased [releasedId=" + releasedId + ", fkOwnedId=" + fkOwnedId + ", directPrice=" + directPrice
+				+ ", startPrice=" + startPrice + ", type=" + type + ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", releasedStatus=" + releasedStatus + ", getReleasedId()=" + getReleasedId() + ", getFkOwnedId()="
+				+ getFkOwnedId() + ", getType()=" + getType() + ", getStartTime()=" + getStartTime() + ", getEndTime()="
+				+ getEndTime() + ", getDirectPrice()=" + getDirectPrice() + ", getStartPrice()=" + getStartPrice()
+				+ ", getReleasedStatus()=" + getReleasedStatus() + ", getClass()=" + getClass() + ", hashCode()="
+				+ hashCode() + ", toString()=" + super.toString() + "]";
+	}
+	
 }

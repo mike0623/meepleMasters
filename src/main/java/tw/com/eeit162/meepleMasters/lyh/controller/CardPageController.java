@@ -16,7 +16,7 @@ public class CardPageController {
 		return "lyh/mycard";
 	}
 	
-	@GetMapping("/released")
+	@GetMapping("/card/releasedList")
 	public String cardReleased() {
 		return "lyh/cardReleased";
 	}

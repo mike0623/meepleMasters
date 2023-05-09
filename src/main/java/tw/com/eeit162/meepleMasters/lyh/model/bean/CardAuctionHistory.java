@@ -82,5 +82,10 @@ public class CardAuctionHistory {
 		this.bidTime = bidTime;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "CardAuctionHistory [cardAuctionHistoryId=" + cardAuctionHistoryId + ", fkAuctionId=" + fkAuctionId
+				+ ", fkBidderId=" + fkBidderId + ", bidPrice=" + bidPrice + ", bidTime=" + bidTime + "]";
+	}
+
 }

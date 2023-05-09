@@ -10,24 +10,48 @@
 <meta charset="UTF-8">
 <title>${webName}</title>
 <link rel="stylesheet" type="text/css" href="${root}/css/card/cardReleased.css">
+<link rel="stylesheet" type="text/css" href="${root}/css/card/cardList.css">
 </head>
 <body>
 
     <jsp:include page="../include/header.jsp"></jsp:include>
-    <div class="bodyContainer">
-        <div class="releasedContainer">
-            <div class="releasedTitle">交易市集</div>
+    <div class="releasedContainer">
+        <div class="releasedTitle">交易市集</div>
             <div class="releasedSelect">
                 <button></button>
 
             </div>
+        <div class="row container cardContainer justify-content-center" id="cardContainer">
+
 
 
 
 
         </div>
-        <jsp:include page="../include/footer.jsp"></jsp:include>
+        
     </div>
+    <jsp:include page="../include/footer.jsp"></jsp:include>
+
+    <script>
+
+        $(async function(){
+            await getAllList();
+        })
+
+        function getAllList() {
+            return axios.get("${root}/released/all")
+            .then(res => {
+                let htmlstr;
+                console.log(res.data.cardList)
+            })
+            .catch(err => {
+                console.error(err); 
+            })
+        }
+
+        
+
+    </script>
 
 </body>
 </html>

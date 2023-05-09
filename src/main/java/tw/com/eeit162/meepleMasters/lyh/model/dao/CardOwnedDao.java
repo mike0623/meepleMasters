@@ -24,7 +24,7 @@ public interface CardOwnedDao extends JpaRepository<CardOwned, Integer> {
 	List<CardOwned> ownedCardStarOrderASC(@Param("memberId") Integer memberId);
 	
 	@Transactional
-	@Modifying
+	@Modifying(clearAutomatically = true)
 	@Query("update CardOwned set cardStatus = 3 where ownedId = :ownedId")
 	Integer updateCardStatusToSell(@Param("ownedId") Integer ownedId);
 	

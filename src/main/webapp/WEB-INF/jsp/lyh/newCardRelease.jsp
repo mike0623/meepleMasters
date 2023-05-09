@@ -14,33 +14,33 @@
 
 <body>
     <jsp:include page="../include/header.jsp"></jsp:include>
-    <div class="newReleaseContainer"></div>
+    <div class="backButton"><button type="button" class="btn btn-outline-secondary" onclick="location.href='${root}/card/releasedList'">返回卡片市集</button></div>
     <main>
         <figure>
             <picture>
-                <img src="${root}/img/logo.png" alt="Citymap illustration" class="newReleaseIcon" />
+                <img src="${root}/img/logo.png" alt="Citymap illustration" class="newReleaseIcon" id="releaseCardImg" />
             </picture>
         </figure>
 
-        <form>
+        <form action="${root}/released/insertCardDirect" method="post">
             <span class="headline">
                 <h2 class="text-headline">卡片上架</h2>
             </span>
             <span class="form-group mb-3" style="position: relative; top: -20;">
-                <label for="ownedId" class="text-small-uppercase form-label" style="width: 100%;">選擇卡片
-                    <select class="text-body form-control form-select" id="ownedId" name="ownedId" type="text" required>
-                        <option id="notSelect">請選擇卡片</option>
+                <label for="ownedId" class="text-small-uppercase form-label" style="width: 100%;">我的卡片
+                    <select class="text-body form-control form-select" id="ownedId" name="ownedId" type="text" style="margin-top: 5px;" path="fkOwnedId" required>
+                        <option id="notSelect" value="">請選擇卡片</option>
                     </select>
                 </label>
             </span>
             <span class="form-group mb-3">
                 <label for="price" class="text-small-uppercase form-label">售出價</label>
                 <input class="text-body" id="price" name="price" type="text"
-                    onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" required>
+                    onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" path="directPrice" required />
             </span>
             <span class="form-group mb-3">
-                <label for="city" class="text-small-uppercase form-label">結束時間</label>
-                <input class="text-body" id="city" name="city" type="text" required>
+                <label for="endTime" class="text-small-uppercase form-label">結束時間（至選擇日期的23:59）</label>
+                <input class="text-body" id="endTime" name="endTime" type="text" path="endTime" required />
             </span>
             <div class="wrapper form-group mb-3">
                 <input type="radio" name="select" id="option-1" checked>
@@ -58,7 +58,6 @@
         </form>
     </main>
     <jsp:include page="../include/footer.jsp"></jsp:include>
-
     <script>
 
         let card = [];
@@ -85,27 +84,83 @@
                 return 0;
             }
             (data.cardList).sort(compare)
+            let cardOwnedId = []
+
             for (i = 0; i < data.cardList.length; i++) {
-                card.push(data.cardList[i]);
+                card.push(data.cardList[i].fkCardId);
+                cardOwnedId.push(data.cardList[i].ownedId)
             }
+            console.log("cardOwnedId: " + cardOwnedId);
 
             let cardIdArray = []
 
             for (i = 0; i < card.length; i++) {
-                let cardid = card[i].fkCardId;
-                cardIdArray.push(cardid)
-                $.get(`${root}/released/getCard/\${cardid}`, function (cardData) {
-                    console.log(cardData.card.cardId)
-                    $("#ownedId").append(`<option value="\${cardData.card.cardId}">\${cardData.card.cardName}</option>`)
-                })
+                let cardid = card[i];
+                console.log("cardid: " + cardid);
+                cardIdArray.push($.get(`${root}/released/getCard/\${cardid}`));
             }
+            // console.log(cardIdArray)
 
-            $("#ownedId").change(function() {
+            let times = 0;
 
+            Promise.all(cardIdArray).then(function (results) {
+                results.forEach(function (cardData) {
+                    // console.log("cardData: " + cardData);
+
+                    let cardStar = cardData.card.cardStar;
+                    let star = "☆";
+
+                    if (cardStar == 1) {
+                        star = "☆";
+                    } else if (cardStar == 2) {
+                        star = "☆☆";
+                    } else if (cardStar == 3) {
+                        star = "☆☆☆";
+                    } else if (cardStar == 4) {
+                        star = "☆☆☆☆";
+                    } else if (cardStar == 5) {
+                        star = "☆☆☆☆☆";
+                    }
+
+                    $("#ownedId").append(`<option value="\${cardOwnedId[times]}" label="\${cardData.card.cardId}">\${star} \${cardData.card.cardName}</option>`);
+
+                    times += 1;
+                });
+            });
+        })
+
+        $("#ownedId").change(function () {
+            $("#ownedId option:selected").each(function () {
+                let id = $(this).attr('label')
+                console.log(id)
+                let imageUrl = `${root}/card/downloadCard/\${id}`;
+                $("#releaseCardImg").removeClass("newReleaseIcon");
+                $("#releaseCardImg").attr("src", imageUrl);
             })
 
-
+            let id = $(this).find("option:selected").attr("id");
+            if (id == "notSelect") {
+                $("#releaseCardImg").addClass("newReleaseIcon");
+                $("#releaseCardImg").attr("src", "${root}/img/logo.png");
+            }
         })
+
+        
+        // $.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
+
+        $("#endTime").datepicker({
+            changeMonth: true,
+            changeYear: true, 
+            dateFormat: 'yy-mm-dd',
+            minDate: 0
+        });
+
+        $("#endTime").on("change", function () {
+            let selectedDate = $("#endTime").datepicker("getDate");
+            if (selectedDate != "") {
+                $(this).parent().addClass("inputs--filled");
+            }
+        });
 
         var inputs = document.querySelectorAll('input[type=text], input[type=email]');
         for (i = 0; i < inputs.length; i++) {

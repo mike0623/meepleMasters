@@ -59,13 +59,14 @@
             padding: 10%;
             position: relative;
             width: 100%;
+            height: 100%;
         }
 
         @media (min-width: 768px) {
             form {
                 float: left;
-                height: 78%;
-                padding: 6%;
+                height: 100%;
+                padding: 30px;
                 width: 60%;
             }
         }
@@ -86,6 +87,7 @@
                 transform: translate(-50%, -50%);
                 top: 50%;
                 width: 42.5rem;
+                height: 100%;
             }
         }
 
@@ -187,6 +189,7 @@
             background: #f9f6ed;
             border-radius: 0.25rem;
             box-shadow: 0 6px 22px rgba(0, 0, 0, 0.1);
+            height: 500px;
         }
 
         .text-headline {
@@ -234,6 +237,19 @@
             }
         }
 
+        .form-select {
+            border-color: #74bdb7;
+        }
+
+        .backButton {
+            position: relative;
+            top: 150px;
+            left: 300px;
+            width: 200px;
+            height: 100px;
+        }
+        
+
         /* radio */
 
         @import url('https://fonts.googleapis.com/css?family=Lato:400,500,600,700&display=swap');
@@ -257,7 +273,7 @@
             bottom: 130px;
             background: #fff;
             height: 40px;
-            width: 40%;
+            width: 140px;
             display: flex;
             align-items: center;
             justify-content: space-evenly;
