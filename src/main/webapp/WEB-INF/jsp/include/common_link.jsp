@@ -45,3 +45,7 @@
 <script type="text/javascript">
 	const root = "${root}";
 </script>
+
+<!-- datepicker -->
+<link rel="stylesheet" type="text/css" href="${root}/js/jquery-ui-1.13.2.custom/jquery-ui.min.css" />
+<script type="text/javascript" src="${root}/js/jquery-ui-1.13.2.custom/jquery-ui.min.js"></script>
