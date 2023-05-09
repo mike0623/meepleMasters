@@ -11,15 +11,16 @@ prefix="c"%>
   </head>
   <body>
     <jsp:include page="/WEB-INF/jsp/include/header.jsp" />
-    <div class="bodyContainer gameCardDiv">
-      <div class="gameListTitle">
-        遊戲列表
-        <div class="link-top"></div>
+    <div class="bodyContainer">
+      <div class="container gameCardDiv">
+        <div><a href="${root}/mall/shoppingCart">購物車</a></div>
+        <div class="gameListTitle">
+          遊戲列表
+          <div class="link-top"></div>
+        </div>
+        <div class="pageButton"></div>
+        <div class="row px-4 pt-4 justify-content-center" id="dataHome"></div>
       </div>
-
-      <div class="row px-4 pt-4 justify-content-center" id="dataHome"></div>
-
-      <div class="pageButton"></div>
     </div>
     <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
     <script>

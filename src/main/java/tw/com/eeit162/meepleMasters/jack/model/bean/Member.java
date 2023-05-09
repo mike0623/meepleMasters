@@ -1,13 +1,15 @@
 package tw.com.eeit162.meepleMasters.jack.model.bean;
 
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -15,56 +17,67 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
 
 @Entity
 @Table(name = "member")
 public class Member {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "memberId")
 	private Integer memberId;
-	
+
 	@Column(name = "memberEmail")
 	private String memberEmail;
-	
+
 	@Column(name = "memberPwd")
 	private String memberPwd;
-	
+
 	@Column(name = "memberLevel")
 	private String memberLevel;
-	
+
 	@Column(name = "memberActive")
 	private Integer memberActive;
-	
+
 	@Column(name = "memberName")
 	private String memberName;
-	
+
 	@Column(name = "memberImg")
 	private byte[] memberImg;
-	
+
 	@Column(name = "memberAge")
 	private Integer memberAge;
-	
+
 	@Column(name = "memberGender")
 	private String memberGender;
-	
+
 	@Column(name = "memberTel")
 	private String memberTel;
-	
+
 	@Column(name = "memberAddress")
 	private String memberAddress;
-	
+
 	@Column(name = "memberCoin")
 	private Integer memberCoin;
-	
+
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "createTime")
 	private Date createTime;
-	
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	private List<ShoppingCart> shoppingCarts;
+
 	public Member() {
+	}
+
+	public Member(Integer memberId) {
+		this.memberId = memberId;
 	}
 
 	public Integer getMemberId() {
@@ -98,7 +111,6 @@ public class Member {
 	public void setMemberLevel(String memberLevel) {
 		this.memberLevel = memberLevel;
 	}
-
 
 	public Integer getMemberActive() {
 		return memberActive;
@@ -172,15 +184,17 @@ public class Member {
 		this.createTime = createTime;
 	}
 
+	public List<ShoppingCart> getShoppingCarts() {
+		return shoppingCarts;
+	}
+
+	public void setShoppingCarts(List<ShoppingCart> shoppingCarts) {
+		this.shoppingCarts = shoppingCarts;
+	}
+
 	@Override
 	public String toString() {
-		return "Member [memberId=" + memberId + ", memberEmail=" + memberEmail + ", memberPwd=" + memberPwd
-				+ ", memberLevel=" + memberLevel + ", active=" + memberActive + ", memberName=" + memberName + ", memberImg="
-				+ Arrays.toString(memberImg) + ", memberAge=" + memberAge + ", memberGender=" + memberGender
-				+ ", memberTel=" + memberTel + ", memberAddress=" + memberAddress + ", memberCoin=" + memberCoin
-				+ ", createTime=" + createTime + "]";
+		return "Member [memberId=" + memberId + ", memberName=" + memberName + "]";
 	}
-	
-	
-	
+
 }

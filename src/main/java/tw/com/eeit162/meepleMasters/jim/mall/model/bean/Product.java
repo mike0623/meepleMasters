@@ -1,14 +1,16 @@
 package tw.com.eeit162.meepleMasters.jim.mall.model.bean;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
@@ -36,7 +38,7 @@ public class Product implements Serializable {
 	@Column(name = "productImg")
 	private byte[] productImg;
 
-	@JsonFormat(pattern ="yyyy-MM-dd" )
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "addedTime", columnDefinition = "DATE")
 	private Date addedTime;
 
@@ -54,6 +56,10 @@ public class Product implements Serializable {
 
 	@Column(name = "productDifficulty")
 	private String productDifficulty;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<ShoppingCart> shoppingCarts;
 
 	@PrePersist
 	public void onCreate() {
@@ -145,12 +151,18 @@ public class Product implements Serializable {
 		this.productDifficulty = productDifficulty;
 	}
 
+	public List<ShoppingCart> getShoppingCarts() {
+		return shoppingCarts;
+	}
+
+	public void setShoppingCarts(List<ShoppingCart> shoppingCarts) {
+		this.shoppingCarts = shoppingCarts;
+	}
+
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", productName=" + productName + ", productPrice=" + productPrice
-				+ ", productImg=" + Arrays.toString(productImg) + ", addedTime=" + addedTime + ", productDescription="
-				+ productDescription + ", productPlayTime=" + productPlayTime + ", productMaxPlayer=" + productMaxPlayer
-				+ ", productMinPlayer=" + productMinPlayer + ", productDifficulty=" + productDifficulty + "]";
+				+ ", addedTime=" + addedTime + "]";
 	}
 
 }
