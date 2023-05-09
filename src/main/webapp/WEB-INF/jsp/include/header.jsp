@@ -43,7 +43,7 @@
                         <a href="#">遊戲討論</a>
                     </li>
                     <li>
-                        <a href="#">場地預約</a>
+                        <a href="${root}/bookingForm">場地預約</a>
                     </li>
                     <li><a href="#">會員中心</a></li>
                     <c:if test="${member == null }">
