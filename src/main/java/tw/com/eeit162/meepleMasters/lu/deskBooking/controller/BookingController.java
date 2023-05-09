@@ -33,7 +33,10 @@ public class BookingController {
 
 	@Autowired
 	private DeskService deskService;
-
+	
+	
+	
+	
 	// 顯示訂位表單頁面
 	@GetMapping("/bookingForm")
 	public String showBookingForm(Model model) {
@@ -62,7 +65,7 @@ public class BookingController {
 	                              @RequestParam("selectedTime") String time,
 	                              @RequestParam("deskId") Integer deskId,
 	                              HttpSession session, HttpServletRequest request,Model model) {
-		System.out.println(deskId);
+		
 		DeskBean tableType = deskService.getDeskById(deskId);
 		
 		model.addAttribute("selectedDate", date);
@@ -81,18 +84,32 @@ public class BookingController {
 							  @RequestParam("selectedDate") String date,
 	                          @RequestParam("selectedTime") String time,
 	                          @RequestParam("deskId") Integer deskId,
-	                          @RequestParam Integer memberId,
+	                          
 	                          HttpSession session, HttpServletRequest request,Model model) {
 		
-////		Member loggedInMember = (Member) session.getAttribute("LoggedInMember");
-////		Integer memberId = loggedInMember.getMemberId();
-//		System.out.println(memberId);
+	    // 從 HttpSession 中獲取 memberId
+
+		Member Member = (Member) session.getAttribute("member");
+		Integer memberId = Member.getMemberId();
+	 
 		
 		
-		model.addAttribute("selectedDate", date);
-	    model.addAttribute("selectedTime", time);
-	    model.addAttribute("tableId", deskId);
-	    model.addAttribute(memberId);
+	    String bookTime = date + " " + time;
+
+	    
+	    BookingBean bookingbean = new BookingBean();
+	    bookingbean.setBookDeskId(deskId);
+	    bookingbean.setBookMemberId(memberId);
+	    bookingbean.setBookTime(bookTime);
+	    
+	    bookingService.insertBooking(bookingbean);
+
+	    
+	    // 調用 bookingService 的 insertBooking 方法
+	    
+	    
+
+
 	    
 	    
 	    
@@ -157,4 +174,15 @@ public class BookingController {
 		model.put("bookingBean", bookingBean);
 		return "bookingSuccess";
 	}
+	//顯示訂位紀錄
+	@GetMapping("/booking/record")
+	public String showBookingRecord(Model model) {
+		List<DeskBean> deskList = deskService.findAllDesks();
+		BookingBean bookingBean = new BookingBean();
+		model.addAttribute("deskList", deskList);
+		model.addAttribute("bookingBean", bookingBean);
+		return "lu/bookingrecord";
+	}
+	
+	
 }

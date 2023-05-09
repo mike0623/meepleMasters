@@ -44,10 +44,10 @@
 
 <div class="container">
  
-	<form method="post" action="${root}/booking/Submit"> 
+	<form method="" action=""> 
 	  	
 		<label>訂位資料</label><br><br><br><br>
-		
+		<p>1312312151511656</p>
 		<!-- 在頁面上顯示選擇的日期和時段 -->
 		<p>日期：${selectedDate}</p>
 		<p>時段：${selectedTime}</p>

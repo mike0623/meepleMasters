@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,9 +34,9 @@ public class BookingBean {
 	@Column(name = "fk_bookDeskId")
 	private Integer bookDeskId;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE", timezone = "GMT+8")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")//HH:mm:ss EEEE
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")//HH:mm:ss
 	@Column(name = "createdAt")
 	private Date createdAt;
 	
@@ -46,7 +47,7 @@ public class BookingBean {
 	public BookingBean() {
 		
 	}
-	
+	@PrePersist
 	public void onCreate() {
 		if (createdAt == null) {
 			createdAt = new Date();
