@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.lu.deskBooking.model.BookingBean;
 import tw.com.eeit162.meepleMasters.lu.deskBooking.model.BookingDto;
 import tw.com.eeit162.meepleMasters.lu.deskBooking.model.DeskBean;
@@ -82,20 +81,20 @@ public class BookingController {
 							  @RequestParam("selectedDate") String date,
 	                          @RequestParam("selectedTime") String time,
 	                          @RequestParam("deskId") Integer deskId,
+	                          @RequestParam Integer memberId,
 	                          HttpSession session, HttpServletRequest request,Model model) {
 		
+////		Member loggedInMember = (Member) session.getAttribute("LoggedInMember");
+////		Integer memberId = loggedInMember.getMemberId();
+//		System.out.println(memberId);
 		
-		int memberId =1;
-		bookingService.insertBooking(booking);
-//		int bookingId = booking.getId();
-//		BookingBean newdate = new BookingBean();
-//		BookingBean newtime = new BookingBean();
-//		BookingBean newtableNumber = new BookingBean();
+		
 		model.addAttribute("selectedDate", date);
 	    model.addAttribute("selectedTime", time);
 	    model.addAttribute("tableId", deskId);
+	    model.addAttribute(memberId);
 	    
-	
+	    
 	    
 	    return "redirect:/booking/success";
 	}

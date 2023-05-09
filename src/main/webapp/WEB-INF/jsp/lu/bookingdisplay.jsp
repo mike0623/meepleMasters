@@ -54,10 +54,15 @@
 		<p>桌號：${tableType.deskType}-${tableType.deskId}號</p>
 		
 
-
+		
 	  <input type="submit" value="送出">
 	</form>
 	
+	<script>
+		let mId = "${member.memberId}";
+
+
+	</script>
 	
 </div>
 </body>

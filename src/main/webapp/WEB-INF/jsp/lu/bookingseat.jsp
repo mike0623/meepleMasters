@@ -66,14 +66,7 @@
 			<input type="hidden" name="selectedDate" value="<%= selectedDate %>">
 		
   			<input type="hidden" name="selectedTime" value="<%= selectedTime %>">		
-		<!--
-		<input type="hidden" id="selectedTable" name="selectedTable" value="">
-		<button type="button" class="table-btn" name="type1" value="2人桌(1號)" onclick="selectTable('2人桌(1號)')">2人桌(1號)</button>
-		<button type="button" class="table-btn" name="type3" value="4人桌(3號)" onclick="selectTable('4人桌(3號)')">4人桌(3號)</button><br><br>
-		<button type="button" class="table-btn" name="type2" value="2人桌(2號)" onclick="selectTable('2人桌(2號)')">2人桌(2號)</button>
-		<button type="button" class="table-btn" name="type4" value="4人桌(4號)" onclick="selectTable('4人桌(4號)')">4人桌(4號)</button>
-		<button type="button" class="table-btn" name="tableNumber" value="5人桌(5號)" onclick="selectTable('5人桌(5號)')">5人桌(5號)</button><br><br>
-		-->
+
 		
 		
 		<button type="button" class="table-btn" name="tableId" value="1">2人桌(1號)</button>
