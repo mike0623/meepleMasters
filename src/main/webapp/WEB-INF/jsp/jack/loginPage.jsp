@@ -71,7 +71,7 @@ include file="../include/common_link.jsp" %>
           	Other way to login
           </div>
           <div class="row justify-content-center" style="margin: 20px">
-            <a href="#" class="btn btn-outline-secondary">Google</a>
+            <a href="${root}/googleLogin" class="btn btn-outline-secondary">Google</a>
         </div>
         <a href="#" class="" style="text-decoration: none; color: #8a513f">
           Terms of service
