@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
-prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -41,13 +41,11 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                 <h6 class="m-0 font-weight-bold text-primary">
                   <a href="${root}/mall/addProduct">新增商品</a>
                 </h6>
-                <div class="pageButton"></div>
               </div>
               <div class="card-body">
                 <div class="table-responsive">
                   <table
                     class="table table-bordered"
-                    id="dataTable"
                     width="100%"
                     cellspacing="0"
                   >
@@ -79,6 +77,8 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                     </tbody>
                   </table>
                 </div>
+
+                <div class="pageButton"></div>
               </div>
             </div>
           </div>
@@ -146,7 +146,6 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
           //   outputString += `<img src="${root}/mall/getPhoto?pId=\${p.productId}">`;
         }
-        // document.getElementById("dataHome").innerHTML = outputString;
         $("#dataHome").html(outputString);
 
         // 用AJAX透過ID刪除資料

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
+pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,46 +11,16 @@ pageEncoding="UTF-8"%>
   </head>
   <body>
     <jsp:include page="/WEB-INF/jsp/include/header.jsp" />
-    <div class="bodyContainer gameCardDiv">
-      <div class="gameListTitle">
-        遊戲列表
-        <div class="link-top"></div>
-      </div>
-
-      <div class="row px-4 pt-4 justify-content-center" id="dataHome">
-        <div class="col-3 d-flex align-items-stretch">
-          <div class="card">
-            <div class="pic">
-              <img src="https://picsum.photos/300/?random=10" />
-            </div>
-            <div class="card-header">${product.productName}</div>
-
-            <div class="card-body">
-              <h3 class="title">${product.productPrice}</h3>
-            </div>
-
-            <div class="card-footer">
-              <div class="text">
-                <ul>
-                  <li>${product.addedTime}</li>
-                  <li>${product.productDescription}</li>
-                  <li>${product.productPlayTime}</li>
-                  <li>
-                    ${product.productMinPlayer}~${product.productMaxPlayer}
-                  </li>
-                  <li>${product.productDifficulty}</li>
-                  <li>
-                    <button class="cartbutton" value="${product.productId}">
-                      加入購物車
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+    <div class="bodyContainer">
+      <div class="container gameCardDiv">
+        <div><a href="${root}/mall/shoppingCart">購物車</a></div>
+        <div class="gameListTitle">
+          遊戲列表
+          <div class="link-top"></div>
         </div>
+        <div class="pageButton"></div>
+        <div class="row px-4 pt-4 justify-content-center" id="dataHome"></div>
       </div>
-      <div class="pageButton"></div>
     </div>
     <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
     <script>
@@ -95,12 +66,28 @@ pageEncoding="UTF-8"%>
           outputString += '<div class="card-footer">';
           outputString += '<div class="text">';
           outputString += "<ul>";
+          outputString += "<c:if test='${member!=null}'>";
           outputString += "<li>";
           outputString += `<button class="cartButton" value="\${p.productId}">加入購物車</button>`;
           outputString += "</li>";
+          outputString += "</c:if>";
+          outputString += "<c:if test='${member==null}'>";
+          outputString += "<li>";
+          outputString +=
+            "<a href='${root}/member/login'><button>加入購物車</button></a>";
+          outputString += "</li>";
+          outputString += "</c:if>";
+          outputString += "<c:if test='${member!=null}'>";
           outputString += "<li>";
           outputString += `<button class="faviroteButton" value="\${p.productId}">加入最愛</button>`;
           outputString += "</li>";
+          outputString += "</c:if>";
+          outputString += "<c:if test='${member==null}'>";
+          outputString += "<li>";
+          outputString +=
+            "<a href='${root}/member/login'><button>加入最愛</button></a>";
+          outputString += "</li>";
+          outputString += "</c:if>";
 
           outputString += "</ul></div></div></div></div>";
         }
@@ -125,8 +112,11 @@ pageEncoding="UTF-8"%>
                 },
               })
               .then((response) => {
-                if (response.status == 200) {
-                  alert("加入成功");
+                if (response.data == "join") {
+                  alert("加入購物車");
+                }
+                if (response.data == "cancel") {
+                  alert("刪除購物車");
                 }
               })
               .catch((error) => console.log(error));
@@ -149,12 +139,11 @@ pageEncoding="UTF-8"%>
                 },
               })
               .then((response) => {
-                console.log(response);
                 if (response.data == "like") {
-                  alert("新增成功");
+                  alert("新增最愛");
                 }
                 if (response.data == "dislike") {
-                  alert("刪除");
+                  alert("刪除最愛");
                 }
               })
               .catch((error) => console.log(error));

@@ -1,8 +1,12 @@
 package tw.com.eeit162.meepleMasters.jim.mall.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
 import tw.com.eeit162.meepleMasters.jim.mall.model.dao.ShoppingCartDAO;
 
@@ -12,14 +16,35 @@ public class ShoppingCartService {
 	@Autowired
 	ShoppingCartDAO scDAO;
 
-	public ShoppingCart addShoppingCart(Integer productId, Integer memberId) {
+	public String addShoppingCartAndRemoveItWhenExist(Integer productId, Integer memberId) {
 
 		ShoppingCart shoppingCartItem = new ShoppingCart();
 
-		shoppingCartItem.setFkMemberId(memberId);
-		shoppingCartItem.setFkProductId(productId);
+		Member m = new Member();
+		m.setMemberId(memberId);
 
-		return scDAO.save(shoppingCartItem);
+		Product p = new Product();
+		p.setProductId(productId);
+
+		ShoppingCart sc = scDAO.findByMemberAndProduct(m, p);
+
+		if (sc != null) {
+			scDAO.deleteById(sc.getCartId());
+			return "cancel";
+		}
+
+		shoppingCartItem.setMember(m);
+		shoppingCartItem.setProduct(p);
+
+		scDAO.save(shoppingCartItem);
+
+		return "join";
+	}
+
+	public List<ShoppingCart> findShoppingCartByMember(Integer memberId) {
+		List<ShoppingCart> shoppingCartbyMember = scDAO.findByMember(new Member(memberId));
+
+		return shoppingCartbyMember;
 	}
 
 }

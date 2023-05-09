@@ -7,7 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 
 @Entity
 @Table(name = "shoppingCart")
@@ -20,11 +24,13 @@ public class ShoppingCart implements Serializable {
 	@Column(name = "cartId")
 	private Integer cartId;
 
-	@Column(name = "fk_memberId")
-	private Integer fkMemberId;
+	@JoinColumn(name = "fk_memberId", referencedColumnName = "memberId", nullable = false)
+	@ManyToOne
+	private Member member;
 
-	@Column(name = "fk_productId")
-	private Integer fkProductId;
+	@JoinColumn(name = "fk_productId", referencedColumnName = "productId", nullable = false)
+	@ManyToOne
+	private Product product;
 
 	public ShoppingCart() {
 	}
@@ -37,20 +43,20 @@ public class ShoppingCart implements Serializable {
 		this.cartId = cartId;
 	}
 
-	public Integer getFkMemberId() {
-		return fkMemberId;
+	public Member getMember() {
+		return member;
 	}
 
-	public void setFkMemberId(Integer fkMemberId) {
-		this.fkMemberId = fkMemberId;
+	public void setMember(Member member) {
+		this.member = member;
 	}
 
-	public Integer getFkProductId() {
-		return fkProductId;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setFkProductId(Integer fkProductId) {
-		this.fkProductId = fkProductId;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 }
