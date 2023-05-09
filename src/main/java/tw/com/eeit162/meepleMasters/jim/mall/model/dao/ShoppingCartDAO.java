@@ -10,6 +10,6 @@ import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
 
 public interface ShoppingCartDAO extends JpaRepository<ShoppingCart, Integer> {
 	ShoppingCart findByMemberAndProduct(Member m, Product p);
-	
+
 	List<ShoppingCart> findByMember(Member m);
 }

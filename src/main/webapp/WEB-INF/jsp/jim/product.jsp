@@ -115,7 +115,7 @@ prefix="c"%>
                 if (response.data == "join") {
                   alert("加入購物車");
                 }
-                if (response.data == "cancel") {
+                if (response.data == "remove") {
                   alert("刪除購物車");
                 }
               })

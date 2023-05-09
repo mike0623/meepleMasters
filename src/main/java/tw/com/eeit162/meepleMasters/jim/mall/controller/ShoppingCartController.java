@@ -20,13 +20,13 @@ public class ShoppingCartController {
 	// 依照商品ID及會員ID將商品加入購物車
 	@GetMapping("/shoppingCart/addShoppingCart")
 	@ResponseBody
-	public String addShoppingCart(@RequestParam Integer productId, @RequestParam Integer memberId) {
+	public String addShoppingCartAndRemoveItWhenExist(@RequestParam Integer productId, @RequestParam Integer memberId) {
 		return scService.addShoppingCartAndRemoveItWhenExist(productId, memberId);
 	}
 
-	@GetMapping("/shoppingCart/test")
+	@GetMapping("/shoppingCart/findShoppingCartByMemberId")
 	@ResponseBody
-	public List<ShoppingCart> test(@RequestParam Integer memberId) {
+	public List<ShoppingCart> findShoppingCartByMemberId(@RequestParam Integer memberId) {
 		List<ShoppingCart> shoppingByMember = scService.findShoppingCartByMember(memberId);
 		return shoppingByMember;
 	}

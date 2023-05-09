@@ -7,93 +7,201 @@ pageEncoding="UTF-8"%>
     <title>${webName}</title>
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
     <jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
+    <style>
+      body {
+        margin-top: 20px;
+        background: #eee;
+      }
+      .ui-w-40 {
+        width: 40px !important;
+        height: auto;
+      }
+
+      .card {
+        box-shadow: 0 1px 15px 1px rgba(52, 40, 104, 0.08);
+      }
+
+      .ui-product-color {
+        display: inline-block;
+        overflow: hidden;
+        margin: 0.144em;
+        width: 0.875rem;
+        height: 0.875rem;
+        border-radius: 10rem;
+        -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+        vertical-align: middle;
+      }
+    </style>
   </head>
   <body>
     <jsp:include page="/WEB-INF/jsp/include/header.jsp" />
     <div class="bodyContainer">
-      <section class="vh-100" style="background-color: #f0ebe2">
-        <div class="container h-100">
-          <div
-            class="row d-flex justify-content-center align-items-center h-100"
-          >
-            <div class="col">
-              <p>
-                <span class="h2">購物車</span
-                ><span class="h4">(1 item in your cart)</span>
-              </p>
-              <div class="card mb-4">
-                <div class="card-body p-4">
-                  <div class="row align-items-center">
-                    <div class="col-md-4">
-                      <img
-                        src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/1.webp"
-                        class="img-fluid"
-                        alt="Generic placeholder image"
-                      />
-                    </div>
-                    <div class="col-md-4 d-flex justify-content-center">
-                      <div>
-                        <p class="small text-muted mb-4 pb-2">遊戲名稱</p>
-                        <p class="lead fw-normal mb-0">抽鬼牌</p>
+      <div class="container px-3 my-5 clearfix">
+        <!-- Shopping cart table -->
+        <div class="card">
+          <div class="card-header">
+            <h2>購物車</h2>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered m-0">
+                <thead>
+                  <tr>
+                    <!-- Set columns width -->
+                    <th class="text-center py-3 px-4" style="min-width: 10px">
+                      圖片
+                    </th>
+                    <th class="text-center py-3 px-4" style="min-width: 300px">
+                      商品名稱
+                    </th>
+                    <th class="text-center py-3 px-4" style="width: 300px">
+                      價格
+                    </th>
+                    <th
+                      class="text-center align-middle py-3 px-0"
+                      style="width: 50px"
+                    >
+                      <a
+                        href="#"
+                        class="shop-tooltip float-none text-light"
+                        title=""
+                        data-original-title="Clear cart"
+                        ><i class="ino ion-md-trash"></i
+                      ></a>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="cartTableBody">
+                  <tr>
+                    <td>
+                      <img src="" class="d-block ui-w-40 ui-bordered mr-4" />
+                    </td>
+                    <td class="text-center p-4">
+                      <div class="media align-items-center">
+                        <div class="media-body">
+                          <div class="d-block text-dark">測試欄位</div>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-md-4 d-flex justify-content-center">
-                      <div>
-                        <p class="small text-muted mb-4 pb-2">價格</p>
-                        <p class="lead fw-normal mb-0">50元</p>
-                      </div>
-                    </div>
+                    </td>
+                    <td
+                      class="text-center font-weight-semibold align-middle p-4"
+                    >
+                      測試欄位
+                    </td>
+
+                    <td class="text-center align-middle px-0">
+                      <a
+                        href="#"
+                        class="shop-tooltip close float-none text-danger"
+                        title=""
+                        data-original-title="Remove"
+                        >×</a
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- / Shopping cart table -->
+
+            <div
+              class="d-flex flex-wrap justify-content-between align-items-center pb-4"
+            >
+              <div class="mt-4">
+                <!-- <label class="text-muted font-weight-normal">Promocode</label>
+                <input type="text" placeholder="ABC" class="form-control" /> -->
+              </div>
+              <div class="d-flex">
+                <div class="text-right mt-4">
+                  <label class="text-muted font-weight-normal m-0">總價</label>
+                  <div class="text-large">
+                    <strong id="totalPrice">$1164.65</strong>
                   </div>
                 </div>
               </div>
-
-              <div class="card mb-5">
-                <div class="card-body p-4">
-                  <div class="float-end">
-                    <p class="mb-0 me-5 d-flex align-items-center">
-                      <span class="small text-muted me-2">Order total:</span>
-                      <span class="lead fw-normal">$799</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-light btn-lg me-2">
-                  Continue shopping
-                </button>
-                <button type="button" class="btn btn-primary btn-lg">
-                  Add to cart
-                </button>
-              </div>
+            </div>
+            <div class="float-right">
+              <button type="button" class="btn btn-lg btn-primary mt-2">
+                結帳
+              </button>
             </div>
           </div>
         </div>
-      </section>
-
-      <div class="bodyContainer gameCardDiv">
-        <div class="row px-4 pt-4 justify-content-center" id="dataHome"></div>
-
-        <div class="pageButton"></div>
-        <div><button id="testButton">測試按鈕</button></div>
       </div>
     </div>
     <jsp:include page="/WEB-INF/jsp/include/footer.jsp" />
     <script>
-      $("#testButton").on("click", function () {
-        getFavoriteGameList();
-      });
-      function getFavoriteGameList() {
+      // 初始化
+      (function inti() {
+        getShoppingCartList();
+      })();
+      // 取得購物車清單
+      function getShoppingCartList() {
+        let mId = "${member.memberId}";
         axios
-          .get(
-            `/meeple-masters/favoriteGame/favoriteGameList/${member.memberEmail}`
-          )
+          .get("/meeple-masters/shoppingCart/findShoppingCartByMemberId", {
+            params: { memberId: mId },
+          })
           .then((response) => {
-            console.log(response.data);
+            if (response.data.length == 0) {
+              $(".card-body").html("尚未加入商品");
+            } else {
+              renderShoppingCart(response.data);
+              addCartButton();
+            }
           })
           .catch((error) => {
             console.log(error);
           });
+      }
+      // 渲染購物車頁面
+      function renderShoppingCart(cartList) {
+        let outputString = "";
+        let totalPrice = 0;
+        for (let p of cartList) {
+          outputString += "<tr><td>";
+          outputString += `<img src='${root}/mall/getPhoto?pId=\${p.product.productId}' class='d-block ui-w-40 ui-bordered mr-4'/>`;
+          outputString += "</td>";
+          outputString += "<td class='text-center p-4'>";
+          outputString += "<div class='media align-items-center'>";
+          outputString += "<div class='media-body'>";
+          outputString += `<div class='d-block text-dark'>\${p.product.productName}</div>`;
+          outputString += "</div></div></td>";
+          outputString +=
+            "<td class='text-center font-weight-semibold align-middle p-4'>";
+          outputString += `\${p.product.productPrice}元</td>`;
+          outputString += "<td class='text-center align-middle px-0'>";
+          outputString += `<button class='deleteButton btn btn-danger btn-circle' value='\${p.product.productId}''><i class='fas fa-trash'></i></button>`;
+          outputString += "</td></tr>";
+          totalPrice += p.product.productPrice;
+        }
+        totalPrice += "元";
+        $("#cartTableBody").html(outputString);
+        $("#totalPrice").html(totalPrice);
+      }
+      //渲染移除購物車商品按鈕
+      function addCartButton() {
+        let cartButton = document.getElementsByClassName("deleteButton");
+        for (i = 0; i < cartButton.length; i++) {
+          cartButton[i].addEventListener("click", function () {
+            let pId = this.value;
+            let mId = "${member.memberId}";
+            axios
+              .get("${root}/shoppingCart/addShoppingCart", {
+                params: {
+                  productId: pId,
+                  memberId: mId,
+                },
+              })
+              .then((response) => {
+                if (response.data == "remove") {
+                  getShoppingCartList();
+                }
+              })
+              .catch((error) => console.log(error));
+          });
+        }
       }
     </script>
   </body>

@@ -20,17 +20,15 @@ public class ShoppingCartService {
 
 		ShoppingCart shoppingCartItem = new ShoppingCart();
 
-		Member m = new Member();
-		m.setMemberId(memberId);
+		Member m = new Member(memberId);
 
-		Product p = new Product();
-		p.setProductId(productId);
+		Product p = new Product(productId);
 
 		ShoppingCart sc = scDAO.findByMemberAndProduct(m, p);
 
 		if (sc != null) {
 			scDAO.deleteById(sc.getCartId());
-			return "cancel";
+			return "remove";
 		}
 
 		shoppingCartItem.setMember(m);
