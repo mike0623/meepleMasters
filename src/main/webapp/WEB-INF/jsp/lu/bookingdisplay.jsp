@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.time.LocalDate" %>
 <!DOCTYPE html>
 <html>
@@ -53,14 +53,28 @@
 		<p>時段：${selectedTime}</p>
 		<p>桌號：${tableType.deskType}-${tableType.deskId}號</p>
 		
+		<input type="hidden" name="selectedDate" value="${selectedDate}">
+		<input type="hidden" name="selectedTime" value="${selectedTime}">
+		<input type="hidden" name="deskId" value="${tableType.deskId}">
 
 		
-	  <input type="submit" value="送出">
-	</form>
+
+
+	<c:if test='${member!=null}'>
+		<li>
+			<input type="submit" value="送出">
+		</li>
+		</c:if>
+	<c:if test='${member==null}'>
+		<li>
+			<a href='${root}/member/login'><button type="button">送出</button></a>
+		</li>
+	</c:if>
+	</form>	
 
 	<script>
 		let mId = "${member.memberId}";
-
+		console.log(mId);
 
 	</script>
 	
