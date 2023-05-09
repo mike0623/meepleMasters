@@ -33,7 +33,10 @@ public class BookingController {
 
 	@Autowired
 	private DeskService deskService;
-
+	
+	
+	
+	
 	// 顯示訂位表單頁面
 	@GetMapping("/bookingForm")
 	public String showBookingForm(Model model) {
@@ -171,4 +174,15 @@ public class BookingController {
 		model.put("bookingBean", bookingBean);
 		return "bookingSuccess";
 	}
+	//顯示訂位紀錄
+	@GetMapping("/booking/record")
+	public String showBookingRecord(Model model) {
+		List<DeskBean> deskList = deskService.findAllDesks();
+		BookingBean bookingBean = new BookingBean();
+		model.addAttribute("deskList", deskList);
+		model.addAttribute("bookingBean", bookingBean);
+		return "lu/bookingrecord";
+	}
+	
+	
 }
