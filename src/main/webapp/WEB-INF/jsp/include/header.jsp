@@ -44,6 +44,18 @@
                     </li>
                     <li>
                         <a href="${root}/bookingForm">場地預約</a>
+                        <div>
+                            <c:if test="${member == null }">
+                                <ul>
+                                    <li><a href="${root}/member/login">訂位紀錄</a></li>
+                                </ul>
+                            </c:if>
+                            <c:if test="${member != null }">
+                                <ul>
+                                    <li><a href="${root}/booking/record">訂位紀錄</a></li>
+                                </ul>
+                            </c:if>
+                        </div>
                     </li>
                     <li><a href="#">會員中心</a></li>
                     <c:if test="${member == null }">

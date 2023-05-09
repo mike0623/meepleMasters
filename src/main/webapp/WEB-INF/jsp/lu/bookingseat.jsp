@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>${webName}</title>
-
+<jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
 <style>
 
 /*	.table-btn {
