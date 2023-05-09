@@ -1,9 +1,13 @@
 package tw.com.eeit162.meepleMasters.jack.service;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.Optional;
 
@@ -73,41 +77,67 @@ public class MemberService {
 
 		bis.close();
 		fis.close();
-		
+
 		memberDao.save(member);
-		
+
 		sendVerificationEmail(member);
-		
+
 		return member;
 	}
-	
+
+	public Member createByGoogle(String payloadEmail, String payloadName, String payloadPicture) throws IOException {
+
+		Member exsistMember = memberDao.findMemberByEmail(payloadEmail);
+
+		if (exsistMember == null) {
+			URL url = new URL(payloadPicture);
+			InputStream is = url.openStream();
+			BufferedInputStream bis = new BufferedInputStream(is);
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			byte[] data = new byte[1024];
+
+			int count;
+			while ((count = bis.read(data, 0, 1024)) != -1) {
+				output.write(data, 0, count);
+			}
+
+			byte[] imageData = output.toByteArray();
+			System.out.println(imageData);
+
+			Member member = new Member();
+
+			member.setMemberEmail(payloadEmail);
+			member.setMemberName(payloadName);
+			member.setMemberImg(imageData);
+			member.setMemberActive(1);
+
+			return memberDao.save(member);
+		}
+
+		return exsistMember;
+	}
+
 	public void sendVerificationEmail(Member member) {
 		System.out.println("已寄出");
 		String token = jwtService.generateToken(member);
 		String subject = "MeepleMasters會員信箱驗證";
-		String url = "http://localhost:8080/meeple-masters/auth/"+token;
-		String content = "您好! 歡迎您加入Meeple Masters，<br/>" + 
-				 "這封信是由Meeple Masters的會員註冊系統所寄出，<br/>" + 
-				 "<h4>請點選下面的連結來進行註冊的下一個步驟：<br/></h4>" + 
-				 "<h3><a href=\"" + url + "\">"+"驗證連結"+"</a></h3>"+ "<br/>" + 
-				 "※ 如果您無法連結信中網址，請讓我們知道。<br/>"+ 
-				 "<br/>" + 
-				 "Meeple Masters團隊 敬上<br/>";
+		String url = "http://localhost:8080/meeple-masters/auth/" + token;
+		String content = "您好! 歡迎您加入Meeple Masters，<br/>" + "這封信是由Meeple Masters的會員註冊系統所寄出，<br/>"
+				+ "<h4>請點選下面的連結來進行註冊的下一個步驟：<br/></h4>" + "<h3><a href=\"" + url + "\">" + "驗證連結" + "</a></h3>" + "<br/>"
+				+ "※ 如果您無法連結信中網址，請讓我們知道。<br/>" + "<br/>" + "Meeple Masters團隊 敬上<br/>";
 		mailService.sendEmail(member.getMemberEmail(), subject, content);
 	}
-	
+
 	public void activeAccount(String token) {
-		if(jwtService.validateToken(token)) {
+		if (jwtService.validateToken(token)) {
 			String email = jwtService.extractEmail(token);
 			Member member = findMemberByEmail(email);
-			if(member!=null) {
+			if (member != null) {
 				member.setMemberActive(1);
 				memberDao.save(member);
 			}
 		}
 	}
-
-
 
 	public Optional<Member> login(String json) {
 		JSONObject member = new JSONObject(json);
@@ -138,7 +168,7 @@ public class MemberService {
 		return memberDao.updatePasswordById(id, password);
 
 	}
-	
+
 	public Integer updateMember(Integer id, String json) {
 		JSONObject jObject = new JSONObject(json);
 
@@ -149,26 +179,25 @@ public class MemberService {
 		Integer age = jObject.isNull("memberAge") ? member.getMemberAge() : jObject.getInt("memberAge");
 		String gender = jObject.isNull("memberGender") ? member.getMemberGender() : jObject.getString("memberGender");
 		String tel = jObject.isNull("memberTel") ? member.getMemberTel() : jObject.getString("memberTel");
-		String address = jObject.isNull("memberAddress") ? member.getMemberAddress() : jObject.getString("memberAddress");
+		String address = jObject.isNull("memberAddress") ? member.getMemberAddress()
+				: jObject.getString("memberAddress");
 
 		System.out.println(member);
-		
+
 		return memberDao.updateMemberById(id, name, age, gender, tel, address);
-		
-		
 
 	}
-	
+
 	public Integer updateImg(Integer id, byte[] memberImg) {
-		
+
 		Optional<Member> memberData = memberDao.findById(id);
 		Member member = memberData.get();
-		
-		if(member!=null) {
-			member.setMemberImg(memberImg);		
+
+		if (member != null) {
+			member.setMemberImg(memberImg);
 			return memberDao.updateImgById(id, memberImg);
 		}
-		
+
 		return null;
 	}
 
@@ -196,25 +225,25 @@ public class MemberService {
 	public byte[] findMemberImg(Integer memberId) {
 
 		Optional<Member> member = memberDao.findById(memberId);
-		
-		if(member != null) {
+
+		if (member != null) {
 			return member.get().getMemberImg();
-			
+
 		}
 
-			return null;
+		return null;
 	}
 
 	public byte[] findMemberImg(String memberEmail) {
 
 		Optional<Member> member = Optional.ofNullable(memberDao.findMemberByEmail(memberEmail));
-		
-		if(member != null) {
-			
+
+		if (member != null) {
+
 			return member.get().getMemberImg();
 		}
 
-			return null;
+		return null;
 	}
 
 }
