@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -174,15 +176,14 @@ public class GameRoomController {
 	
 	//玩家離開房間
 	@GetMapping("/game/playerLeaveGame/{tableCode}/{memberEmail}")
-	public String playerLeaveGame(@PathVariable("tableCode") String tableCode,@PathVariable("memberEmail") String memberEmail) {
+	public String playerLeaveGame(@PathVariable("tableCode") String tableCode,@PathVariable("memberEmail") String memberEmail,HttpSession session) {
+		session.removeAttribute("tableCode");
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
-		for(int i = 0;i<game.getPlayers().size();i++) {
-			if(game.getPlayers().get(i).getMemberEmail().equals(memberEmail)) {
-				game.getPlayers().remove(i);
-			}
-		}
+		game.removePlayer(memberEmail);
+		
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("action", "someoneLeaveGame");
+		jsonObject.put("playerName", DataInterface.getMemberByEmail(memberEmail).getMemberName());
 		for(Member member :game.getPlayers()) {
 			WebsocketUtil.sendMessageByUserEmail(member.getMemberEmail(), jsonObject.toString());
 		}
@@ -192,11 +193,16 @@ public class GameRoomController {
 	
 	//玩家加入房間
 	@GetMapping("/game/joinGame/{tableCode}/{memberEmail}")
-	public String joinGame(@PathVariable("tableCode") String tableCode, @PathVariable("memberEmail") String memberEmail,Model model) {
+	public String joinGame(@PathVariable("tableCode") String tableCode, @PathVariable("memberEmail") String memberEmail,Model model,HttpSession session) {
+		session.setAttribute("tableCode", tableCode);
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
+		
 		if(game ==null) {
 			System.out.println("存在的房間數:"+GameRoomUtil.getExistGameRoom().size());
 			return "redirect:/game/playGameLobby";
+		}
+		if(game.getGameStatus() == 3) {
+			return "redirect:/game/enterGameView/"+game.getGameName()+"/"+tableCode+"/"+memberEmail;
 		}
 		boolean isInTheRoom = false;
 		for(Member m:game.getPlayers()) {
@@ -206,29 +212,44 @@ public class GameRoomController {
 		}
 		if(!isInTheRoom) {
 			Member member = DataInterface.getMemberByEmail(memberEmail);
+			
 			game.addPlayer(member);
 		}
 		
 		Product product = DataInterface.getProductByProductName(game.getGameName());
 		List<Integer> degreeScoreList = new ArrayList<>();
+		//告訴其他人我加入房間了
+		//需要資料，是不是房主，玩家名，玩家熟練度，玩家id
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("action", "someoneJoinGame");
+		
 		for(Member player : game.getPlayers()) {
+			if(player.getMemberEmail().equals(memberEmail)) {
+				jsonObject.put("playerName",player.getMemberName());
+				jsonObject.put("playerEmaiil",player.getMemberEmail());
+				jsonObject.put("playerId",player.getMemberId());
+				jsonObject.put("playerDegree", DataInterface.getGameDegree(player.getMemberId(), product.getProductId()).getScore());
+			}
 			degreeScoreList.add(DataInterface.getGameDegree(player.getMemberId(), product.getProductId()).getScore());
 		}
+		
+		
 		model.addAttribute("game", product);
 		model.addAttribute("tableCode", tableCode);
 		model.addAttribute("playerList", game.getPlayers());
 		System.out.println("還有幾個人在房間裡"+game.getPlayers());
 		if(memberEmail.equals(game.getHostEmail())) {
 			model.addAttribute("ishost", true);
+			jsonObject.put("ishost", true);
 		}else {
 			model.addAttribute("ishost", false);
+			jsonObject.put("ishost",false);
 		}
 		model.addAttribute("degreeScoreList", degreeScoreList);
 		model.addAttribute("finalNumOfPlayer", game.getFinalNumOfPlayer());
 		model.addAttribute("gameStatus", game.getGameStatus());
-		//告訴其他人我加入房間了
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("action", "someoneJoinGame");
+		
+		
 		for(Member member:game.getPlayers()) {
 			if(!member.getMemberEmail().equals(memberEmail)) {
 				WebsocketUtil.sendMessageByUserEmail(member.getMemberEmail(), jsonObject.toString());
@@ -239,15 +260,13 @@ public class GameRoomController {
 	
 	//房主踢出玩家時
 	@GetMapping("/game/kickPlayerOut/{tableCode}/{memberEmail}")
-	@ResponseBody
-	public void kickPlayerOut(@PathVariable("tableCode") String tableCode,@PathVariable("memberEmail") String memberEmail) {
-		//將玩家從map中移除
-		Game game = GameRoomUtil.getGameByTableCode(tableCode);
-		game.removePlayer(memberEmail);
+	public String kickPlayerOut(@PathVariable("tableCode") String tableCode,@PathVariable("memberEmail") String memberEmail) {
 		//ws告訴他整理畫面
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("action", "youHaveBeenKickOutOfTheRoom");
 		WebsocketUtil.sendMessageByUserEmail(memberEmail,jsonObject.toString());
+		
+		return "redirect:/game/playerLeaveGame/"+tableCode+"/"+memberEmail;
 	}
 	
 	//在大廳顯示已開放的房間

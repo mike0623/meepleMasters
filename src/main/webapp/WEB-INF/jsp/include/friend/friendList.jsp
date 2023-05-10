@@ -15,7 +15,7 @@
 <jsp:include page="friendButtonControll.jsp"></jsp:include>
 </head>
 <body>
-	<button onclick="showFriendList()">朋友列表</button>
+<!-- 	<button onclick="showFriendList()">朋友列表</button> -->
 	<div id="friendList" class="friendList">
 		<div class="onlineFriend">
 			
@@ -106,7 +106,10 @@
 		$(".getNewMessage").hide();
 		//製作未確認好友邀請
 		findFriendInvite();
-		var isSelectedPage;
+		var isSelectedPage = false;
+		var isRoomPage = false;
+		var isGameLobbyPage = false;
+		
 
 		
 		var ws = new WebSocket("ws://localhost:8080${root}/michael/websocket/${member.memberEmail}");
@@ -358,13 +361,65 @@
 			}
 			//有玩家加入遊戲房間時
 			if("someoneJoinGame" == action && true == isRoomPage){
-				//有空時改成直接調整畫面，以確認重新整理沒問題
-				window.location.reload();
+				//有空時改成直接調整畫面，已確認重新整理沒問題
+				//window.location.reload();
+				//是不是房主，玩家名，玩家熟練度，玩家id
+				let playerName = json.playerName;
+				let playerId = json.playerId;
+				let playerEmaiil = json.playerEmaiil;
+				let playerDegree = json.playerDegree;
+				let playerDegreePercent = parseInt(playerDegree)/10 + "%";
+				let ishost = json.ishost;
+				if(ishost){
+					$(".freeSeat:eq(0)").html(`
+							<div class="container text-center">
+							<div class="row">
+								<div class="col-4">
+									<img style="width: 100px;"
+										src="${root}/member/findMemberImg/`+playerId+`" alt="">
+									<span>`+playerName+`</span><br/>
+									<span onclick="kickPlayerOut(`+playerEmaiil+`,`+playerName+`)" style="cursor: pointer;">踢出玩家</span>
+								</div>
+								<div class="col-8">
+									<div class="degreeLine">
+										<div class="degree" style="width:`+playerDegreePercent+`;"></div>
+									</div>
+									<br/> <span class="degreePoint" style="text-align: center">遊戲熟練度:`+playerDegree+`</span>
+								</div>
+							</div>
+						</div>
+							`);
+				}
+				if(ishost == false){
+					$(".freeSeat:eq(0)").html(`
+							<div class="container text-center">
+							<div class="row">
+								<div class="col-4">
+									<img style="width: 100px;"
+										src="${root}/member/findMemberImg/`+playerId+`" alt="">
+									<span>`+playerName+`</span><br/>
+								</div>
+								<div class="col-8">
+									<div class="degreeLine">
+										<div class="degree" style="width:`+playerDegreePercent+`;"></div>
+									</div>
+									<br/> <span class="degreePoint" style="text-align: center">遊戲熟練度:`+playerDegree+`</span>
+								</div>
+							</div>
+						</div>
+							`);
+				}
+				
+				$(".freeSeat")[0].classList.add("hasSeat",playerName);
+				$(".freeSeat")[0].classList.remove("freeSeat");
 			}
 			//有玩家離開房間時
 			if("someoneLeaveGame" == action && true == isRoomPage){
 				//有空時改成直接調整畫面，以確認重新整理沒問題
-				window.location.reload();
+				//window.location.reload();
+				let playerName = json.playerName;
+				$(".player.hasSeat."+playerName).remove();
+				$(".players").append(`<div class="player freeSeat">自由位</div>`);
 			}
 			//當有房間開放時，若我在Lobby頁面，且該遊戲的顯示是展開的
 			if("gameIsOpening" == action && true == isGameLobbyPage){
@@ -392,6 +447,91 @@
 				let tableCode = json.tableCode;
 				window.location.href = "${root}/game/enterGameView/"+gameName+"/"+tableCode+"/${member.memberEmail}";
 			}
+			//橋牌遊戲
+			if("bridgeGame" == action){
+				//按下喊王按鈕時
+				if("pressBidButton" == json.gameAction){
+					let suit = json.trumpAndLevel.substring(0,2);
+					let num = parseInt(json.trumpAndLevel.substring(2));
+					//是我的回合
+					if(json.playerNTurnEmail == "${member.memberEmail}"){
+						if(json.isBiddingPhase){
+							let str = "";
+							str += "目前王牌: "+json.trumpAndLevel+" 目前得標者:"+json.playerNBid+" 請選擇是否要喊王:";
+							//喊王的按鈕，要根據目前喊到哪來新增
+							if("梅花" == suit){
+								str += `
+									<button class="btn btn-primary">梅花`+(num+1)+`</button>
+									<button class="btn btn-primary">方塊`+num+`</button>
+									<button class="btn btn-primary">紅心`+num+`</button>
+									<button class="btn btn-primary">黑桃`+num+`</button>
+									<button class="btn btn-primary">無王`+num+`</button>
+									<button class="btn btn-primary">跳過</button>
+								`;
+							}
+							if("方塊" == suit){
+								str += `
+									<button class="btn btn-primary">梅花`+(num+1)+`</button>
+									<button class="btn btn-primary">方塊`+(num+1)+`</button>
+									<button class="btn btn-primary">紅心`+num+`</button>
+									<button class="btn btn-primary">黑桃`+num+`</button>
+									<button class="btn btn-primary">無王`+num+`</button>
+									<button class="btn btn-primary">跳過</button>
+								`;
+							}
+							if("紅心" == suit){
+								str += `
+									<button class="btn btn-primary">梅花`+(num+1)+`</button>
+									<button class="btn btn-primary">方塊`+(num+1)+`</button>
+									<button class="btn btn-primary">紅心`+(num+1)+`</button>
+									<button class="btn btn-primary">黑桃`+num+`</button>
+									<button class="btn btn-primary">無王`+num+`</button>
+									<button class="btn btn-primary">跳過</button>
+								`;
+							}
+							if("黑桃" == suit){
+								str += `
+									<button class="btn btn-primary">梅花`+(num+1)+`</button>
+									<button class="btn btn-primary">方塊`+(num+1)+`</button>
+									<button class="btn btn-primary">紅心`+(num+1)+`</button>
+									<button class="btn btn-primary">黑桃`+(num+1)+`</button>
+									<button class="btn btn-primary">無王`+num+`</button>
+									<button class="btn btn-primary">跳過</button>
+								`;
+							}
+							if("無王" == suit){
+								str += `
+									<button class="btn btn-primary">梅花`+(num+1)+`</button>
+									<button class="btn btn-primary">方塊`+(num+1)+`</button>
+									<button class="btn btn-primary">紅心`+(num+1)+`</button>
+									<button class="btn btn-primary">黑桃`+(num+1)+`</button>
+									<button class="btn btn-primary">無王`+(num+1)+`</button>
+									<button class="btn btn-primary">跳過</button>
+								`;
+							}
+							$(".showGameProgress").html(str);
+						}
+						if(json.isBiddingPhase == false){ //輪到我出牌
+							$(".showGameProgress").text("輪到你出牌了");
+							$(".team1WinRequirement").text(json.team1WinRequirement);
+							$(".team2WinRequirement").text(json.team2WinRequirement);
+							$(".gameTrump").text(suit);
+						}
+					}else{ //不是我的回合
+						if(json.isBiddingPhase){
+							$(".showGameProgress").text("目前王牌: "+json.trumpAndLevel+" 目前得標者:"+json.playerNBid+" 等待"+json.playerNTurn+"選擇");
+						}
+						if(json.isBiddingPhase == false){
+							$(".showGameProgress").text("等待"+json.playerNTurn+"出牌");
+							$(".team1WinRequirement").text(json.team1WinRequirement);
+							$(".team2WinRequirement").text(json.team2WinRequirement);
+							$(".gameTrump").text(suit);
+						}
+					}
+				}
+				
+			}
+			
 			
 			
 			

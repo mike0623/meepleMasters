@@ -6,9 +6,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"></jsp:include>
+<link href="${root}/css/bootstrap.min.css" rel="stylesheet">
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+	ol, ul {
+     padding-left: 0rem;
+	}
+	body{ 
+ 		color: #858796; 
+ 	} 
 	.box{
 		position:relative;
 	}
@@ -177,29 +185,125 @@
 		left:50px;
 		font-size:30px;
 	}
+	.canDo{
+		cursor: pointer;
+	}
 </style>
 </head>
 <body>
+	<span id="tableCode" style="display:none;">${tableCode}</span>
+	<div style="width:100%; position:relative; top:75px;">
 	<div class="box">
 		<div class="showGameProgress">
-			<c:choose>
-				<c:when test="${bridge.phase == 1}">等待${bridge.player1.name}出牌</c:when>
-				<c:when test="${bridge.phase == 2}">等待${bridge.player1.name}出牌</c:when>
-				<c:when test="${bridge.phase == 3}">等待${bridge.player1.name}出牌</c:when>
-				<c:when test="${bridge.phase == 4}">等待${bridge.player1.name}出牌</c:when>
-				<c:when test="${bridge.phase == 5}">一輪結束，${bridge.perTurnWinner.team} (${bridge.perTurnWinner.name})贏得此墩</c:when>
-				<c:when test="${bridge.phase == 11}">等待${bridge.player1.name}選擇</c:when>
-				<c:when test="${bridge.phase == 21}">等待${bridge.player2.name}選擇</c:when>
-				<c:when test="${bridge.phase == 31}">等待${bridge.player3.name}選擇</c:when>
-				<c:when test="${bridge.phase == 41}">等待${bridge.player4.name}選擇</c:when>
-			</c:choose>
-			<c:if test="true">
-				<button class="btn btn-primary">梅花1</button>
-				<button class="btn btn-primary">方塊1</button>
-				<button class="btn btn-primary">紅心1</button>
-				<button class="btn btn-primary">黑桃1</button>
-				<button class="btn btn-primary">無王1</button>
-				<button class="btn btn-primary">跳過</button>
+			<c:if test="${myArray.get(0).playerNumber != bridge.playerNTurn.playerNumber}">
+				<c:choose>
+					<c:when test="${bridge.phase == 1}">等待${bridge.player1.name}出牌</c:when>
+					<c:when test="${bridge.phase == 2}">等待${bridge.player2.name}出牌</c:when>
+					<c:when test="${bridge.phase == 3}">等待${bridge.player3.name}出牌</c:when>
+					<c:when test="${bridge.phase == 4}">等待${bridge.player4.name}出牌</c:when>
+					<c:when test="${bridge.phase == 5}">一輪結束，${bridge.perTurnWinner.team} (${bridge.perTurnWinner.name})贏得此墩</c:when>
+					<c:when test="${bridge.phase == 11}">目前王牌:
+						<c:choose>
+							<c:when test="${bridge.trump == 0}">黑桃${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 1}">紅心${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 2}">方塊${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 3}">梅花${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 4}">無王${bridge.trumpLevel}</c:when>
+						</c:choose>
+						<c:if test="${bridge.playerNBid != null}">
+							目前得標者:${bridge.playerNBid.name}
+						</c:if>
+						等待${bridge.player1.name}選擇
+					</c:when>
+					<c:when test="${bridge.phase == 21}">目前王牌:
+						<c:choose>
+							<c:when test="${bridge.trump == 0}">黑桃${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 1}">紅心${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 2}">方塊${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 3}">梅花${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 4}">無王${bridge.trumpLevel}</c:when>
+						</c:choose>
+						<c:if test="${bridge.playerNBid != null}">
+							目前得標者:${bridge.playerNBid.name}
+						</c:if>
+						等待${bridge.player2.name}選擇
+					</c:when>
+					<c:when test="${bridge.phase == 31}">目前王牌:
+						<c:choose>
+							<c:when test="${bridge.trump == 0}">黑桃${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 1}">紅心${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 2}">方塊${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 3}">梅花${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 4}">無王${bridge.trumpLevel}</c:when>
+						</c:choose>
+						<c:if test="${bridge.playerNBid != null}">
+							目前得標者:${bridge.playerNBid.name}
+						</c:if>
+						等待${bridge.player3.name}選擇
+					</c:when>
+					<c:when test="${bridge.phase == 41}">目前王牌:
+						<c:choose>
+							<c:when test="${bridge.trump == 0}">黑桃${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 1}">紅心${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 2}">方塊${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 3}">梅花${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 4}">無王${bridge.trumpLevel}</c:when>
+						</c:choose>
+						<c:if test="${bridge.playerNBid != null}">
+							目前得標者:${bridge.playerNBid.name}
+						</c:if>
+						等待${bridge.player4.name}選擇
+					</c:when>
+				</c:choose>
+	
+			</c:if>
+			<c:if test="${myArray.get(0).playerNumber == bridge.playerNTurn.playerNumber}">
+				<c:choose>
+					<c:when test="${bridge.phase < 10}">輪到你出牌了</c:when>
+					<c:when test="${bridge.phase > 10}">
+						目前王牌:
+						<c:choose>
+							<c:when test="${bridge.trump == 0}">黑桃${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 1}">紅心${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 2}">方塊${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 3}">梅花${bridge.trumpLevel}</c:when>
+							<c:when test="${bridge.trump == 4}">無王${bridge.trumpLevel}</c:when>
+						</c:choose>
+						<c:if test="${bridge.playerNBid != null}">
+							目前得標者:${bridge.playerNBid.name}
+						</c:if>
+						請選擇是否要喊王:
+						<button class="btn btn-primary">梅花${bridge.trumpLevel+1}</button>
+						<c:choose>
+							<c:when test="${bridge.trump == 0}"><button class="btn btn-primary">方塊${bridge.trumpLevel+1}</button></c:when>
+							<c:when test="${bridge.trump == 1}"><button class="btn btn-primary">方塊${bridge.trumpLevel+1}</button></c:when>
+							<c:when test="${bridge.trump == 2}"><button class="btn btn-primary">方塊${bridge.trumpLevel+1}</button></c:when>
+							<c:when test="${bridge.trump == 3}"><button class="btn btn-primary">方塊${bridge.trumpLevel}</button></c:when>
+							<c:when test="${bridge.trump == 4}"><button class="btn btn-primary">方塊${bridge.trumpLevel+1}</button></c:when>
+						</c:choose>
+						<c:choose>
+							<c:when test="${bridge.trump == 0}"><button class="btn btn-primary">紅心${bridge.trumpLevel+1}</button></c:when>
+							<c:when test="${bridge.trump == 1}"><button class="btn btn-primary">紅心${bridge.trumpLevel+1}</button></c:when>
+							<c:when test="${bridge.trump == 2}"><button class="btn btn-primary">紅心${bridge.trumpLevel}</button></c:when>
+							<c:when test="${bridge.trump == 3}"><button class="btn btn-primary">紅心${bridge.trumpLevel}</button></c:when>
+							<c:when test="${bridge.trump == 4}"><button class="btn btn-primary">紅心${bridge.trumpLevel+1}</button></c:when>
+						</c:choose>
+						<c:choose>
+							<c:when test="${bridge.trump == 0}"><button class="btn btn-primary">黑桃${bridge.trumpLevel+1}</button></c:when>
+							<c:when test="${bridge.trump == 1}"><button class="btn btn-primary">黑桃${bridge.trumpLevel}</button></c:when>
+							<c:when test="${bridge.trump == 2}"><button class="btn btn-primary">黑桃${bridge.trumpLevel}</button></c:when>
+							<c:when test="${bridge.trump == 3}"><button class="btn btn-primary">黑桃${bridge.trumpLevel}</button></c:when>
+							<c:when test="${bridge.trump == 4}"><button class="btn btn-primary">黑桃${bridge.trumpLevel+1}</button></c:when>
+						</c:choose>
+						<c:if test="${bridge.trump == 4}">
+							<button class="btn btn-primary">無王${bridge.trumpLevel+1}</button>
+						</c:if>
+						<c:if test="${bridge.trump != 4}">
+							<button class="btn btn-primary">無王${bridge.trumpLevel}</button>
+						</c:if>
+						<button class="btn btn-primary">跳過</button>
+					</c:when>
+				</c:choose>
 			</c:if>
 		</div>
 		<div class="container-fluid text-center">
@@ -208,31 +312,69 @@
 		    	<div class="tableArea">
 		    		<div class="trump">
 		    			<span>本局王牌:</span>
-		    			<span>${trump}</span>
+		    			<c:if test="${bridge.phase > 10}">
+							<span class="gameTrump">尚未決定</span>
+						</c:if>
+						<c:if test="${bridge.phase < 10}">
+			    			<c:choose>
+								<c:when test="${bridge.trump == 0}"><span class="gameTrump">黑桃</span></c:when>
+								<c:when test="${bridge.trump == 1}"><span class="gameTrump">紅心</span></c:when>
+								<c:when test="${bridge.trump == 2}"><span class="gameTrump">方塊</span></c:when>
+								<c:when test="${bridge.trump == 3}"><span class="gameTrump">梅花</span></c:when>
+								<c:when test="${bridge.trump == 4}"><span class="gameTrump">無王</span></c:when>
+							</c:choose>
+						</c:if>
 		    		</div>
-					<div class="desk">
-						<img class="cardInDesk" src="${root}/poker/0"><br/>
-						<span>x32</span>
-					</div>
-					<div class="showCardForToPlayers">
-						<img class="cardInDesk" src="${root}/poker/44"><br/>
-					</div>
+		    		<c:if test="${bridge.finalNumOfPlayer == 2}">
+						<div class="desk">
+							<img class="cardInDesk" src="${root}/poker/0"><br/>
+							<span>x${bridge.deskList.size()}</span>
+						</div>
+						<div class="showCardForToPlayers">
+							<img class="cardInDesk" src="${root}/poker/${bridge.forTwoPlayersCard}"><br/>
+						</div>
+					</c:if>
+					<c:if test="${bridge.finalNumOfPlayer == 3}">
+						<div class="forThreePlayerArea"></div>
+					</c:if>
 					<div class="myShowCardArea">
-						<img class="cardInMyShowCardArea" src="${root}/poker/1">
+						<c:if test="${myArray.get(0).playedCard != null}">
+							<img class="cardInMyShowCardArea" src="${root}/poker/${myArray.get(0).playedCard}">
+						</c:if>
 						<span style="position:absolute;bottom:3px;left:50px">自己</span>
 					</div>
-					<div class="player2ShowCardArea">
-						<span>Player2</span>
-						<img class="cardInplayer2ShowCardArea" src="${root}/poker/2">
-					</div>
-					<div class="player3ShowCardArea">
-						<span>Player3</span>
-						<img class="cardInplayer3ShowCardArea" src="${root}/poker/3">
-					</div>
-					<div class="player4ShowCardArea">
-						<span>Player4</span>
-						<img class="cardInplayer4ShowCardArea" src="${root}/poker/4">
-					</div>
+					<c:if test="${myArray.size() >= 4}">
+						<div class="player2ShowCardArea">
+							<span>${myArray.get(1).name}</span>
+							<c:if test="${myArray.get(1).playedCard != null}">
+								<img class="cardInplayer2ShowCardArea" src="${root}/poker/${myArray.get(1).playedCard}">
+							</c:if>
+						</div>
+					</c:if>
+					<c:if test="${myArray.size() == 2}">
+						<div class="player3ShowCardArea">
+							<span>${myArray.get(1).name}</span>
+							<c:if test="${myArray.get(1).playedCard != null}">
+								<img class="cardInplayer3ShowCardArea" src="${root}/poker/${myArray.get(1).playedCard}">
+							</c:if>
+						</div>
+					</c:if>
+					<c:if test="${myArray.size() >= 4}">
+						<div class="player3ShowCardArea">
+							<span>${myArray.get(2).name}</span>
+							<c:if test="${myArray.get(2).playedCard != null}">
+								<img class="cardInplayer3ShowCardArea" src="${root}/poker/${myArray.get(2).playedCard}">
+							</c:if>
+						</div>
+					</c:if>
+					<c:if test="${myArray.size() >= 4}">
+						<div class="player4ShowCardArea">
+							<span>${myArray.get(3).name}</span>
+							<c:if test="${myArray.get(3).playedCard != null}">
+								<img class="cardInplayer4ShowCardArea" src="${root}/poker/${myArray.get(3).playedCard}">
+							</c:if>
+						</div>
+					</c:if>
 					<div class="discardArea">
 						<span>棄牌堆</span>
 						<img class="cardInDiscardArea" src="${root}/poker/0">
@@ -241,46 +383,30 @@
 				<div class="myHand">
 				<h2>我的手牌</h2>
 					<div class="cardInMyHandArea">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
-						<img class="cardInMyHand" src="${root}/poker/0">
+						<c:forEach items="${myArray.get(0).handCardList}" var="i">
+							<img name="${i}" class="cardInMyHand <c:if test="${myArray.get(0).playerNumber == bridge.playerNTurn.playerNumber && bridge.phase <10}">canDo</c:if>" src="${root}/poker/${i}">
+						</c:forEach>
 					</div>
 				</div>
 		    </div>
 		    <div class="col-3 rightSide">
-		    	<div class="playerArea">
-					<img class="playerImg" src="${root}/poker/back/0">
+		    	<c:forEach items="${myArray}" var="playerN">
+		    		<div class="playerArea">
+					<img class="playerImg" src="${root}/member/emailFindMemberImg/${playerN.email}">
 					<div class="playerInfo1">
-						<span>Andy</span><br/>
-						<span>熟練度:500</span><br/>
+						<span>${playerN.name}</span><br/>
+						<span>熟練度:${playerN.bridgeDegree}</span><br/>
 					</div>
 					<div class="playerInfo2">
-						<span>隊伍:紅隊</span><br/>
-						<span>贏下墩數:1</span>
+						<c:choose>
+							<c:when test="${playerN.team == 1}"><span>隊伍:紅隊</span><br/></c:when>
+							<c:when test="${playerN.team == 2}"><span>隊伍:藍隊</span><br/></c:when>
+						</c:choose>
+						<span>贏下墩數:${playerN.wonTricks}</span>
 					</div>
-				</div>
-				
-				<div class="playerArea">
-					<img class="playerImg" src="${root}/poker/back/0">
-					<div class="playerInfo1">
-						<span>Betty</span><br/>
-						<span>熟練度:50</span><br/>
 					</div>
-					<div class="playerInfo2">
-						<span>隊伍:藍隊</span><br/>
-						<span>贏下墩數:1</span>
-					</div>
-				</div>
+		    	</c:forEach>
+	
 				<div class="teamInfo">
 					<table>
 						<tr>
@@ -290,12 +416,18 @@
 						</tr>
 						<tr>
 							<td>紅隊</td>
-							<td>?</td>
+							<c:choose>
+								<c:when test="${bridge.team1WinRequirement != null}"><td class="team1WinRequirement">${bridge.team1WinRequirement}</td></c:when>
+								<c:when test="${bridge.team1WinRequirement == null}"><td class="team1WinRequirement">?</td></c:when>
+							</c:choose>
 							<td>?</td>
 						</tr>
 						<tr>
 							<td>藍隊</td>
-							<td>?</td>
+							<c:choose>
+								<c:when test="${bridge.team2WinRequirement != null}"><td class="team2WinRequirement">${bridge.team2WinRequirement}</td></c:when>
+								<c:when test="${bridge.team2WinRequirement == null}"><td class="team2WinRequirement">?</td></c:when>
+							</c:choose>
 							<td>?</td>
 						</tr>
 					</table>
@@ -307,11 +439,10 @@
 		  </div>
 		</div>
 	</div>
+	</div>
 	
 	
-	
-	<script>
-		
-	</script>
+	<jsp:include page="../../include/bridge/bridgeJS.jsp"></jsp:include>
+	<jsp:include page="/WEB-INF/jsp/include/footer.jsp"></jsp:include>
 </body>
 </html>

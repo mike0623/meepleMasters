@@ -9,6 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<button onclick="showFriendList()">好友列表</button>
 <input type="text" id="selectedFriend"><button onclick="searchFriend()">搜尋好友</button>
 <form action="${root}/game/createGameTable/Bridge/${member.memberEmail}">
 	<button>創建橋牌房間</button>
