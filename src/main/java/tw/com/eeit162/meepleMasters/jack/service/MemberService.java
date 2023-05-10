@@ -6,26 +6,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.WebApplicationContext;
 
-import tw.com.eeit162.meepleMasters.jack.mail.JavaMail;
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
 
@@ -47,6 +38,14 @@ public class MemberService {
 
 	}
 
+	/**
+	 * 註冊會員
+	 * @param json
+	 * @return Member
+	 * @throws IOException
+	 * @throws Exception
+	 * @throws ParseException
+	 */
 	public Member createMember(String json) throws IOException, Exception, ParseException {
 		JSONObject jObject = new JSONObject(json);
 		
@@ -90,6 +89,14 @@ public class MemberService {
 		return member;
 	}
 
+	/**
+	 * google登入 註冊會員
+	 * @param payloadEmail
+	 * @param payloadName
+	 * @param payloadPicture
+	 * @return
+	 * @throws IOException
+	 */
 	public Member createByGoogle(String payloadEmail, String payloadName, String payloadPicture) throws IOException {
 
 		Member exsistMember = memberDao.findMemberByEmail(payloadEmail);
@@ -123,6 +130,10 @@ public class MemberService {
 		return exsistMember;
 	}
 
+	/**
+	 * 寄認證信
+	 * @param member
+	 */
 	public void sendVerificationEmail(Member member) {
 		System.out.println("已寄出");
 		String token = jwtService.generateToken(member);
@@ -134,6 +145,10 @@ public class MemberService {
 		mailService.sendEmail(member.getMemberEmail(), subject, content);
 	}
 
+	/**
+	 * 會員認證
+	 * @param token
+	 */
 	public void activeAccount(String token) {
 		if (jwtService.validateToken(token)) {
 			String email = jwtService.extractEmail(token);
@@ -145,6 +160,11 @@ public class MemberService {
 		}
 	}
 
+	/**
+	 * 登入
+	 * @param json
+	 * @return Optional
+	 */
 	public Optional<Member> login(String json) {
 		JSONObject member = new JSONObject(json);
 		String email = member.getString("memberEmail");
@@ -163,6 +183,12 @@ public class MemberService {
 
 	}
 
+	/**
+	 * 更新密碼
+	 * @param id
+	 * @param json
+	 * @return Integer
+	 */
 	public Integer updatePwd(Integer id, String json) {
 		JSONObject jObject = new JSONObject(json);
 
@@ -173,6 +199,14 @@ public class MemberService {
 
 	}
 
+	/**
+	 * 更新會員資料
+	 * @param id
+	 * @param json
+	 * @return Integer
+	 * @throws JSONException
+	 * @throws ParseException
+	 */
 	public Integer updateMember(Integer id, String json) throws JSONException, ParseException {
 		JSONObject jObject = new JSONObject(json);
 
@@ -194,6 +228,12 @@ public class MemberService {
 
 	}
 
+	/**
+	 * 更新會員圖片
+	 * @param id
+	 * @param memberImg
+	 * @return Integer
+	 */
 	public Integer updateImg(Integer id, byte[] memberImg) {
 
 		Optional<Member> memberData = memberDao.findById(id);
@@ -207,6 +247,11 @@ public class MemberService {
 		return null;
 	}
 
+	/**
+	 * id找會員
+	 * @param id
+	 * @return Member
+	 */
 	public Member findMemberById(Integer id) {
 
 		Optional<Member> option = memberDao.findById(id);
@@ -217,7 +262,12 @@ public class MemberService {
 
 		return null;
 	}
-
+	
+	/**
+	 * email找會員
+	 * @param memberEmail
+	 * @return Member
+	 */
 	public Member findMemberByEmail(String memberEmail) {
 
 		Member member = memberDao.findMemberByEmail(memberEmail);
@@ -227,7 +277,12 @@ public class MemberService {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * id找會員圖片
+	 * @param memberId
+	 * @return byte[]
+	 */
 	public byte[] findMemberImg(Integer memberId) {
 
 		Optional<Member> member = memberDao.findById(memberId);
@@ -239,7 +294,12 @@ public class MemberService {
 
 		return null;
 	}
-
+	
+	/**
+	 * email找會員圖片
+	 * @param memberEmail
+	 * @return byte[]
+	 */
 	public byte[] findMemberImg(String memberEmail) {
 
 		Optional<Member> member = Optional.ofNullable(memberDao.findMemberByEmail(memberEmail));
