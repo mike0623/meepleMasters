@@ -39,7 +39,7 @@ public class DataInterface {
 		member.setMemberEmail(memberJson.getString("memberEmail"));
 		member.setMemberPwd(memberJson.getString("memberPwd"));
 		member.setMemberName(memberJson.getString("memberName"));
-		member.setMemberAge(memberJson.getInt("memberAge"));
+//		member.setMemberAge(memberJson.getInt("memberAge"));
 		member.setMemberGender(memberJson.getString("memberGender"));
 		member.setMemberTel(memberJson.getString("memberTel"));
 		member.setMemberAddress(memberJson.getString("memberAddress"));
@@ -68,7 +68,7 @@ public class DataInterface {
 		member.setMemberEmail(memberJson.getString("memberEmail"));
 		member.setMemberPwd(memberJson.getString("memberPwd"));
 		member.setMemberName(memberJson.getString("memberName"));
-		member.setMemberAge(memberJson.getInt("memberAge"));
+//		member.setMemberAge(memberJson.getInt("memberAge"));
 		member.setMemberGender(memberJson.getString("memberGender"));
 		member.setMemberTel(memberJson.getString("memberTel"));
 		member.setMemberAddress(memberJson.getString("memberAddress"));

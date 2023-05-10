@@ -1,7 +1,7 @@
 package tw.com.eeit162.meepleMasters.jack.controller;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 
 import org.apache.tomcat.jni.File;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -45,11 +46,12 @@ public class MemberController {
 	 * 註冊會員
 	 * @param body
 	 * @return String
-	 * @throws IOException
+	 * @throws Exception 
+	 * @throws ParseException 
 	 */
 	@ResponseBody
 	@PostMapping("/createMember")
-	public boolean createMember(@RequestBody String body) throws IOException {
+	public boolean createMember(@RequestBody String body) throws ParseException, Exception {
 		JSONObject newMember = new JSONObject(body);
 		Member email = mService.findMemberByEmail(newMember.getString("memberEmail")) ;
 		if(email == null) {
@@ -85,15 +87,17 @@ public class MemberController {
 			url.put("url", "/login");
 			return url.toString();
 		}
-		session.setMaxInactiveInterval(-1);
-		session.setAttribute("member", optional.get());
+		
 		if(optional.get().getMemberLevel().contentEquals("管理員")) {
+			session.setAttribute("member", optional.get());
+			session.setMaxInactiveInterval(-1);
 			System.out.println("管理員");
 			url.put("url", "/member/admin");
 			return url.toString();
 		}else {
 			if(optional.get().getMemberActive() == 1) {
-				
+				session.setAttribute("member", optional.get());
+				session.setMaxInactiveInterval(-1);
 				url.put("url","/index");
 				return url.toString();
 			}
@@ -143,10 +147,12 @@ public class MemberController {
 	 * @param id
 	 * @param body
 	 * @return Member
+	 * @throws ParseException 
+	 * @throws JSONException 
 	 */
 	@ResponseBody
 	@PutMapping("/member/updateMember/{id}")
-	public String updateMember(@PathVariable(name = "id") Integer id, @RequestBody String body, HttpSession session) {
+	public String updateMember(@PathVariable(name = "id") Integer id, @RequestBody String body, HttpSession session) throws JSONException, ParseException {
 		
 		Integer memberUpdate = mService.updateMember(id, body);
 		Member member = mService.findMemberById(id);

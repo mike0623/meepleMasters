@@ -8,12 +8,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,13 +47,15 @@ public class MemberService {
 
 	}
 
-	public Member createMember(String json) throws IOException {
+	public Member createMember(String json) throws IOException, Exception, ParseException {
 		JSONObject jObject = new JSONObject(json);
-
+		
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(jObject.getString("memberBirth"));
+		
 		String email = jObject.getString("memberEmail");
 		String password = jObject.getString("memberPwd");
 		String name = jObject.getString("memberName");
-		Integer age = jObject.isNull("memberAge") ? null : jObject.getInt("memberAge");
+		Date birth = jObject.isNull("memberBirth") ? null : date;
 		String gender = jObject.isNull("memberGender") ? null : jObject.getString("memberGender");
 		String tel = jObject.isNull("memberTel") ? null : jObject.getString("memberTel");
 		String address = jObject.isNull("memberAddress") ? null : jObject.getString("memberAddress");
@@ -60,7 +65,7 @@ public class MemberService {
 		member.setMemberPwd(password);
 		member.setMemberName(name);
 		member.setMemberLevel("一般會員");
-		member.setMemberAge(age);
+		member.setMemberBirth(birth);
 		member.setMemberGender(gender);
 		member.setMemberTel(tel);
 		member.setMemberAddress(address);
@@ -109,6 +114,7 @@ public class MemberService {
 			member.setMemberEmail(payloadEmail);
 			member.setMemberName(payloadName);
 			member.setMemberImg(imageData);
+			member.setMemberLevel("一般會員");
 			member.setMemberActive(1);
 
 			return memberDao.save(member);
@@ -155,8 +161,6 @@ public class MemberService {
 			return Optional.empty();
 		}
 
-//		Member memberLogin = memberDao.findMemberByEmailandPassword(member.getMemberEmail(), member.getMemberPwd());
-//		return Optional.ofNullable(memberDao.findMemberByEmailandPassword(member.getMemberEmail(), member.getMemberPwd())); 
 	}
 
 	public Integer updatePwd(Integer id, String json) {
@@ -169,14 +173,16 @@ public class MemberService {
 
 	}
 
-	public Integer updateMember(Integer id, String json) {
+	public Integer updateMember(Integer id, String json) throws JSONException, ParseException {
 		JSONObject jObject = new JSONObject(json);
 
 		Optional<Member> memberData = memberDao.findById(id);
 		Member member = memberData.get();
+		
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(jObject.getString("memberBirth"));
 
 		String name = jObject.isNull("memberName") ? member.getMemberName() : jObject.getString("memberName");
-		Integer age = jObject.isNull("memberAge") ? member.getMemberAge() : jObject.getInt("memberAge");
+		Date birth = jObject.isNull("memberBirth") ? member.getMemberBirth() : date;
 		String gender = jObject.isNull("memberGender") ? member.getMemberGender() : jObject.getString("memberGender");
 		String tel = jObject.isNull("memberTel") ? member.getMemberTel() : jObject.getString("memberTel");
 		String address = jObject.isNull("memberAddress") ? member.getMemberAddress()
@@ -184,7 +190,7 @@ public class MemberService {
 
 		System.out.println(member);
 
-		return memberDao.updateMemberById(id, name, age, gender, tel, address);
+		return memberDao.updateMemberById(id, name, birth, gender, tel, address);
 
 	}
 
