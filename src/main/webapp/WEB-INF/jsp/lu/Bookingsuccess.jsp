@@ -41,45 +41,30 @@
 <body>
 <jsp:include page="../include/header.jsp"></jsp:include>
 
-
-
 <div class="container">
  
-	<form method="post" action="${root}/booking/Submit"> 
-	  	
-		<label>訂位資料</label><br><br><br><br>
+    <form action="/booking/calendar" method="post">
+    	<label>訂位成功</label><br><br>
 		
 		<!-- 在頁面上顯示選擇的日期和時段 -->
-		<p>日期：${selectedDate}</p>
-		<p>時段：${selectedTime}</p>
-		<p>桌號：${tableType.deskType}-${tableType.deskId}號</p>
-		
-		<input type="hidden" name="selectedDate" value="${selectedDate}">
+		<p>日期 : ${selectedDate}</p>
+		<p>時段 : ${selectedTime}</p>
+		<p>桌號 : ${tableType.deskType}-${tableType.deskId}號</p>
+        <input type="hidden" name="selectedDate" value="${selectedDate}">
 		<input type="hidden" name="selectedTime" value="${selectedTime}">
-		<input type="hidden" name="deskId" value="${tableType.deskId}">
-
-		
-
-
-	<c:if test='${member!=null}'>
-		<li>
-			<input type="hidden" name="id" value="${Booking.bookId}" />
-			<input type="submit" value="送出">
-		</li>
-		</c:if>
-	<c:if test='${member==null}'>
-		<li>
-			<a href='${root}/member/login'><button type="button">送出</button></a>
-		</li>
-	</c:if>
-	</form>	
+		<input type="hidden" name="deskIdtype" value="${tableType.deskId}">
+        <input type="submit" value="加入行事曆">
+    </form>
+    
+    <form action="/booking/cancel" method="post">
+        <input type="hidden" name="bookingId" value="">
+        <input type="submit" value="取消訂位">
+    </form>
 </div>
 <jsp:include page="../include/footer.jsp"></jsp:include>
 	<script>
 		let mId = "${member.memberId}";
-		let bId = "${Booking.bookId}"
 		console.log(mId);
-		console.log(bId);
 
 	</script>
 
