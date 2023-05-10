@@ -39,7 +39,7 @@
                     onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" path="directPrice" required />
             </span>
             <span class="form-group mb-3">
-                <label for="endTime" class="text-small-uppercase form-label">結束時間（至選擇日期的00:00截止）</label>
+                <label for="endTime" class="text-small-uppercase form-label">結束時間（至選擇日期的23:59截止）</label>
                 <input class="text-body" id="endTime" name="endTime" type="text" path="endTime" required />
             </span>
             <div class="wrapper form-group mb-3">
@@ -210,6 +210,8 @@
                 }
             }
         }
+
+        $("#submit").click
     </script>
 </body>
 

@@ -291,10 +291,13 @@
 		$("#drawCard").click(function () {
 
 			let member = "${member}";
+			let coin = "${member.memberCoin}"
 
 			if (member == "") {
 				window.location.href = "${root}/login";
-			} else {
+			} else if (coin < 100) {
+				Swal.fire({title:'餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert'})
+			} 	else {
 				Swal.fire({
 				title: '確定要花100米寶幣抽卡嗎？',
 				showCancelButton: true,
