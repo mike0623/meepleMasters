@@ -2,10 +2,10 @@ const memberName = document.querySelector("#memberName");
 const address = document.querySelector("#memberAddress");
 const tel = document.querySelector("#memberTel");
 const gender = document.querySelector("#memberGender");
-const age = document.querySelector("#memberAge");
+const birth = document.querySelector("#memberBirth");
 const img = document.querySelector("#memberImg");
 
-const inputs = [memberName, address, tel, gender, age];
+const inputs = [memberName, address, tel, gender, birth];
 
 if (performance.navigation.type == 2) {
   console.log("Doing reload");
@@ -20,7 +20,7 @@ document.querySelector("#edit").addEventListener("click", function () {
   inputs.forEach(function (el, index) {
     el.removeAttribute("readonly");
     el.removeAttribute("disabled");
-
+    
     if (index === 0) {
       el.focus();
     }
@@ -38,7 +38,7 @@ document.querySelector("#save").addEventListener("click", function () {
   axios
     .put(`/meeple-masters/member/updateMember/${dbId}`, {
       memberName: memberName.value === "" ? null : memberName.value,
-      memberAge: age.value === "" ? null : age.value,
+      memberBirth: birth.value === "" ? null : birth.value,
       memberGender: gender.value === "" ? null : gender.value,
       memberTel: tel.value === "" ? null : tel.value,
       memberAddress: address.value === "" ? null : address.value,
@@ -82,3 +82,17 @@ theImg.addEventListener("change", function () {
       });
   };
 });
+
+
+$("#memberBirth").datepicker({
+  changeMonth: true,
+  changeYear: true,
+  dateFormat:'yy-mm-dd',
+  yearRange:'-120:+0',
+  maxDate:0
+})
+
+$("#memberBirth").on("keydown", function(event) {
+  event.preventDefault();
+});
+

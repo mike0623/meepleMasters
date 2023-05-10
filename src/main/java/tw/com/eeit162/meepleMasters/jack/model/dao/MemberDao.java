@@ -1,5 +1,7 @@
 package tw.com.eeit162.meepleMasters.jack.model.dao;
 
+import java.util.Date;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,9 +25,9 @@ public interface MemberDao extends JpaRepository<Member, Integer> {
 	
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query(value="update Member set memberName = :memberName, memberAge = :memberAge, memberGender = :memberGender, memberTel = :memberTel, memberAddress = :memberAddress where memberId = :memberId")
+	@Query(value="update Member set memberName = :memberName, memberBirth = :memberBirth, memberGender = :memberGender, memberTel = :memberTel, memberAddress = :memberAddress where memberId = :memberId")
 	Integer updateMemberById(@Param(value = "memberId") Integer memberId, @Param(value = "memberName") String memberName, 
-			@Param(value = "memberAge") Integer memberAge, @Param(value = "memberGender") String memberGender, 
+			@Param(value = "memberBirth") Date memberBirth, @Param(value = "memberGender") String memberGender, 
 			@Param(value = "memberTel") String memberTel, @Param(value = "memberAddress") String memberAddress);
 	
 	@Transactional
@@ -36,6 +38,7 @@ public interface MemberDao extends JpaRepository<Member, Integer> {
 	
 	//Card
 	@Modifying(clearAutomatically = true)
-	@Query(value="update Member set memberCoin = :memberCoin where memberId = :memberId")
-	Integer updateMemberCoin(@Param(value = "memberId") Integer memberId, @Param(value = "memberCoin") Integer memberCoin);
+	@Query(value="update Member set memberCoin = memberCoin+ :coin where memberId = :memberId")
+	Integer updateMemberCoin(@Param(value = "memberId") Integer memberId, @Param(value = "coin") Integer coin);
+	
 }

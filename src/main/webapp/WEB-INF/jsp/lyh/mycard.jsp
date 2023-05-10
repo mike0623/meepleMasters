@@ -90,12 +90,12 @@
 		let getSellList = [];
 
 		$.get("${root}/card/mycard/${member.memberId}/getOrder", function(data){
-			console.log("data: " + data[0])
+			// console.log("data: " + data[0])
 			getCardListObj = JSON.parse(data).cardList;
 			getCardList = JSON.stringify(getCardListObj)
-			console.log("getCardList: " + data.cardList)
+			// console.log("getCardList: " + data.cardList)
 			getSellList = JSON.parse(data).sellList;
-			console.log("getSellList: " + getSellList);
+			// console.log("getSellList: " + getSellList);
 		})
 
 		// axios.get("${root}/card/mycard/${member.memberId}/getOrder")
@@ -291,10 +291,13 @@
 		$("#drawCard").click(function () {
 
 			let member = "${member}";
+			let coin = "${member.memberCoin}"
 
 			if (member == "") {
 				window.location.href = "${root}/login";
-			} else {
+			} else if (coin < 100) {
+				Swal.fire({title:'餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert'})
+			} 	else {
 				Swal.fire({
 				title: '確定要花100米寶幣抽卡嗎？',
 				showCancelButton: true,
@@ -312,7 +315,7 @@
 					let isNew = false;
 					axios.post("${root}/card/getNewCard").then(response => {
 						var str = response.data.newCard;
-						console.log(str)
+						// console.log(str)
 						var cardId = str.split("cardId=")[1].split(",")[0];
 						var cardName = str.split("cardName=")[1].split(",")[0];
 						newCardString += `<div class="container newCardContainer"><div class="newCardImgDiv"><img src="${root}/card/downloadCard/\${cardId}" class="newCardImg"><img src="${root}/img/lyh/pop_new.png" class="newIcon d-none"></div><div class="newCardTitle">\${cardName}</div><div class="ribbonAnime"><lottie-player src="${root}/json/123225-ribbon.json"  background="transparent" speed="1" style="width: 500px; height: 600px;" loop autoplay></lottie-player></div></div>`;

@@ -8,11 +8,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<jsp:include page="../include/friend/friendList.jsp"></jsp:include>
-<jsp:include page="../include/friend/friendButtonControll.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"></jsp:include>
+<link href="${root}/css/bootstrap.min.css" rel="stylesheet">
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
+ol, ul {
+     padding-left: 0rem;
+}
+body{ 
+ 	color: #858796; 
+ } 
 .box {
 	width: 60%;
 	margin: auto;
@@ -95,7 +101,8 @@
 	</div>
 	
 	<script type="text/javascript">
-		var isGameLobbyPage = true;
+		//宣告在ws的js上
+		isGameLobbyPage = true;
 //		//依照遊戲名展開或收合目前可加入的房間列表
 		function showExistGameArea(gameName){
 			//判斷目前是開還是關的狀態
@@ -178,5 +185,6 @@
 //		//
 // 		function 
 	</script>
+	<jsp:include page="/WEB-INF/jsp/include/footer.jsp"></jsp:include>
 </body>
 </html>

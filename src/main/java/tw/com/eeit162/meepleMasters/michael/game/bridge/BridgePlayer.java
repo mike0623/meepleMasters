@@ -11,7 +11,7 @@ public class BridgePlayer {
 	
 	private String name;
 	
-	private String Email;
+	private String email;
 	
 	private Integer bridgeDegree;
 	
@@ -19,9 +19,11 @@ public class BridgePlayer {
 	
 	private List<Integer> handCardList = new ArrayList<>();
 	
-	private Integer wonTricks;
+	private Integer wonTricks = 0;
 	
 	private Integer team;//1紅隊，2藍隊
+	
+	private Integer playedCard; //目前打出的牌
 	
 	
 
@@ -41,11 +43,11 @@ public class BridgePlayer {
 	}
 
 	public String getEmail() {
-		return Email;
+		return email;
 	}
 
 	public void setEmail(String email) {
-		Email = email;
+		this.email = email;
 	}
 
 	public Integer getBridgeDegree() {
@@ -100,9 +102,17 @@ public class BridgePlayer {
 		this.handCardList = handCardList;
 	}
 
+	public Integer getPlayedCard() {
+		return playedCard;
+	}
+
+	public void setPlayedCard(Integer playedCard) {
+		this.playedCard = playedCard;
+	}
+
 	@Override
 	public String toString() {
-		return "BridgePlayer [playerNumber=" + playerNumber + ", name=" + name + ", Email=" + Email + ", bridgeDegree="
+		return "BridgePlayer [playerNumber=" + playerNumber + ", name=" + name + ", Email=" + email + ", bridgeDegree="
 				+ bridgeDegree + ", handCardSet=" + handCardSet + ", handCardList=" + handCardList + ", wonTricks="
 				+ wonTricks + ", team=" + team + "]";
 	}

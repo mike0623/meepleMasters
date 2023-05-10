@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
@@ -26,7 +27,7 @@ public class CardReleasedService {
 	@Autowired
 	private CardReleasedDao cRDao;
 	
-	public List<CardOwned> showOwnedCard(Integer memberId) {
+	public List<CardOwned> showMyCard(Integer memberId) {
 		
 		List<CardOwned> ownedCard = cODao.ownedCardStarOrderASC(memberId);
 //		System.out.println(ownedCard.toString());
@@ -36,6 +37,16 @@ public class CardReleasedService {
 		}
 		
 		return ownedCard;
+	}
+	
+	public CardOwned showOnwedDetail(Integer ownedId) {
+		Optional<CardOwned> owned = cODao.findById(ownedId);
+		
+		if (owned.isEmpty()) {
+			return null;
+		}
+		
+		return owned.get();
 	}
 	
 	public Card findCardById(Integer cardId) {
@@ -49,15 +60,19 @@ public class CardReleasedService {
 	}
 	
 	
-	
-	public CardReleased insertCardReleased(Integer ownedId, Integer type, Date endTime) {
+	@Transactional
+	public CardReleased insertCardReleasedDirect(Integer ownedId, Integer price, Date endTime) {
 		
 		CardReleased cr = new CardReleased();
 		
+		cODao.updateCardStatusToSell(ownedId);
+		
 		cr.setFkOwnedId(ownedId);
-		cr.setType(type);
+		cr.setDirectPrice(price);
+		cr.setType(1);
 		cr.setStartTime(new Date());
 		cr.setEndTime(endTime);
+		cr.setReleasedStatus(1);
 		
 		CardReleased newRelease = cRDao.save(cr);
 		
@@ -85,11 +100,6 @@ public class CardReleasedService {
 		return releaseList;
 	}
 	
-	public String updateCardStatusToSell(Integer ownedId) {
-		
-		 cODao.updateCardStatusToSell(ownedId);
-		
-		 return "";
-	}
+
 
 }

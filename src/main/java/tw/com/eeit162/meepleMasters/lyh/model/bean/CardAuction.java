@@ -27,17 +27,11 @@ public class CardAuction {
 	@Column(name = "fk_releasedId")
 	private Integer fkReleasedId;
 	
-	@Column(name = "startPrice")
-	private Integer startPrice;
-	
-	@Column(name = "directPrice")
-	private Integer directPrice;
-	
-	@Column(name = "auctionStatus")
-	private Integer auctionStatus;
-	
 	@Column(name = "fk_purchaserId")
 	private Integer fkPurchaserId;
+	
+	@Column(name = "purchasePrice")
+	private Integer purchasePrice;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -64,36 +58,20 @@ public class CardAuction {
 		this.fkReleasedId = fkReleasedId;
 	}
 
-	public Integer getStartPrice() {
-		return startPrice;
-	}
-
-	public void setStartPrice(Integer startPrice) {
-		this.startPrice = startPrice;
-	}
-
-	public Integer getDirectPrice() {
-		return directPrice;
-	}
-
-	public void setDirectPrice(Integer directPrice) {
-		this.directPrice = directPrice;
-	}
-
-	public Integer getAuctionStatus() {
-		return auctionStatus;
-	}
-
-	public void setAuctionStatus(Integer auctionStatus) {
-		this.auctionStatus = auctionStatus;
-	}
-
 	public Integer getFkPurchaserId() {
 		return fkPurchaserId;
 	}
 
 	public void setFkPurchaserId(Integer fkPurchaserId) {
 		this.fkPurchaserId = fkPurchaserId;
+	}
+
+	public Integer getPurchasePrice() {
+		return purchasePrice;
+	}
+
+	public void setPurchasePrice(Integer purchasePrice) {
+		this.purchasePrice = purchasePrice;
 	}
 
 	public Date getPurchaseTime() {
@@ -103,6 +81,11 @@ public class CardAuction {
 	public void setPurchaseTime(Date purchaseTime) {
 		this.purchaseTime = purchaseTime;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "CardAuction [auctionId=" + auctionId + ", fkReleasedId=" + fkReleasedId + ", fkPurchaserId="
+				+ fkPurchaserId + ", purchasePrice=" + purchasePrice + ", purchaseTime=" + purchaseTime + "]";
+	}
+	
 }

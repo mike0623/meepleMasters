@@ -51,7 +51,7 @@ public class CardListService {
 			return null;
 		}
 		
-		mDao.updateMemberCoin(memberId, memberCoin-100);
+		mDao.updateMemberCoin(memberId, -100);
 
 		int cardId = randomCardId();
 
@@ -235,7 +235,7 @@ public class CardListService {
 	public int star2() {
 		cardStar();
 		Random random = new Random();
-		int randomNumber = (random.nextInt(Math.abs(card2.size()))+1)-1;
+		int randomNumber = (random.nextInt(Math.abs(card2.size())+1))-1;
 
 		System.out.println(card2.get(randomNumber));
 		return card2.get(randomNumber);
@@ -244,7 +244,7 @@ public class CardListService {
 	public int star1() {
 		cardStar();
 		Random random = new Random();
-		int randomNumber = (random.nextInt(Math.abs(card1.size()))+1)-1;
+		int randomNumber = (random.nextInt(Math.abs(card1.size())+1))-1;
 
 		System.out.println(card1.get(randomNumber));
 		return card1.get(randomNumber);

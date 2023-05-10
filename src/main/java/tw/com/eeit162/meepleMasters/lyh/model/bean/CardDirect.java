@@ -27,9 +27,6 @@ public class CardDirect {
 	@Column(name = "fk_releasedId")
 	private Integer fkReleasedId;
 	
-	@Column(name = "directPrice")
-	private Integer directPrice;
-	
 	@Column(name = "fk_purchaserId")
 	private Integer fkPurchaserId;
 	
@@ -38,9 +35,6 @@ public class CardDirect {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "purchaseTime")
 	private Date purchaseTime;
-	
-	@Column(name = "directStatus")
-	private Integer directStatus;
 	
 	public CardDirect() {
 	}
@@ -61,14 +55,6 @@ public class CardDirect {
 		this.fkReleasedId = fkReleasedId;
 	}
 
-	public Integer getDirectPrice() {
-		return directPrice;
-	}
-
-	public void setDirectPrice(Integer directPrice) {
-		this.directPrice = directPrice;
-	}
-
 	public Integer getFkPurchaserId() {
 		return fkPurchaserId;
 	}
@@ -85,14 +71,10 @@ public class CardDirect {
 		this.purchaseTime = purchaseTime;
 	}
 
-	public Integer getDirectStatus() {
-		return directStatus;
-	}
-
-	public void setDirectStatus(Integer directStatus) {
-		this.directStatus = directStatus;
+	@Override
+	public String toString() {
+		return "CardDirect [directId=" + directId + ", fkReleasedId=" + fkReleasedId + ", fkPurchaserId="
+				+ fkPurchaserId + ", purchaseTime=" + purchaseTime + "]";
 	}
 	
-	
-
 }

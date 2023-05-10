@@ -1,8 +1,81 @@
 .releasedContainer {
-    position: relative;
-    top: 75px;
     text-align: center;
     width: 1000px;
     margin: auto;
-    padding-bottom: 150px;
+    height: 100%;
+}
+
+.releasedTitle {
+    margin: 20px;
+    font-size: 30px;
+    color: #47322d;
+}
+
+.releaseDetail {
+    background-color: #647168;
+    color: #FFF;
+    height: 100px;
+    padding: 10px;
+    text-align: left;
+}
+
+.content {
+    width: 1000px;
+    height: auto;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.nav {
+}
+
+.nav-pills {
+    width: 450px;
+    background: none;
+}
+
+.nav-item {
+    width: 30%;
+}
+
+.nav-pills .nav-link {
+    font-weight: bold;
+    padding-top: 13px;
+    text-align: center;
+    background: #647168;
+    color: #fff;
+    border-radius: 30px;
+    height: 100px;
+}
+
+.nav-pills .nav-link.active {
+    background: #fff;
+    color: #647168;
+}
+
+.tab-content {
+    position: absolute;
+    width: 1000px;
+    height: auto;
+    margin-top: -50px;
+    background: #fff;
+    color: #647168;
+    border-radius: 30px;
+    z-index: 1000;
+    padding: 30px;
+    margin-bottom: 50px;
+}
+
+.tab-content button {
+    border-radius: 15px;
+    width: 100px;
+    margin: 0 auto;
+    float: right;
+}
+
+.shopping {
+    position: absolute;
+    width: 30px;
+    right: 15px;
+    bottom: 20px;
 }

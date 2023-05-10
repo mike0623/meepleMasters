@@ -86,9 +86,14 @@
 						</div>
 						<div class="row mt-3">
 							<div class="col-md-12">
-								<label class="labels">Age</label>
+								<label class="labels">Birth</label>
+								<c:set var="BirthDate" value="${member.memberBirth}" />
+								<fmt:formatDate value="${BirthDate}" pattern="yyyy-MM-dd" var="formattedDate" />
                                 <input type="text"
-									class="form-control" value="${member.memberAge}" id="memberAge" readonly>
+								class="form-control" value="${formattedDate}" id="memberBirth"  disabled>
+								<div id="memberBirth-error" class="invalid-feedback">
+
+								</div>
 							</div>
 							<div class="col-md-12">
 								<label class="labels">Address</label>

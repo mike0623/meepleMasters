@@ -74,9 +74,9 @@
                       </div>
                     </div>
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="age" placeholder="Age"
+                      <input type="text" class="form-control" id="birth" placeholder="Birth"
                         style="background-color: rgb(250, 240, 217)" />
-                      <label for="age">Age</label>
+                      <label for="bitrh">Birth</label>
                     </div>
                     <div class="mb-3">
                       <select class="form-select" id="gender" aria-label="Default select example"
