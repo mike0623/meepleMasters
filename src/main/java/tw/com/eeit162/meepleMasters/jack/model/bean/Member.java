@@ -47,9 +47,12 @@ public class Member {
 
 	@Column(name = "memberImg")
 	private byte[] memberImg;
-
-	@Column(name = "memberAge")
-	private Integer memberAge;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "memberBirth")
+	private Date memberBirth;
 
 	@Column(name = "memberGender")
 	private String memberGender;
@@ -136,12 +139,14 @@ public class Member {
 		this.memberImg = memberImg;
 	}
 
-	public Integer getMemberAge() {
-		return memberAge;
+	
+
+	public Date getMemberBirth() {
+		return memberBirth;
 	}
 
-	public void setMemberAge(Integer memberAge) {
-		this.memberAge = memberAge;
+	public void setMemberBirth(Date memberBirth) {
+		this.memberBirth = memberBirth;
 	}
 
 	public String getMemberGender() {
