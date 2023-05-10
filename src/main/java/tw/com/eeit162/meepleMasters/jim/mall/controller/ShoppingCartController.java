@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,11 +25,16 @@ public class ShoppingCartController {
 		return scService.addShoppingCartAndRemoveItWhenExist(productId, memberId);
 	}
 
+	// 透過會員ID找到他的購物車
 	@GetMapping("/shoppingCart/findShoppingCartByMemberId")
 	@ResponseBody
 	public List<ShoppingCart> findShoppingCartByMemberId(@RequestParam Integer memberId) {
-		List<ShoppingCart> shoppingByMember = scService.findShoppingCartByMember(memberId);
-		return shoppingByMember;
+		List<ShoppingCart> cartByMember = scService.findShoppingCartByMember(memberId);
+		return cartByMember;
 	}
 
+	@GetMapping("/shoppingCart/cartToOreder/{memberId}")
+	public void cartToOrder(@PathVariable Integer memberId) {
+		scService.cartToOrder(memberId);
+	}
 }

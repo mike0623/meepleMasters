@@ -121,11 +121,13 @@ pageEncoding="UTF-8"%>
                 </div>
               </div>
             </div>
-            <div class="float-right">
-              <button type="button" class="btn btn-lg btn-primary mt-2">
-                結帳
-              </button>
-            </div>
+            <form action="#">
+              <div class="float-right">
+                <button type="submit" class="btn btn-lg btn-primary mt-2">
+                  結帳
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -139,6 +141,12 @@ pageEncoding="UTF-8"%>
       // 取得購物車清單
       function getShoppingCartList() {
         let mId = "${member.memberId}";
+        if (mId == "") {
+          alert("請先登入");
+          // window.location.href = "${root}/login";
+          window.location.replace("${root}/login");
+          return;
+        }
         axios
           .get("/meeple-masters/shoppingCart/findShoppingCartByMemberId", {
             params: { memberId: mId },
@@ -159,22 +167,22 @@ pageEncoding="UTF-8"%>
       function renderShoppingCart(cartList) {
         let outputString = "";
         let totalPrice = 0;
-        for (let p of cartList) {
+        for (let cartItem of cartList) {
           outputString += "<tr><td>";
-          outputString += `<img src='${root}/mall/getPhoto?pId=\${p.product.productId}' class='d-block ui-w-40 ui-bordered mr-4'/>`;
+          outputString += `<img src='${root}/mall/getPhoto?pId=\${cartItem.product.productId}' class='d-block ui-w-40 ui-bordered mr-4'/>`;
           outputString += "</td>";
           outputString += "<td class='text-center p-4'>";
           outputString += "<div class='media align-items-center'>";
           outputString += "<div class='media-body'>";
-          outputString += `<div class='d-block text-dark'>\${p.product.productName}</div>`;
+          outputString += `<div class='d-block text-dark'>\${cartItem.product.productName}</div>`;
           outputString += "</div></div></td>";
           outputString +=
             "<td class='text-center font-weight-semibold align-middle p-4'>";
-          outputString += `\${p.product.productPrice}元</td>`;
+          outputString += `\${cartItem.product.productPrice}元</td>`;
           outputString += "<td class='text-center align-middle px-0'>";
-          outputString += `<button class='deleteButton btn btn-danger btn-circle' value='\${p.product.productId}''><i class='fas fa-trash'></i></button>`;
+          outputString += `<button class='deleteButton btn btn-danger btn-circle' value='\${cartItem.product.productId}' type='button''><i class='fas fa-trash'></i></button>`;
           outputString += "</td></tr>";
-          totalPrice += p.product.productPrice;
+          totalPrice += cartItem.product.productPrice;
         }
         totalPrice += "元";
         $("#cartTableBody").html(outputString);

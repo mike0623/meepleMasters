@@ -61,6 +61,10 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private List<ShoppingCart> shoppingCarts;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<Order> orders;
+
 	@PrePersist
 	public void onCreate() {
 		if (addedTime == null) {

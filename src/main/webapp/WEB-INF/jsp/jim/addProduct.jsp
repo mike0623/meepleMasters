@@ -2,7 +2,8 @@
 pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
 prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
+
+<jsp:include page="../include/common_link.jsp" />
 <!DOCTYPE html>
 <html>
   <head>
@@ -14,19 +15,13 @@ prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
     <!-- Page Wrapper -->
     <div id="wrapper">
       <!-- ######## include ######## -->
-      <jsp:include
-        page="/WEB-INF/jsp/include/admin/adminSidebar.jsp"
-      ></jsp:include>
-
+      <jsp:include page="../include/admin/adminSidebar.jsp"></jsp:include>
       <!-- Content Wrapper -->
       <div id="content-wrapper" class="d-flex flex-column">
         <!-- Main Content -->
         <div id="content">
           <!-- ######## include ######## -->
-          <jsp:include
-            page="/WEB-INF/jsp/include/admin/adminNavbar.jsp"
-          ></jsp:include>
-
+          <jsp:include page="../include/admin/adminNavbar.jsp"></jsp:include>
           <!-- /.container-fluid -->
 
           <div class="col-lg-6 mb-4">
@@ -108,9 +103,7 @@ prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
         </div>
 
         <!-- ######## include ######## -->
-        <jsp:include
-          page="/WEB-INF/jsp/include/admin/adminFooter.jsp"
-        ></jsp:include>
+        <jsp:include page="../include/admin/adminFooter.jsp"></jsp:include>
       </div>
     </div>
     <script>
@@ -133,8 +126,6 @@ prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
         const tempSrc = URL.createObjectURL(file);
         imgPreview.attr("src", tempSrc);
       });
-
-      $("#resetButton").on("click");
     </script>
   </body>
 </html>

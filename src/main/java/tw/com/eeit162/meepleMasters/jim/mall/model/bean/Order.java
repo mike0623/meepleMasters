@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -15,8 +17,10 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
-@Table(name = "order")
+@Table(name = "[order]")
 public class Order implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -26,6 +30,7 @@ public class Order implements Serializable {
 	@Column(name = "orderId")
 	private Integer orderId;
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "orderDate")
@@ -40,11 +45,12 @@ public class Order implements Serializable {
 	@Column(name = "paymentMethod")
 	private String paymentMethod;
 
+	@JoinColumn(name = "fk_productId", referencedColumnName = "productId", nullable = false)
+	@ManyToOne
+	private Product product;
+
 	@Column(name = "fk_memberId")
 	private Integer fkMemberId;
-
-	@Column(name = "fk_cartId")
-	private Integer fkCartId;
 
 	@Column(name = "fk_receiver")
 	private Integer fkReceiver;
@@ -105,14 +111,6 @@ public class Order implements Serializable {
 
 	public void setFkMemberId(Integer fkMemberId) {
 		this.fkMemberId = fkMemberId;
-	}
-
-	public Integer getFkCartId() {
-		return fkCartId;
-	}
-
-	public void setFkCartId(Integer fkCartId) {
-		this.fkCartId = fkCartId;
 	}
 
 	public Integer getFkReceiver() {
