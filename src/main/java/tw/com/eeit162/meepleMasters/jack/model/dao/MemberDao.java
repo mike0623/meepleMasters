@@ -36,6 +36,7 @@ public interface MemberDao extends JpaRepository<Member, Integer> {
 	
 	//Card
 	@Modifying(clearAutomatically = true)
-	@Query(value="update Member set memberCoin = :memberCoin where memberId = :memberId")
-	Integer updateMemberCoin(@Param(value = "memberId") Integer memberId, @Param(value = "memberCoin") Integer memberCoin);
+	@Query(value="update Member set memberCoin = memberCoin+ :coin where memberId = :memberId")
+	Integer updateMemberCoin(@Param(value = "memberId") Integer memberId, @Param(value = "coin") Integer coin);
+	
 }
