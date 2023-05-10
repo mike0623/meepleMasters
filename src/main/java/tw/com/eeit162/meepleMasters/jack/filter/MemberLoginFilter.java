@@ -17,8 +17,11 @@ public class MemberLoginFilter extends OncePerRequestFilter{
 			throws ServletException, IOException {
 			HttpSession session = request.getSession();
 			String contextPath = request.getContextPath();
-
-			if(session.getAttribute("member") == null && !("yes").equals(request.getHeader("isServer"))) {
+			boolean isServer = false;
+			if(request.getHeader("isServer") != null) {
+				isServer = ("yes").equals(request.getHeader("isServer"));
+			}
+			if(session.getAttribute("member") == null && !isServer) {
 				response.sendRedirect(contextPath + "/login");
 			}else {
 				 filterChain.doFilter(request, response);

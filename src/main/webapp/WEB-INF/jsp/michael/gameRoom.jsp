@@ -8,11 +8,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<jsp:include page="../include/friend/friendList.jsp"></jsp:include>
-<jsp:include page="../include/friend/friendButtonControll.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"></jsp:include>
+<link href="${root}/css/bootstrap.min.css" rel="stylesheet">
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+ol, ul {
+     padding-left: 0rem;
+ }
+ body{ 
+ 	color: #858796; 
+ } 
 .box {
 	width: 60%;
 	margin: auto;
@@ -57,7 +63,9 @@
 }
 </style>
 </head>
+
 <body>
+<div style="width:100%; position:relative; top:75px;">
 	<div class="box">
 		<div class="gameType">
 			<div class="container text-center">
@@ -100,7 +108,7 @@
 			</c:if>
 			<div class="players">
 				<c:forEach begin="0" end="${playerList.size() -1}" step="1" var="i">
-					<div class="player hasSit ${playerList[i].memberName}">
+					<div class="player hasSeat ${playerList[i].memberName}">
 					<div class="container text-center">
 						<div class="row">
 							<div class="col-4">
@@ -125,18 +133,18 @@
 				</div>
 				</c:forEach>
 				<c:if test="${0 == finalNumOfPlayer}">
-						<div class="player">自由位</div>
+						<div class="player freeSeat">自由位</div>
 				</c:if>
 				<c:if test="${finalNumOfPlayer != 0 && finalNumOfPlayer-playerList.size()-1 >= 0}">
 					<c:forEach begin="0" end="${finalNumOfPlayer - playerList.size() -1}" step="1" var="i">
-						<div class="player">自由位</div>
+						<div class="player freeSeat">自由位</div>
 					</c:forEach>
 				</c:if>
 				
 
 			</div>
 		</div>
-
+		</div>
 
 
 	</div>
@@ -152,7 +160,7 @@
 			  $(".player:eq(0)").siblings().remove();
 			  for(let i =2;i<=$("#numOfPlayers").val();i++){
 				  $(".players").append(`
-				  		<div class="player">自由位</div>
+				  		<div class="player freeSeat">自由位</div>
 						  `);
 			  }
 			  $("#createRoomA")[0].href = "${root}/game/finalNumOfPlayer/${game.productName}/${member.memberEmail}/"+$("#numOfPlayers").val();
@@ -221,7 +229,7 @@
 		
 		//當玩家數達上限時，可以按下開始按鈕
 		function startButton(){
-			if($(".hasSit").length == ${finalNumOfPlayer}){
+			if($(".hasSeat").length == ${finalNumOfPlayer}){
 				//連結到遊玩頁面
 				window.location.href = "${root}/game/startGame/${game.productName}/${tableCode}/${member.memberEmail}";
 			}else{
@@ -232,8 +240,8 @@
 		//踢出玩家
 		function kickPlayerOut(playerEmail,playerName){
 			axios.get("${root}/game/kickPlayerOut/${tableCode}/"+playerEmail).then(function(response){
-				$(".hasSit."+playerName).remove();
-				$(".players").append(`<div class="player">自由位</div>`);
+				$(".hasSeat."+playerName).remove();
+				$(".players").append(`<div class="player freeSeat">自由位</div>`);
 			}).catch(function(error){
 				console.log("踢出玩家出錯啦",error);
 			}).finally(function(){
@@ -252,7 +260,8 @@
 			countDegreePercent(i+1,$(".degreePoint:eq("+i+")").text().replace("遊戲熟練度:",""));
 		}
 		$(".inviteFriendToGame").hide();
-		var isRoomPage = true;
+		//宣告在ws的js上
+		isRoomPage = true;
 		
 		//製作熟練度進度條
 		function countDegreePercent(NumOfPlayer,degree){
@@ -262,5 +271,6 @@
 		}
 		
 	</script>
+	<jsp:include page="/WEB-INF/jsp/include/footer.jsp"></jsp:include>
 </body>
 </html>

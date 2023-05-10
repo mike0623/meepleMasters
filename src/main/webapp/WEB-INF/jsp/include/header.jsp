@@ -5,13 +5,22 @@
 <!DOCTYPE html>
 <html>
 <head>
+<c:if test="${member != null }">
+<jsp:include page="friend/friendList.jsp"></jsp:include>
+</c:if>
 <meta charset="UTF-8">
 <title>${webName}</title>
 <link rel="stylesheet" type="text/css" href="${root}/css/header.css">
 <style>
+	
 </style>
 </head>
 <body>
+	<c:if test="${member != null }">
+		<div class="friendButton">
+			<span class="friendListSpan" onclick="showFriendList()">好友列表</span>
+		</div>
+	</c:if>
     <div class="nav fixed-top">
         <header>
             <div class="logo"><a href="${root}"><img src="${root}/img/logo.png" alt="" class="logoImg" /></a></div>
@@ -57,7 +66,20 @@
                             </c:if>
                         </div>
                     </li>
-                    <li><a href="#">會員中心</a></li>
+                    <li>
+                    	<a href="#">加入遊戲</a>
+                    	<div>
+                                <ul>
+    								
+                                    <li><a href="${root}/game/createGameTable/Bridge/${member.memberEmail}">創建橋牌遊戲房間</a></li>
+                                    <li><a href="${root}/game/playGameLobby">進入遊戲大廳</a></li>
+                                    <c:if test="${tableCode != null}">
+                                    	<li><a href="${root}/game/joinGame/${tableCode}/${member.memberEmail}">回到遊玩中的遊戲</a></li>
+                                    </c:if>
+    
+                                </ul>
+                            </div>
+                    </li>
                     <c:if test="${member == null }">
                     	<li style="background: none;"><a href="${root}/member/login" style="font-size: 16px;">註冊 / 登入</a></li>
                     </c:if>

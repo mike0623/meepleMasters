@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
@@ -32,20 +31,26 @@ public class Bridge extends Game{
 	
 	private Set<Integer> discardSet;
 	
-	private Integer trump; //王牌 0-3分別為黑桃，紅心，方塊，梅花，4為無王
-	
 	private Integer forTwoPlayersCard;
 	
 	private Integer phase; //1:等待玩家一出牌，2:等待玩家二出牌，3:等待玩家三出牌，4:等待玩家四出牌，5:每人都出玩牌時，停留3秒讓大家看牌
 				   		   //11:等待玩家一喊王 21:等待玩家二喊王 31:等待玩家三喊王 41:等待玩家四喊王 
 	
-	private Integer playerNTurn; //誰的回合
+	private BridgePlayer playerNTurn; //誰的回合
 	
-	private Integer playerNBid; //誰叫的王牌，pass不算
+	private BridgePlayer playerNBid = null; //誰叫的王牌，pass不算
+
+	private Integer trump = 4; //王牌 0-3分別為黑桃，紅心，方塊，梅花，4為無王
 	
+	private Integer trumpLevel = 0; //喊王喊到數字幾
+	
+	private Integer countBidPass = 0;//計算連續喊了幾次pass
+
 	private BridgePlayer perTurnWinner;
 	
 	private ArrayList<BridgePlayer> playerSeat = new ArrayList<>();
+	
+	private ArrayList<Integer> simplePlayOrder = new ArrayList<>();
 	
 	
 	
@@ -64,9 +69,17 @@ public class Bridge extends Game{
 		createPlayers(game.getFinalNumOfPlayer());
 		//將玩家基本資料寫入BridgePlayer物件裡
 		writePlayersInfo(game.getPlayers());
-		//隨機分隊
+		//隨機分隊和遊戲順序
 		decidePlayerSeatAndTeam(game.getFinalNumOfPlayer());
-
+		//設置遊戲階段
+		setPhase(playerSeat.get(0),true);
+		setPlayerNTurn(playerSeat.get(0));
+		//兩人遊戲時，桌面上的牌
+		if(game.getFinalNumOfPlayer() == 2) {
+			setTwoPlayerCard();
+			countBidPass = -1;
+		}
+		
 	}
 	
 	
@@ -147,22 +160,28 @@ public class Bridge extends Game{
 			if(temp.get(i) == 1) {
 				playerSeat.add(player1);
 				player1.setTeam(1);
+				simplePlayOrder.add(1);
 			}
 			if(temp.get(i) == 2) {
 				playerSeat.add(player2);
 				player2.setTeam(2);
+				simplePlayOrder.add(2);
 			}
 			if(temp.get(i) == 3) {
 				playerSeat.add(player3);
-				player3.setTeam(3);
+				player3.setTeam(1);
+				simplePlayOrder.add(3);
 			}
 			if(temp.get(i) == 4) {
 				playerSeat.add(player4);
-				player4.setTeam(4);
+				player4.setTeam(2);
+				simplePlayOrder.add(4);
 			}
 			temp.remove(i);
 		}
 		System.out.println("玩家座位"+playerSeat);
+		//設定起始的playerNBid
+		setPlayerNBid(playerSeat.get(playerSeat.size()-1));
 	}
 	
 	//發起始手牌
@@ -187,7 +206,150 @@ public class Bridge extends Game{
 		}
 	}
 	
+	//兩人遊戲時中間的卡片
+	public void setTwoPlayerCard() {
+		int i = (int)Math.floor((Math.random()*deskList.size()));
+		Integer card = deskList.get(i);
+		if(deskSet.remove(card)) {
+			deskList.remove(i);
+			forTwoPlayersCard = card;
+		}
+	}
 	
+	//設置遊戲階段
+	//Overloading
+	public void setPhase(BridgePlayer player,boolean isBiddingPhase) {
+		if(player == null) {
+			phase = 5;
+		}
+		if(isBiddingPhase) {
+			phase = player.getPlayerNumber()*10 + 1;
+			return;
+		}
+		if(!isBiddingPhase) {
+			phase = player.getPlayerNumber();
+			return;
+		}
+	}
+	
+	//用email找到play
+	public BridgePlayer findBridgePlayerByEmail(String email) {
+		for(BridgePlayer player : playerSeat) {
+			if(player.getEmail().equals(email)) {
+				return player;
+			}
+		}
+		return null;
+	}
+	
+	//用王牌數字找到對應文字
+	public String transTrumpFromStringAndInteger(Integer integer) {
+		if(integer == 0) {
+			return "黑桃";
+		}
+		if(integer == 1) {
+			return "紅心";
+		}
+		if(integer == 2) {
+			return "方塊";
+		}
+		if(integer == 3) {
+			return "梅花";
+		}
+		if(integer == 4) {
+			return "無王";
+		}
+		return null;
+	}
+	
+	//取得玩家位置，0開始
+	public Integer getPlayerSeatIndex(BridgePlayer player) {
+		Integer index = 0;
+		for(int i = 0;i<playerSeat.size();i++) {
+			if(playerSeat.get(i) == player) {
+				index = i;
+			}
+		}
+		return index;
+	}
+	
+	//按下喊王按鈕時的方法，回傳是否還是喊王階段
+	public boolean bidding(BridgePlayer player,String suit,Integer trumpLevel) {
+		if("跳過".equals(suit)) {
+			countBidPass++;
+			if(countBidPass == playerSeat.size()-1) {
+				return false;
+			}
+			return true;
+		}
+		playerNBid = player;
+		if("黑桃".equals(suit)) {
+			trump = 0;
+		}
+		if("紅心".equals(suit)) {
+			trump = 1;
+		}
+		if("方塊".equals(suit)) {
+			trump = 2;
+		}
+		if("梅花".equals(suit)) {
+			trump = 3;
+		}
+		if("無王".equals(suit)) {
+			trump = 4;
+		}
+		this.trumpLevel = trumpLevel;
+		countBidPass = 0;
+		return true;
+	}
+	
+	//換下一位的回合
+	public BridgePlayer nextTurn(BridgePlayer oldPlayer,boolean isBiddingPhase) {
+		Integer oldIndex = 0;
+		for(int i = 0;i<playerSeat.size();i++) {
+			if(oldPlayer.getPlayerNumber() == playerSeat.get(i).getPlayerNumber()) {
+				oldIndex = i;
+			}
+		}
+		if(isBiddingPhase) {
+			Integer newIndex = 0;
+			if(oldIndex == 0) {
+				newIndex = playerSeat.size()-1;
+			}else {
+				newIndex = oldIndex -1;
+			}
+			playerNTurn = playerSeat.get(newIndex);
+			return playerNTurn;
+		}
+		if(!isBiddingPhase) {
+			Integer newIndex = 0;
+			if(oldIndex == playerSeat.size()-1) {
+				newIndex = 0;
+			}else {
+				newIndex = oldIndex +1;
+			}
+			playerNTurn = playerSeat.get(newIndex);
+			return playerNTurn;
+		}
+		return null;
+	}
+	
+	//喊王階段結束時，計算兩隊勝利所需墩數
+	public void countWinRequirement() {
+		if(playerNBid.getTeam() == 1) {
+			team1WinRequirement = 6+trumpLevel;
+			team2WinRequirement = 14-team1WinRequirement;
+		}
+		if(playerNBid.getTeam() == 2) {
+			team2WinRequirement = 6+trumpLevel;
+			team1WinRequirement = 14-team2WinRequirement;
+		}
+	}
+	
+	
+	
+	
+
 	
 	
 	
@@ -338,22 +500,22 @@ public class Bridge extends Game{
 	}
 
 
-	public Integer getPlayerNTurn() {
+	public BridgePlayer getPlayerNTurn() {
 		return playerNTurn;
 	}
 
 
-	public void setPlayerNTurn(Integer playerNTurn) {
+	public void setPlayerNTurn(BridgePlayer playerNTurn) {
 		this.playerNTurn = playerNTurn;
 	}
 
 
-	public Integer getPlayerNBid() {
+	public BridgePlayer getPlayerNBid() {
 		return playerNBid;
 	}
 
 
-	public void setPlayerNBid(Integer playerNBid) {
+	public void setPlayerNBid(BridgePlayer playerNBid) {
 		this.playerNBid = playerNBid;
 	}
 
@@ -375,6 +537,36 @@ public class Bridge extends Game{
 
 	public void setPlayerSeat(ArrayList<BridgePlayer> playerSeat) {
 		this.playerSeat = playerSeat;
+	}
+
+
+	public Integer getTrumpLevel() {
+		return trumpLevel;
+	}
+
+
+	public void setTrumpLevel(Integer trumpLevel) {
+		this.trumpLevel = trumpLevel;
+	}
+
+
+	public ArrayList<Integer> getSimplePlayOrder() {
+		return simplePlayOrder;
+	}
+
+
+	public void setSimplePlayOrder(ArrayList<Integer> simplePlayOrder) {
+		this.simplePlayOrder = simplePlayOrder;
+	}
+
+
+	public Integer getCountBidPass() {
+		return countBidPass;
+	}
+
+
+	public void setCountBidPass(Integer countBidPass) {
+		this.countBidPass = countBidPass;
 	}
 	
 	
