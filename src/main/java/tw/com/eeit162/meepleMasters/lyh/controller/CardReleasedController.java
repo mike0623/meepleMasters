@@ -113,9 +113,9 @@ public class CardReleasedController {
 		return "lyh/cardReleased";
 	}
 
-	@GetMapping("/TestAAA")
+	@GetMapping("/all")
 	@ResponseBody
-	public ArrayList<CardDto> Test() {
+	public ArrayList<CardDto> showAllRelease() {
 
 		// 取得所有card
 		List<CardReleased> allReleaseCard = cRService.showAllReleased();
@@ -148,7 +148,7 @@ public class CardReleasedController {
 			cDList.add(cardDto);
 		});
 
-		cDList.sort((a,b)->b.getDirectPrice()-a.getDirectPrice());
+//		cDList.sort((a,b)->b.getDirectPrice()-a.getDirectPrice());
 		
 		
 		return cDList;
@@ -156,64 +156,78 @@ public class CardReleasedController {
 
 	
 	
-	@GetMapping("/all")
-	public ResponseEntity<?> showAllRelease() {
+//	@GetMapping("/AAA")
+//	public ResponseEntity<?> showAllRelease1() {
+//
+//		List<CardReleased> allReleaseCard = cRService.showAllReleased();
+//
+//		JSONObject jsonObject = new JSONObject();
+//		JSONArray dataArray = new JSONArray();
+//
+//		for (CardReleased card : allReleaseCard) {
+//			if (card.getReleasedStatus() == 1) {
+//				dataArray.put(card);
+//			}
+//		}
+//
+//		jsonObject.put("cardList", dataArray);
+//
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_JSON);
+//
+//		if (dataArray != null && !dataArray.isEmpty()) {
+//			return new ResponseEntity<>(jsonObject.toMap(), headers, HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//
+//	}
 
-		List<CardReleased> allReleaseCard = cRService.showAllReleased();
-
-		JSONObject jsonObject = new JSONObject();
-		JSONArray dataArray = new JSONArray();
-
-		for (CardReleased card : allReleaseCard) {
-			if (card.getReleasedStatus() == 1) {
-				dataArray.put(card);
-			}
-		}
-
-		jsonObject.put("cardList", dataArray);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		if (dataArray != null && !dataArray.isEmpty()) {
-			return new ResponseEntity<>(jsonObject.toMap(), headers, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-
-	}
-
-	@GetMapping("/my")
-	public ResponseEntity<?> showMyRelease(HttpSession session) {
-
-		Member member = (Member) session.getAttribute("member");
-		Integer memberId = member.getMemberId();
-
-//		System.out.println("memberId " + memberId);
-
-		List<CardReleased> allReleaseCard = cRService.showMyReleased(memberId);
-
-		JSONObject jsonObject = new JSONObject();
-		JSONArray dataArray = new JSONArray();
-
-		for (CardReleased card : allReleaseCard) {
-			if (card.getReleasedStatus() == 1) {
-				dataArray.put(card);
-			}
-		}
-
-		jsonObject.put("cardList", dataArray);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		if (dataArray != null && !dataArray.isEmpty()) {
-			return new ResponseEntity<>(jsonObject.toMap(), headers, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-
-	}
+//	@GetMapping("/my")
+//	@ResponseBody
+//	public ResponseEntity<?> showMyRelease(HttpSession session) {
+//
+//		Member member = (Member) session.getAttribute("member");
+//		Integer memberId = member.getMemberId();
+//
+////		System.out.println("memberId " + memberId);
+//
+//		// 取得所有card
+//		List<CardReleased> allReleaseCard = cRService.showAllReleased();
+//		// 過濾掉下架的card
+//		List<CardReleased> listedCards = allReleaseCard.stream().filter(card -> card.getReleasedStatus() == 1)
+//				.collect(Collectors.toList());
+//
+//		ArrayList<CardDto> cDList = new ArrayList<CardDto>();
+//
+//		listedCards.stream().forEach(cardReleased -> {
+//			
+//			CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
+//			Card card = cRService.findCardById(cardOwned.getFkCardId());
+//
+//			CardDto cardDto = new CardDto();
+//
+//			cardDto.setReleasedId(cardReleased.getReleasedId());
+//			cardDto.setOwnedId(cardOwned.getOwnedId());
+//			cardDto.setDirectPrice(cardReleased.getDirectPrice());
+//			cardDto.setStartPrice(cardReleased.getStartPrice());
+//			cardDto.setType(cardReleased.getType());
+//			cardDto.setEndTime(cardReleased.getEndTime());
+//			cardDto.setReleasedStatus(cardReleased.getReleasedStatus());
+//			cardDto.setCardId(card.getCardId());
+//			cardDto.setMemberId(cardOwned.getFkMemberId());
+//			cardDto.setCardStatus(cardOwned.getCardStatus());
+//			cardDto.setCardName(card.getCardName());
+//			cardDto.setCardStar(card.getCardStar());
+//			
+//			cDList.add(cardDto);
+//		});
+//
+////		cDList.sort((a,b)->b.getDirectPrice()-a.getDirectPrice());
+//		
+//		
+//		return cDList;
+//	}
 
 	@GetMapping("/owned/{ownedId}")
 	public ResponseEntity<?> showOwnedCard(@PathVariable("ownedId") Integer ownedId) {

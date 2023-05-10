@@ -26,9 +26,6 @@
     padding: 30px;
 }
 
-.nav {
-}
-
 .nav-pills {
     width: 450px;
     background: none;
@@ -54,7 +51,7 @@
 }
 
 .tab-content {
-    position: absolute;
+    position: relative;
     width: 1000px;
     height: auto;
     margin-top: -50px;

@@ -42,7 +42,7 @@
                         2
                     </div>
                 </div>
-                
+
             </div>
 
         </div>
@@ -57,76 +57,72 @@
             await getMyList();
         })
 
-        let onwedArrayall = [];
-        let onwedIdArrayall = [];
-        let priceArrayall = [];
-        let endTimeArrayall = [];
-        let cardArrayall = [];
-        let cardDetailImgall = [];
-        let cardNameall = [];
-
-        let onwedArraymy = [];
-        let onwedIdArraymy = [];
-        let priceArraymy = [];
-        let endTimeArraymy = [];
-        let cardArraymy = [];
-        let cardDetailImgmy = [];
-        let cardNamemy = [];
-
         function getAllList() {
             return axios.get("${root}/released/all")
                 .then(res => {
                     let htmlstr = "";
 
-              
+                    let memberId = "${member.memberId}"
+                    let memberCoin = "${member.memberCoin}"
 
-                    for (i = 0; i < res.data.cardList.length; i++) {
-                        // console.log(res.data.cardList[i])
-                        onwedArrayall.push($.get(`${root}/released/owned/\${res.data.cardList[i].fkOwnedId}`))
-                        onwedIdArrayall.push(`\${res.data.cardList[i].fkOwnedId}`)
-                        priceArrayall.push(`\${res.data.cardList[i].directPrice}`)
-                        endTimeArrayall.push(`\${res.data.cardList[i].endtime}`)
+                    console.log(res)
+
+                    for (i = 0; i < res.data.length; i++) {
+                        htmlstr += `<div class="col-3 d-flex cardEach"><div class="card" id="\${res.data[i].releasedId}">`;
+                        htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
+                        htmlstr += `<div class="releaseDetail">\${res.data[i].cardName}<br>`;
+                        htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i></div>`;
+                        htmlstr += `<a href="#" onclick="
+                        Swal.fire('Any fool can use a computer')
+                        "><img src="${root}/img/lyh/shopping.png" class="shopping d-none" id="\${res.data[i].memberId}"/></a></figure></div></div>`;
                     }
 
+                    $("#allCardContainer").append(htmlstr);
 
-                    Promise.all(onwedArrayall).then(function (ownedRes) {
-
-                        for (i = 0; i < ownedRes.length; i++) {
-                            // console.log(ownedRes[i].showOnwedDetail)
-                            cardArrayall.push($.get(`${root}/released/getCard/\${ownedRes[i].showOnwedDetail.fkCardId}`))
+                    for (i = 0; i < res.data.length; i++) {
+                        if (res.data[i].memberId != memberId) {
+                            $("#i").removeClass("d-none")
+                            console.log("1")
                         }
+                    }
 
-                        
-
-                        Promise.all(cardArrayall).then(function (cardRes) {
-
-                            for (i = 0; i < cardRes.length; i++) {
-                                cardDetailImgall.push(`${root}/card/downloadCard/\${cardRes[i].card.cardId}`)
-                                cardNameall.push(`\${cardRes[i].card.cardName}`)
-                                // console.log(cardRes[i].card.cardName)
-                            }
-
-                            Promise.all(cardDetailImgall).then(function (results) {
-                                let id = 0;
-                                // console.log(cardName)
-                                for (i = 0; i < cardNameall.length; i++) {
-                                    htmlstr += `<div class="col-3 d-flex cardEach"><div class="card" id="\${id}">`;
-                                    htmlstr += `<figure><img alt="" src="\${results[i]}" class="hanafuda">`;
-                                    htmlstr += `<div class="releaseDetail">\${cardNameall[i]}<br>`;
-                                    htmlstr += `\${priceArrayall[i]} <i class="fa-solid fa-coins"></i></div>`;
-                                    htmlstr += `<a href="#" onclick="
-                                    Swal.fire('Any fool can use a computer')
-                                    "><img src="${root}/img/lyh/shopping.png" class="shopping" /></a></figure></div></div>`;
-                                    id += 1;
-                                }
+                    // for (i = 0; i < res.data.cardList.length; i++) {
+                    //     // console.log(res.data.cardList[i])
+                    //     onwedArrayall.push($.get(`${root}/released/owned/\${res.data.cardList[i].fkOwnedId}`))
+                    //     onwedIdArrayall.push(`\${res.data.cardList[i].fkOwnedId}`)
+                    //     priceArrayall.push(`\${res.data.cardList[i].directPrice}`)
+                    //     endTimeArrayall.push(`\${res.data.cardList[i].endtime}`)
+                    // }
 
 
-                                // console.log("htmlstr" + htmlstr);
-                                $("#allCardContainer").append(htmlstr);
+                    // Promise.all(onwedArrayall).then(function (ownedRes) {
 
-                            })
-                        })
-                    })
+                    //     for (i = 0; i < ownedRes.length; i++) {
+                    //         // console.log(ownedRes[i].showOnwedDetail)
+                    //         cardArrayall.push($.get(`${root}/released/getCard/\${ownedRes[i].showOnwedDetail.fkCardId}`))
+                    //     }
+
+
+
+                    //     Promise.all(cardArrayall).then(function (cardRes) {
+
+                    //         for (i = 0; i < cardRes.length; i++) {
+                    //             cardDetailImgall.push(`${root}/card/downloadCard/\${cardRes[i].card.cardId}`)
+                    //             cardNameall.push(`\${cardRes[i].card.cardName}`)
+                    //             // console.log(cardRes[i].card.cardName)
+                    //         }
+
+                    //         Promise.all(cardDetailImgall).then(function (results) {
+                    //             let id = 0;
+                    //             // console.log(cardName)
+
+
+                    //             // console.log("htmlstr" + htmlstr);
+                    //             $("#allCardContainer").append(htmlstr);
+
+                    //         })
+                    //     })
+                    // })
 
 
                 })
@@ -136,59 +132,31 @@
         }
 
         function getMyList() {
-            return axios.get("${root}/released/my")
+            return axios.get("${root}/released/all")
                 .then(res => {
+
+                    let memberId = "${member.memberId}"
+
                     let htmlstr = "";
 
 
-
-                    for (i = 0; i < res.data.cardList.length; i++) {
-                        // console.log(res.data.cardList[i])
-                        onwedArraymy.push($.get(`${root}/released/owned/\${res.data.cardList[i].fkOwnedId}`))
-                        onwedIdArraymy.push(`\${res.data.cardList[i].fkOwnedId}`)
-                        priceArraymy.push(`\${res.data.cardList[i].directPrice}`)
-                        endTimeArraymy.push(`\${res.data.cardList[i].endtime}`)
-                    }
-
-
-
-                    Promise.all(onwedArraymy).then(function (ownedRes) {
-
-                        for (i = 0; i < ownedRes.length; i++) {
-                            // console.log(ownedRes[i].showOnwedDetail)
-                            cardArraymy.push($.get(`${root}/released/getCard/\${ownedRes[i].showOnwedDetail.fkCardId}`))
+                    for (i = 0; i < res.data.length; i++) {
+                        if (res.data[i].memberId == memberId) {
+                            htmlstr += `<div class="col-3 d-flex cardEach"><div class="card" id="\${res.data[i].releasedId}">`;
+                        htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
+                        htmlstr += `<div class="releaseDetail">\${res.data[i].cardName}<br>`;
+                        htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i></div>`;
+                        htmlstr += `<a href="#" onclick="
+    Swal.fire('Any fool can use a computer')
+    "><img src="${root}/img/lyh/shopping.png" class="shopping d-none" /></a></figure></div></div>`;
                         }
 
+                        
 
+                    }
 
-                        Promise.all(cardArraymy).then(function (cardRes) {
+                    $("#myCardContainer").append(htmlstr);
 
-                            for (i = 0; i < cardRes.length; i++) {
-                                cardDetailImgmy.push(`${root}/card/downloadCard/\${cardRes[i].card.cardId}`)
-                                cardNamemy.push(`\${cardRes[i].card.cardName}`)
-                                // console.log(cardRes[i].card.cardName)
-                            }
-
-                            Promise.all(cardDetailImgmy).then(function (results) {
-
-                                // console.log(cardNamemy)
-                                for (i = 0; i < cardNamemy.length; i++) {
-                                    let id = 0;
-                                    htmlstr += `<div class="col-3 d-flex"><div class="card" id="\${id}">`;
-                                    htmlstr += `<figure><img alt="" src="\${results[i]}" class="hanafuda">`;
-                                    htmlstr += `<div class="releaseDetail">\${cardNamemy[i]}<br>`;
-                                    htmlstr += `\${priceArraymy[i]} <i class="fa-solid fa-coins"></i></div>`;
-                                    htmlstr += `<a href="#" title="測試超連結"><img src="${root}/img/lyh/shopping.png" class="shopping" /></a></figure></div></div>`;
-                                    id += 1;
-                                }
-
-
-                                // console.log("htmlstr" + htmlstr);
-                                $("#myCardContainer").append(htmlstr);
-
-                            })
-                        })
-                    })
 
 
                 })
@@ -197,23 +165,13 @@
                 })
         }
 
-        $(".shopping").click(function() {
-            // console.log("this")
-            Swal.fire('Any fool can use a computer')
-        })
+        // $(".shopping").click(function() {
+        //     // console.log("this")
+        //     Swal.fire('Any fool can use a computer')
+        // })
 
-        let cards = document.getElementsByClassName('card');
 
-        // console.log(cards.length)
-        
-        for(var i = 0; i < cards.length; i++) {
-        (function(index) {
-            cards[index].addEventListener("click", function() {
-            // console.log("Clicked index: " + index);
-        })
-        })(i);
 
-}
 
 
     </script>
