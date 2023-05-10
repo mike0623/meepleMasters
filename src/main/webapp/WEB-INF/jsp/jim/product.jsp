@@ -6,7 +6,7 @@ prefix="c"%>
   <head>
     <meta charset="UTF-8" />
     <title>${webName}</title>
-    <jsp:include page="../include/common_link.jsp" />
+    <!-- <jsp:include page="../include/common_link.jsp" /> -->
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
   </head>
   <body>

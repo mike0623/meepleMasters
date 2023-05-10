@@ -46,7 +46,7 @@ public class FavoriteGameController {
 		List<Product> productList = new ArrayList<>();
 		for (FavoriteGame fg : gameList) {
 
-			Product product = pService.findProductById(fg.getFkProductId());
+			Product product = pService.findProductById(fg.getProduct().getProductId());
 			productList.add(product);
 		}
 

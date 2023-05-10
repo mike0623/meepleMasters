@@ -19,6 +19,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+
 @Entity
 @Table(name = "[order]")
 public class Order implements Serializable {
@@ -49,11 +51,13 @@ public class Order implements Serializable {
 	@ManyToOne
 	private Product product;
 
-	@Column(name = "fk_memberId")
-	private Integer fkMemberId;
+	@JoinColumn(name = "fk_memberId", referencedColumnName = "memberId", nullable = false)
+	@ManyToOne
+	private Member member;
 
-	@Column(name = "fk_receiver")
-	private Integer fkReceiver;
+	@JoinColumn(name = "fk_receiver", referencedColumnName = "memberId", nullable = false)
+	@ManyToOne
+	private Member receiver;
 
 	@PrePersist
 	public void onCreate() {
@@ -105,20 +109,28 @@ public class Order implements Serializable {
 		this.paymentMethod = paymentMethod;
 	}
 
-	public Integer getFkMemberId() {
-		return fkMemberId;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setFkMemberId(Integer fkMemberId) {
-		this.fkMemberId = fkMemberId;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
-	public Integer getFkReceiver() {
-		return fkReceiver;
+	public Member getMember() {
+		return member;
 	}
 
-	public void setFkReceiver(Integer fkReceiver) {
-		this.fkReceiver = fkReceiver;
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Member getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(Member receiver) {
+		this.receiver = receiver;
 	}
 
 }
