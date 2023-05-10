@@ -18,8 +18,9 @@
 <body>
 
     <jsp:include page="../include/header.jsp"></jsp:include>
-    <div class="cardListContainer">
+    <div class="cardListContainer" style="padding-bottom: 0;">
         <div class="releasedContainer">
+            <div class=".content" style="height: 50px;"><a href="${root}/newRelease"><button id="drawCard" class="button-19"><span>上架我的卡片</span></button></a></div>
             <div class="content">
                 <!-- Nav pills -->
                 <ul class="nav nav-pills" role="tablist" style="background: none; height: auto;">
@@ -68,67 +69,33 @@
                     console.log(res)
 
                     for (i = 0; i < res.data.length; i++) {
-                        htmlstr += `<div class="col-3 d-flex cardEach"><div class="card" id="\${res.data[i].releasedId}">`;
-                        htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
+                        htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
+                        htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda" id="\${res.data[i].releasedId}">`;
                         htmlstr += `<div class="releaseDetail">\${res.data[i].cardName}<br>`;
                         htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i></div>`;
                         htmlstr += `<a href="#" onclick="
                         Swal.fire('Any fool can use a computer')
-                        "><img src="${root}/img/lyh/shopping.png" class="shopping d-none" id="\${res.data[i].memberId}"/></a></figure></div></div>`;
+                        " class="aLink"><img src="${root}/img/lyh/shopping.png" class="shopping d-none \${res.data[i].memberId}"/></a></figure></div></div>`;
                     }
 
                     $("#allCardContainer").append(htmlstr);
 
+                    
                     for (i = 0; i < res.data.length; i++) {
                         if (res.data[i].memberId != memberId) {
-                            $("#i").removeClass("d-none")
-                            console.log("1")
+                            $(".aLink").find(`.\${i}`).removeClass("d-none")
+                            console.log(`.\${i}`)
                         }
                     }
-
-                    // for (i = 0; i < res.data.cardList.length; i++) {
-                    //     // console.log(res.data.cardList[i])
-                    //     onwedArrayall.push($.get(`${root}/released/owned/\${res.data.cardList[i].fkOwnedId}`))
-                    //     onwedIdArrayall.push(`\${res.data.cardList[i].fkOwnedId}`)
-                    //     priceArrayall.push(`\${res.data.cardList[i].directPrice}`)
-                    //     endTimeArrayall.push(`\${res.data.cardList[i].endtime}`)
-                    // }
-
-
-                    // Promise.all(onwedArrayall).then(function (ownedRes) {
-
-                    //     for (i = 0; i < ownedRes.length; i++) {
-                    //         // console.log(ownedRes[i].showOnwedDetail)
-                    //         cardArrayall.push($.get(`${root}/released/getCard/\${ownedRes[i].showOnwedDetail.fkCardId}`))
-                    //     }
-
-
-
-                    //     Promise.all(cardArrayall).then(function (cardRes) {
-
-                    //         for (i = 0; i < cardRes.length; i++) {
-                    //             cardDetailImgall.push(`${root}/card/downloadCard/\${cardRes[i].card.cardId}`)
-                    //             cardNameall.push(`\${cardRes[i].card.cardName}`)
-                    //             // console.log(cardRes[i].card.cardName)
-                    //         }
-
-                    //         Promise.all(cardDetailImgall).then(function (results) {
-                    //             let id = 0;
-                    //             // console.log(cardName)
-
-
-                    //             // console.log("htmlstr" + htmlstr);
-                    //             $("#allCardContainer").append(htmlstr);
-
-                    //         })
-                    //     })
-                    // })
-
 
                 })
                 .catch(err => {
                     console.error(err);
                 })
+        }
+
+        function findNotMember() {
+            
         }
 
         function getMyList() {

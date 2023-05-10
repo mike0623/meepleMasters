@@ -14,7 +14,7 @@
 
 <body>
     <jsp:include page="../include/header.jsp"></jsp:include>
-    <div class="backButton"><button type="button" class="btn btn-outline-secondary" onclick="location.href='${root}/card/releasedList'">返回卡片市集</button></div>
+    <div class="backButton"></div>
     <main>
         <figure>
             <picture>
@@ -22,8 +22,10 @@
             </picture>
         </figure>
 
-        <form action="${root}/released/insertCardDirect" method="post">
+        <form action="${root}/released/insertCardDirect" method="post" id="formConfirm">
+            
             <span class="headline">
+                <i class="fa-solid fa-arrow-left-long" onclick="location.href='${root}/card/releasedList'"></i>
                 <h2 class="text-headline">卡片上架</h2>
             </span>
             <span class="form-group mb-3" style="position: relative; top: -20;">
@@ -54,7 +56,7 @@
                     <span>Teacher</span>
                 </label> -->
             </div>
-            <input class="text-small-uppercase" id="submit" type="submit" value="上架">
+            <input class="submit" id="submit" value="上架" type="submit">
         </form>
     </main>
     <jsp:include page="../include/footer.jsp"></jsp:include>
@@ -196,22 +198,41 @@
             }
         }
 
-        var submitBtn = document.querySelector('input[type=submit]');
-        submitBtn.addEventListener('click', onSubmit);
+        // var submitBtn = document.querySelector('input[type=submit]');
+        // submitBtn.addEventListener('click', onSubmit);
 
-        function onSubmit(ev) {
-            var inputsWrappers = ev.target.parentNode.querySelectorAll('span');
-            for (i = 0; i < inputsWrappers.length; i++) {
-                input = inputsWrappers[i].querySelector('input[type=text], input[type=email]');
-                if (input.checkValidity() == false) {
-                    inputsWrappers[i].classList.add('inputs--invalid');
-                } else if (input.checkValidity() == true) {
-                    inputsWrappers[i].classList.remove('inputs--invalid');
+        // function onSubmit(ev) {
+        //     var inputsWrappers = ev.target.parentNode.querySelectorAll('span');
+        //     for (i = 0; i < inputsWrappers.length; i++) {
+        //         input = inputsWrappers[i].querySelector('input[type=text], input[type=email]');
+        //         if (input.checkValidity() == false) {
+        //             inputsWrappers[i].classList.add('inputs--invalid');
+        //         } else if (input.checkValidity() == true) {
+        //             inputsWrappers[i].classList.remove('inputs--invalid');
+        //         }
+        //     }
+        // }
+
+        $("#submit").click(function(e){
+            e.preventDefault(); 
+            Swal.fire({
+				title: '確定要上架嗎？',
+				showCancelButton: true,
+				confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
+				cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
+				confirmButtonColor: '#CA7159',
+				cancelButtonColor: '#CBC0AA',
+				customClass: 'confirmAlert',
+				reverseButtons: true
+			}).then((result) => {
+                if (result.isConfirmed) {
+                    $('form').submit();
                 }
-            }
-        }
+                
+                  })
+              });
 
-        $("#submit").click
+
     </script>
 </body>
 

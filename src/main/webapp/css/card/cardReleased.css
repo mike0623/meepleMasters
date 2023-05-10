@@ -76,3 +76,15 @@
     right: 15px;
     bottom: 20px;
 }
+
+.button-19 {
+    width: 150px; 
+    position: relative; 
+    top: 40px; 
+    right: -450px;
+    background-color: #dc7e6a;
+}
+
+.button-19:after {
+    background-color: #e9917d;
+}
