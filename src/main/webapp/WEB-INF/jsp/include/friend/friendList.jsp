@@ -434,12 +434,24 @@
 			//當房主離開房間
 			if("hostCloseGame" == action && true == isRoomPage){
 				alert("房主離開房間了");
-				window.location.href = "${root}/game/playGameLobby";
+				axios.get("${root}/game/removeSessionTableCode").then(function(){
+					window.location.href = "${root}/game/playGameLobby";
+				}).catch(function(){
+					console.log("房主離開房間出錯了",error);
+				}).finally(function(){
+					
+				});
 			}
 			//當被房主踢掉時
 			if("youHaveBeenKickOutOfTheRoom" == action && true == isRoomPage){
-				window.location.href = "${root}/game/playGameLobby";
-				alert("您已被房主踢除房間");
+				axios.get("${root}/game/removeSessionTableCode").then(function(){
+					window.location.href = "${root}/game/playGameLobby";
+					alert("您已被房主踢除房間");
+				}).catch(function(){
+					console.log("房主離開房間出錯了",error);
+				}).finally(function(){
+					
+				});
 			}
 			//當遊戲開始時
 			if("gameStart" == action){

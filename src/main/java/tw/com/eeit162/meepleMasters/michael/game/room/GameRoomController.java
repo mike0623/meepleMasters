@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
@@ -30,7 +31,11 @@ public class GameRoomController {
 	
 	//創建房間
 	@GetMapping("/game/createGameTable/{gameName}/{memberEmail}")
-	public String createGame(@PathVariable("gameName") String gameName, @PathVariable("memberEmail") String memberEmail,Model model) {
+	public String createGame(@PathVariable("gameName") String gameName, @PathVariable("memberEmail") String memberEmail,Model model,HttpSession session) {
+		if(session.getAttribute("tableCode") != null) {
+			String tableCode = session.getAttribute("tableCode").toString();
+			return "redirect:/game/joinGame/"+tableCode+"/"+memberEmail+"?hasCreatedRoom=true";
+		}
 		Member host = DataInterface.getMemberByEmail(memberEmail);
 		Product product = DataInterface.getProductByProductName(gameName);
 		
@@ -51,10 +56,8 @@ public class GameRoomController {
 		game.addHost(host);
 		game.setGameName(gameName);
 		game.setGameStatus(0);
-		String tableCode = "";
 
 		model.addAttribute("game", product);
-		model.addAttribute("tableCode", tableCode);
 		model.addAttribute("playerList", game.getPlayers());
 		model.addAttribute("gameStatus", game.getGameStatus());
 		model.addAttribute("ishost", true);
@@ -156,8 +159,10 @@ public class GameRoomController {
 	
 	//房主已加入map後的離開遊戲
 	@GetMapping("/game/leaveGame/{tableCode}")
-	public String leaveGame(@PathVariable("tableCode") String tableCode) {
+	public String leaveGame(@PathVariable("tableCode") String tableCode,HttpSession session) {
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
+		session.removeAttribute("tableCode");
+		
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("action", "hostCloseGame");
 		//通知所有其他玩家，讓他們回到lobby畫面
@@ -190,15 +195,63 @@ public class GameRoomController {
 		return "redirect:/game/playGameLobby";
 	}
 	
+	//房主離開遊戲，或玩家被房主踢掉時，其他玩家用ajax來消滅session
+	@GetMapping("/game/removeSessionTableCode")
+	@ResponseBody
+	public void removeSessionTableCode(HttpSession session) {
+		session.removeAttribute("tableCode");
+	}
+	
 	
 	//玩家加入房間
 	@GetMapping("/game/joinGame/{tableCode}/{memberEmail}")
-	public String joinGame(@PathVariable("tableCode") String tableCode, @PathVariable("memberEmail") String memberEmail,Model model,HttpSession session) {
-		session.setAttribute("tableCode", tableCode);
+	public String joinGame(@PathVariable("tableCode") String tableCode, @PathVariable("memberEmail") String memberEmail,Model model,HttpSession session,@RequestParam(value = "hasCreatedRoom",required = false) boolean hasCreatedRoom) {
+		//-----------------------------------------------------------------
+		model.addAttribute("hasJoinedRoom", "false");
+		if(session.getAttribute("tableCode") != null) {
+			if(!session.getAttribute("tableCode").equals(tableCode)) {
+				model.addAttribute("hasJoinedRoom", "true");
+			}
+		}
+		//-----------------------------------------------------------------
+		model.addAttribute("hasCreatedRoom", "false");
+		if(hasCreatedRoom) {
+			model.addAttribute("hasCreatedRoom", "true");
+		}
+		//-----------------------------------------------------------------
+		//如果他已經有創建過房間，或已加入房間，就直接回傳所在遊戲的頁面
+		if("true".equals(model.getAttribute("hasJoinedRoom")) || hasCreatedRoom) {
+			Game game = GameRoomUtil.getGameByTableCode(session.getAttribute("tableCode").toString());
+			if(game ==null) {
+				session.removeAttribute("tableCode");
+				return "redirect:/game/playGameLobby";
+			}
+			if(game.getGameStatus() == 3) {
+				return "redirect:/game/enterGameView/"+game.getGameName()+"/"+tableCode+"/"+memberEmail;
+			}
+			Product product = DataInterface.getProductByProductName(game.getGameName());
+			List<Integer> degreeScoreList = new ArrayList<>();
+			for(Member player : game.getPlayers()) {
+				degreeScoreList.add(DataInterface.getGameDegree(player.getMemberId(), product.getProductId()).getScore());
+			}
+			model.addAttribute("game", product);
+			model.addAttribute("tableCode", tableCode);
+			model.addAttribute("playerList", game.getPlayers());
+			if(memberEmail.equals(game.getHostEmail())) {
+				model.addAttribute("ishost", true);
+			}else {
+				model.addAttribute("ishost", false);
+			}
+			model.addAttribute("degreeScoreList", degreeScoreList);
+			model.addAttribute("finalNumOfPlayer", game.getFinalNumOfPlayer());
+			model.addAttribute("gameStatus", game.getGameStatus());
+			return "/michael/gameRoom";
+		}
+		//-----------------------------------------------------------------
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
-		
+		session.setAttribute("tableCode", tableCode);
 		if(game ==null) {
-			System.out.println("存在的房間數:"+GameRoomUtil.getExistGameRoom().size());
+			session.removeAttribute("tableCode");
 			return "redirect:/game/playGameLobby";
 		}
 		if(game.getGameStatus() == 3) {
@@ -248,6 +301,7 @@ public class GameRoomController {
 		model.addAttribute("degreeScoreList", degreeScoreList);
 		model.addAttribute("finalNumOfPlayer", game.getFinalNumOfPlayer());
 		model.addAttribute("gameStatus", game.getGameStatus());
+		
 		
 		
 		for(Member member:game.getPlayers()) {

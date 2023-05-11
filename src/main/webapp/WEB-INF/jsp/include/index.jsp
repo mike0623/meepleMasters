@@ -45,7 +45,7 @@
 					<div class="col-3 d-flex align-items-stretch">
 						<div class="card">
 							<div class="pic">
-								<img src="${root}/mall/getPhoto?pId=${product.productId}">
+								<img class="productImg" src="${root}/mall/getPhoto?pId=${product.productId}">
 							</div>
 							<div class="card-header">遊戲人數：${product.productMinPlayer}~${product.productMaxPlayer}</div>
 							<div class="card-body">
