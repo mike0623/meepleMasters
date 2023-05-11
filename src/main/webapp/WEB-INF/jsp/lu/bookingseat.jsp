@@ -1,7 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ include file="../include/common_link.jsp" %>
 <%@ page import="java.time.LocalDate" %>
 <!DOCTYPE html>
 <html>
@@ -11,20 +12,7 @@
 <jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
 <style>
 
-/*	.table-btn {
-		background-color: #3e2723;
-		border: none;
-		color: white;
-	    padding: 15px 32px;
-	    text-align: center;
-	    text-decoration: none;
-	    display: inline-block;
-	    font-size: 16px;
-	    margin: 4px 2px;
-	    cursor: pointer;
-	    border-radius: 4px;
-}		
-*/
+
 	.table-btn.clicked {
   		background-color: #ccc; /* 將按鈕背景色更改為淺色 */
 	}
@@ -50,8 +38,8 @@
 %>
 
 <!-- 在頁面上顯示選擇的日期和時段 -->
-<p>日期：<%= selectedDate %></p>
-<p>時段：<%= selectedTime %></p>
+<!-- <p>日期：<%= selectedDate %></p>
+<p>時段：<%= selectedTime %></p> -->
 
 
 <div class="container">
@@ -84,7 +72,8 @@
 	  <input type="button" value="繼續" onclick="submitForm()">
 	</form>
 	
-
+</div>
+<jsp:include page="../include/footer.jsp"></jsp:include>
 	<script>
 
 
@@ -117,7 +106,6 @@
 </script>
 
 
-</div>
 </body>
 </html>
 

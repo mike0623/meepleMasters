@@ -25,8 +25,8 @@ public class BookingBean {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "deskId")
-	private Integer deskId;
+	@Column(name = "bookId")
+	private Integer bookId;
 	
 	@Column(name = "fk_bookMemberId")
 	private Integer bookMemberId;
@@ -40,6 +40,13 @@ public class BookingBean {
 	@Column(name = "createdAt")
 	private Date createdAt;
 	
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "bookDate")
+	private Date bookDate;
+	
+
 	@Column(name = "bookTime")
 	private String bookTime;
 	
@@ -55,12 +62,12 @@ public class BookingBean {
 	}
 	
 	
-	public Integer getDeskId() {
-		return deskId;
+	public Integer getBookId() {
+		return bookId;
 	}
 
-	public void setDeskId(Integer deskId) {
-		this.deskId = deskId;
+	public void setBookId(Integer deskId) {
+		this.bookId = deskId;
 	}
 
 	public Integer getBookMemberId() {
@@ -85,6 +92,12 @@ public class BookingBean {
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+	public Date getBookDate() {
+		return bookDate;
+	}
+	public void setBookDate(Date bookDate) {
+		this.bookDate = bookDate;
 	}
 
 	public String getBookTime() {

@@ -131,7 +131,7 @@
 				data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<h6 class="collapse-header">預約管理系統</h6>
-					<a class="collapse-item" href="/">預約管理</a>
+					<a class="collapse-item" href="${root}/Booking/admin">預約管理</a>
 				</div>
 			</div></li>
 

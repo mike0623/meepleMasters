@@ -25,15 +25,15 @@ public class Bridge extends Game{
 
 	private Integer team2WinRequirement;
 	
-	private Integer team1WonTricks;
+	private Integer team1WonTricks = 0;
 
-	private Integer team2WonTricks;
+	private Integer team2WonTricks = 0;
 	
 	private Set<Integer> discardSet;
 	
 	private Integer forTwoPlayersCard;
 	
-	private Integer phase; //1:等待玩家一出牌，2:等待玩家二出牌，3:等待玩家三出牌，4:等待玩家四出牌，5:每人都出玩牌時，停留3秒讓大家看牌
+	private Integer phase; //1:等待玩家一出牌，2:等待玩家二出牌，3:等待玩家三出牌，4:等待玩家四出牌
 				   		   //11:等待玩家一喊王 21:等待玩家二喊王 31:等待玩家三喊王 41:等待玩家四喊王 
 	
 	private BridgePlayer playerNTurn; //誰的回合
@@ -52,7 +52,13 @@ public class Bridge extends Game{
 	
 	private ArrayList<Integer> simplePlayOrder = new ArrayList<>();
 	
+	private Integer usedCardPerTurn = 0;
 	
+	private Integer perTurnSuit = null; //每輪的花色
+	
+	private boolean isEndOfTheGame = false;
+	
+	private String winTeam; 
 	
 	
 	
@@ -232,7 +238,24 @@ public class Bridge extends Game{
 		}
 	}
 	
-	//用email找到play
+	//找出玩家手牌特定花色剩幾張
+	public Integer getNumOfSpecific(BridgePlayer player,Integer suit) {
+		Integer count = 0;
+		for(Integer card:player.getHandCardList()) {
+			if(card == 1) {
+				if(suit == 0) {
+					count++;
+					continue;
+				}
+			}
+			if(Math.floor((card-1)/13) == suit) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	//用email找到player
 	public BridgePlayer findBridgePlayerByEmail(String email) {
 		for(BridgePlayer player : playerSeat) {
 			if(player.getEmail().equals(email)) {
@@ -240,6 +263,16 @@ public class Bridge extends Game{
 			}
 		}
 		return null;
+	}
+	
+	//用牌找到對應花色
+	public Integer getSuitByCard(Integer card) {
+		Integer testSuits = Math.floorDiv(card, 13);
+		Integer testNumber =  card % 13;
+		if(testNumber == 0) {
+			testSuits -= 1;
+		}
+		return testSuits;
 	}
 	
 	//用王牌數字找到對應文字
@@ -346,7 +379,200 @@ public class Bridge extends Game{
 		}
 	}
 	
+	//出牌時，紀錄自己出的牌  如果所有玩家都出牌了，就進入階段五，
+	public void useCard(BridgePlayer player,Integer card) {
+		player.useCard(card);
+		usedCardPerTurn++;
+	}
 	
+	//判斷出牌階段是否回合結束
+	public boolean isEndOfTheTurn() {
+		if(usedCardPerTurn == playerSeat.size()) {
+			return true;
+		}
+		return false;
+	}
+	
+	//決定本輪贏家
+	//overloading
+	public void setPerTurnWinner() {
+		BridgePlayer winner = null;
+		for(BridgePlayer player:playerSeat) {
+			if(winner == null) {
+				winner = player;
+				continue;
+			}
+			Integer challengerCard = player.getPlayedCard();
+			Integer winnerCard = winner.getPlayedCard();
+			Integer challengerCardSuit = getSuitByCard(challengerCard);
+			Integer winnerCardSuit = getSuitByCard(winnerCard);
+			//挑戰為當，挑戰為王
+			if(challengerCardSuit == perTurnSuit && challengerCardSuit == trump) {
+				if(winnerCardSuit == perTurnSuit) {
+					//戰鬥
+					if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
+						winner = player;
+					}
+					continue;
+				}else {
+					winner = player;
+					continue;
+				}
+			}
+			//挑戰為當，挑戰非王
+			if(challengerCardSuit == perTurnSuit && challengerCardSuit != trump) {
+				if(winnerCardSuit == perTurnSuit && winnerCardSuit != trump) {
+					//戰鬥
+					if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
+						winner = player;
+					}
+					continue;
+				}
+				if(winnerCardSuit != perTurnSuit && winnerCardSuit == trump) {
+					continue;
+				}
+				if(winnerCardSuit != perTurnSuit && winnerCardSuit != trump) {
+					winner = player;
+					continue;
+				}
+			}
+			//挑戰非當，挑戰為王
+			if(challengerCardSuit != perTurnSuit && challengerCardSuit == trump) {
+				if(winnerCardSuit != perTurnSuit && winnerCardSuit == trump) {
+					//戰鬥
+					if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
+						winner = player;
+					}
+					continue;
+				}
+				winner = player;
+				continue;
+			}
+			//挑戰非當，挑戰非王
+			if(challengerCardSuit != perTurnSuit && challengerCardSuit == trump) {
+				if(winnerCardSuit != perTurnSuit && winnerCardSuit != trump) {
+					//戰鬥
+					if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
+						winner = player;
+					}
+					continue;
+				}
+				continue;
+			}
+			//---------------------------------------------
+//			if(perTurnSuit == trump) {
+//				if(challengerCardSuit != trump) {
+//					System.out.println("花色為王，挑戰非王");
+//					continue;
+//				}
+//				if(winnerCardSuit != trump) {
+//					winner = player;
+//					System.out.println("花色為王，衛冕非王");
+//					continue;
+//				}
+//				//比賽囉
+//				if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
+//					winner = player;
+//					continue;
+//				}
+//				
+//			}
+//			if(challengerCardSuit != perTurnSuit && challengerCardSuit != trump) {
+//				System.out.println("挑戰非當，挑戰非王");
+//				continue;
+//			}
+//			if(challengerCardSuit != perTurnSuit && challengerCardSuit == trump) {
+//				if(winnerCardSuit != trump) {
+//					winner = player;
+//					System.out.println("挑戰非當，挑戰為王，衛冕非王");
+//					continue;
+//				}else {
+//					//比賽囉
+//					if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
+//						winner = player;
+//						System.out.println("挑戰非當，挑戰為王，衛冕為王");
+//						continue;
+//					}
+//				}
+//			}
+//			if(winnerCardSuit != perTurnSuit && winnerCardSuit != trump) {
+//				winner = player;
+//				System.out.println("衛冕非當，衛冕非王");
+//				continue;
+//			}
+//			//比賽囉
+//			if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
+//				winner = player;
+//				continue;
+//			}
+			//---------------------------------------------
+		}
+		perTurnWinner = winner;
+	}
+	
+	//兩人玩時第一階段，回傳是否還是第一階段
+	public boolean twoPlayerPhaseOne() {
+		System.out.println("誰是贏家"+perTurnWinner.getName());
+		perTurnWinner.getHandCardSet().add(forTwoPlayersCard);
+		perTurnWinner.getHandCardList().clear();
+		for(Integer card:perTurnWinner.getHandCardSet()) {
+			perTurnWinner.getHandCardList().add(card);
+		}
+		int i = (int)Math.floor((Math.random()*deskList.size()));
+		Integer deskCard = deskList.get(i);
+		for(BridgePlayer player:playerSeat) {
+			if(player != perTurnWinner) {
+				player.getHandCardSet().add(deskCard);
+				player.getHandCardList().clear();
+				for(Integer card:player.getHandCardSet()) {
+					player.getHandCardList().add(card);
+				}
+			}
+		}
+		if(deskSet.remove(deskCard)) {
+			deskList.remove(deskCard);
+		}
+		//補充新卡
+		if(deskSet.size() != 0) {
+			int j = (int)Math.floor((Math.random()*deskList.size()));
+			Integer newForTwoPlayersCard = deskList.get(j);
+			forTwoPlayersCard = newForTwoPlayersCard;
+			System.out.println("新的卡"+forTwoPlayersCard);
+			if(deskSet.remove(newForTwoPlayersCard)) {
+				deskList.remove(newForTwoPlayersCard);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	//清空所有玩家已出卡片
+	public void resetPlayersUsedCard() {
+		for(BridgePlayer player:playerSeat) {
+			player.setPlayedCard(null);
+		}
+	}
+	
+	//一輪結束時，計分
+	public void plusScoreWhenEndOfTheTurn() {
+		perTurnWinner.setWonTricks(perTurnWinner.getWonTricks()+1);
+		if(perTurnWinner.getTeam() == 1) {
+			team1WonTricks++;
+		}
+		if(perTurnWinner.getTeam() == 2) {
+			team2WonTricks++;
+		}
+	}
+	
+	//哪隊勝利
+	public void makeWinTeam() {
+		if(team1WonTricks > team1WinRequirement) {
+			setWinTeam("紅隊");
+		}
+		if(team2WonTricks > team2WinRequirement) {
+			setWinTeam("藍隊");
+		}
+	}
 	
 	
 
@@ -418,6 +644,7 @@ public class Bridge extends Game{
 	public void setPlayer4(BridgePlayer player4) {
 		this.player4 = player4;
 	}
+
 
 
 	public Integer getTeam1WinRequirement() {
@@ -568,6 +795,46 @@ public class Bridge extends Game{
 	public void setCountBidPass(Integer countBidPass) {
 		this.countBidPass = countBidPass;
 	}
+
+
+	public Integer getUsedCardPerTurn() {
+		return usedCardPerTurn;
+	}
+
+
+	public void setUsedCardPerTurn(Integer usedCardPerTurn) {
+		this.usedCardPerTurn = usedCardPerTurn;
+	}
+
+
+	public Integer getPerTurnSuit() {
+		return perTurnSuit;
+	}
+
+
+	public void setPerTurnSuit(Integer perTurnSuit) {
+		this.perTurnSuit = perTurnSuit;
+	}
+
+
+	public boolean getIsEndOfTheGame() {
+		return isEndOfTheGame;
+	}
+
+	
+	public void setIsEndOfTheGame(boolean isEndOfTheGame) {
+		this.isEndOfTheGame = isEndOfTheGame;
+	}
+
+	public String getWinTeam() {
+		return winTeam;
+	}
+
+
+	public void setWinTeam(String winTeam) {
+		this.winTeam = winTeam;
+	}
+
 	
 	
 	
