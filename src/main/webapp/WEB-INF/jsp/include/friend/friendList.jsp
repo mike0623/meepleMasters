@@ -93,9 +93,9 @@
 		<span>聊天室</span>
 	</div>
 	
-	<div class="getNewMessage">
-		<span >new message!</span>
-	</div>
+	<div class="getNewMessage" style="display:none;" onclick="openCloseChatRoom()">
+			<span>new message!</span>
+		</div>
 	
 	
 	<script>
@@ -179,6 +179,7 @@
 			if("getMessage" == action){
 				//如果聊天室視窗不是打開狀態，就顯示有新訊息
 				if($(".controllerDialogBox").hasClass("closedChatRoom")){
+					console.log("應該要跳出新訊息通知喔");
 					$(".getNewMessage").show();
 				}
 				//重新製作tag
@@ -516,6 +517,7 @@
 							$(".team1WinRequirement").text(json.team1WinRequirement);
 							$(".team2WinRequirement").text(json.team2WinRequirement);
 							$(".gameTrump").text(suit);
+							$(".cardInMyHand").classList.add("canDo");
 						}
 					}else{ //不是我的回合
 						if(json.isBiddingPhase){
@@ -528,6 +530,10 @@
 							$(".gameTrump").text(suit);
 						}
 					}
+				}
+				if("useCard" == json.gameAction){
+					//重新整理頁面，有空改成前端渲染
+					window.location.reload();
 				}
 				
 			}

@@ -6,7 +6,7 @@
 <html>
 <head>
 <c:if test="${member != null }">
-<jsp:include page="friend/friendList.jsp"></jsp:include>
+	<jsp:include page="friend/friendList.jsp"></jsp:include>
 </c:if>
 <meta charset="UTF-8">
 <title>${webName}</title>
@@ -66,8 +66,9 @@
                             </c:if>
                         </div>
                     </li>
+                    <c:if test="${member != null }">
                     <li>
-                    	<a href="#">加入遊戲</a>
+                    	<a href="#">開始遊玩</a>
                     	<div>
                                 <ul>
     								
@@ -80,6 +81,12 @@
                                 </ul>
                             </div>
                     </li>
+                    </c:if>
+	                <c:if test="${member == null }">
+	                    <li>
+	                    	<a href="${root}/member/login">開始遊玩</a>
+                    	</li>
+                    </c:if>
                     <c:if test="${member == null }">
                     	<li style="background: none;"><a href="${root}/member/login" style="font-size: 16px;">註冊 / 登入</a></li>
                     </c:if>
