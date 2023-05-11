@@ -61,6 +61,14 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private List<ShoppingCart> shoppingCarts;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<FavoriteGame> favoriteGames;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<Order> orders;
+
 	@PrePersist
 	public void onCreate() {
 		if (addedTime == null) {
@@ -69,6 +77,10 @@ public class Product implements Serializable {
 	}
 
 	public Product() {
+	}
+
+	public Product(Integer productId) {
+		this.productId = productId;
 	}
 
 	public Integer getProductId() {
@@ -157,6 +169,22 @@ public class Product implements Serializable {
 
 	public void setShoppingCarts(List<ShoppingCart> shoppingCarts) {
 		this.shoppingCarts = shoppingCarts;
+	}
+
+	public List<FavoriteGame> getFavoriteGames() {
+		return favoriteGames;
+	}
+
+	public void setFavoriteGames(List<FavoriteGame> favoriteGames) {
+		this.favoriteGames = favoriteGames;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
 	}
 
 	@Override

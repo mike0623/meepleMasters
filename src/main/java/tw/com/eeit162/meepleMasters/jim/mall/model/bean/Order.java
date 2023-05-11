@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -15,8 +17,12 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+
 @Entity
-@Table(name = "order")
+@Table(name = "[order]")
 public class Order implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -26,6 +32,7 @@ public class Order implements Serializable {
 	@Column(name = "orderId")
 	private Integer orderId;
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "orderDate")
@@ -40,14 +47,17 @@ public class Order implements Serializable {
 	@Column(name = "paymentMethod")
 	private String paymentMethod;
 
-	@Column(name = "fk_memberId")
-	private Integer fkMemberId;
+	@JoinColumn(name = "fk_productId", referencedColumnName = "productId", nullable = false)
+	@ManyToOne
+	private Product product;
 
-	@Column(name = "fk_cartId")
-	private Integer fkCartId;
+	@JoinColumn(name = "fk_memberId", referencedColumnName = "memberId", nullable = false)
+	@ManyToOne
+	private Member member;
 
-	@Column(name = "fk_receiver")
-	private Integer fkReceiver;
+	@JoinColumn(name = "fk_receiver", referencedColumnName = "memberId", nullable = false)
+	@ManyToOne
+	private Member receiver;
 
 	@PrePersist
 	public void onCreate() {
@@ -99,28 +109,28 @@ public class Order implements Serializable {
 		this.paymentMethod = paymentMethod;
 	}
 
-	public Integer getFkMemberId() {
-		return fkMemberId;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setFkMemberId(Integer fkMemberId) {
-		this.fkMemberId = fkMemberId;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
-	public Integer getFkCartId() {
-		return fkCartId;
+	public Member getMember() {
+		return member;
 	}
 
-	public void setFkCartId(Integer fkCartId) {
-		this.fkCartId = fkCartId;
+	public void setMember(Member member) {
+		this.member = member;
 	}
 
-	public Integer getFkReceiver() {
-		return fkReceiver;
+	public Member getReceiver() {
+		return receiver;
 	}
 
-	public void setFkReceiver(Integer fkReceiver) {
-		this.fkReceiver = fkReceiver;
+	public void setReceiver(Member receiver) {
+		this.receiver = receiver;
 	}
 
 }

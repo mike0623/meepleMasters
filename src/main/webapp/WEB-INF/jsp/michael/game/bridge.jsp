@@ -195,6 +195,8 @@
 	<div style="width:100%; position:relative; top:75px;">
 	<div class="box">
 		<div class="showGameProgress">
+		<c:if test="${bridge.isEndOfTheGame == true}">遊戲結束，${bridge.winTeam}勝利</c:if>
+		<c:if test="${bridge.isEndOfTheGame == false}">
 			<c:if test="${myArray.get(0).playerNumber != bridge.playerNTurn.playerNumber}">
 				<c:choose>
 					<c:when test="${bridge.phase == 1}">等待${bridge.player1.name}出牌</c:when>
@@ -305,6 +307,7 @@
 					</c:when>
 				</c:choose>
 			</c:if>
+			</c:if>
 		</div>
 		<div class="container-fluid text-center">
 		  <div class="row">
@@ -325,7 +328,7 @@
 							</c:choose>
 						</c:if>
 		    		</div>
-		    		<c:if test="${bridge.finalNumOfPlayer == 2}">
+		    		<c:if test="${bridge.finalNumOfPlayer == 2 && bridge.deskList.size() > 0}">
 						<div class="desk">
 							<img class="cardInDesk" src="${root}/poker/0"><br/>
 							<span>x${bridge.deskList.size()}</span>
@@ -375,16 +378,16 @@
 							</c:if>
 						</div>
 					</c:if>
-					<div class="discardArea">
-						<span>棄牌堆</span>
-						<img class="cardInDiscardArea" src="${root}/poker/0">
-					</div>
+<!-- 					<div class="discardArea"> -->
+<!-- 						<span>棄牌堆</span> -->
+<%-- 						<img class="cardInDiscardArea" src="${root}/poker/0"> --%>
+<!-- 					</div> -->
 				</div>
 				<div class="myHand">
 				<h2>我的手牌</h2>
 					<div class="cardInMyHandArea">
 						<c:forEach items="${myArray.get(0).handCardList}" var="i">
-							<img name="${i}" class="cardInMyHand <c:if test="${myArray.get(0).playerNumber == bridge.playerNTurn.playerNumber && bridge.phase <10}">canDo</c:if>" src="${root}/poker/${i}">
+							<img name="${i}" class="cardInMyHand <c:if test="${myArray.get(0).playerNumber == bridge.playerNTurn.playerNumber && bridge.phase <10 && (bridge.perTurnSuit == null || bridge.perTurnSuit == Integer((i-1) / 13))}">canDo</c:if> <c:if test="${bridge.perTurnSuit != null && bridge.perTurnSuit != Integer((i-1) / 13) && bridge.getNumOfSpecific(myArray.get(0), bridge.perTurnSuit == null?4:bridge.perTurnSuit) == 0}">canDo</c:if>" src="${root}/poker/${i}">
 						</c:forEach>
 					</div>
 				</div>
@@ -420,7 +423,7 @@
 								<c:when test="${bridge.team1WinRequirement != null}"><td class="team1WinRequirement">${bridge.team1WinRequirement}</td></c:when>
 								<c:when test="${bridge.team1WinRequirement == null}"><td class="team1WinRequirement">?</td></c:when>
 							</c:choose>
-							<td>?</td>
+							<td>${bridge.team1WonTricks}</td>
 						</tr>
 						<tr>
 							<td>藍隊</td>
@@ -428,7 +431,7 @@
 								<c:when test="${bridge.team2WinRequirement != null}"><td class="team2WinRequirement">${bridge.team2WinRequirement}</td></c:when>
 								<c:when test="${bridge.team2WinRequirement == null}"><td class="team2WinRequirement">?</td></c:when>
 							</c:choose>
-							<td>?</td>
+							<td>${bridge.team2WonTricks}</td>
 						</tr>
 					</table>
 				</div>

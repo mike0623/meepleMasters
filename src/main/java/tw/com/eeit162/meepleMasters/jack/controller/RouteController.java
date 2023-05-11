@@ -9,7 +9,7 @@ public class RouteController {
 	@GetMapping({"/index"})
 	public String index() {
 		
-		return "include/index";
+		return "redirect:/";
 	}
 	
 	@GetMapping("/login")

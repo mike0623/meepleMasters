@@ -29,6 +29,7 @@
 				if(json.isBiddingPhase == false){
 					if(json.playerNTurnEmail == "${member.memberEmail}"){
 						$(".showGameProgress").text("輪到你出牌了");
+						$(".cardInMyHand").addClass("canDo");
 					}else{
 						$(".showGameProgress").text("等待"+json.playerNTurn+"出牌");
 					}
@@ -42,6 +43,41 @@
 				
 			});
 			
+		});
+		
+		
+		//輪到我的回合，點選卡牌時
+		$(".cardInMyHandArea").on("click",".canDo",function(){
+			let card = this.name;
+			let dom = $(this)
+			axios.get("${root}/bridge/useCard/${tableCode}/${member.memberEmail}/"+card).then(function(response){
+				dom.remove();
+				$(".myShowCardArea").append(`
+					<img class="cardInMyShowCardArea" src="${root}/poker/`+card+`" />	
+						`);
+				$(".cardInMyHand").removeClass("canDo");
+				let json = response.data;
+				//回合還沒結束
+				if(json.isEndOfTheTurn == false){
+					$(".showGameProgress").text("等待"+json.playerNTurn+"出牌");
+				}
+				//回合結束
+				if(json.isEndOfTheTurn){
+					$(".showGameProgress").text(`
+						一輪結束，`+json.winTeam+` (`+json.perTurnWinner+`)贏得此墩
+							`);
+					setTimeout(function(){
+						$(".myShowCardArea img").remove();
+						$(".player2ShowCardArea img").remove();
+						$(".player3ShowCardArea img").remove();
+						$(".player4ShowCardArea img").remove();
+					}, 3000);
+				}
+			}).catch(function(error){
+				console.log("出牌時出錯啦",error);
+			}).finally(function(){
+				
+			});
 		});
 	</script>
 </body>

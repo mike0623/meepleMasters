@@ -93,9 +93,9 @@
 		<span>聊天室</span>
 	</div>
 	
-	<div class="getNewMessage">
-		<span >new message!</span>
-	</div>
+	<div class="getNewMessage" style="display:none;" onclick="openCloseChatRoom()">
+			<span>new message!</span>
+		</div>
 	
 	
 	<script>
@@ -179,6 +179,7 @@
 			if("getMessage" == action){
 				//如果聊天室視窗不是打開狀態，就顯示有新訊息
 				if($(".controllerDialogBox").hasClass("closedChatRoom")){
+					console.log("應該要跳出新訊息通知喔");
 					$(".getNewMessage").show();
 				}
 				//重新製作tag
@@ -433,12 +434,24 @@
 			//當房主離開房間
 			if("hostCloseGame" == action && true == isRoomPage){
 				alert("房主離開房間了");
-				window.location.href = "${root}/game/playGameLobby";
+				axios.get("${root}/game/removeSessionTableCode").then(function(){
+					window.location.href = "${root}/game/playGameLobby";
+				}).catch(function(){
+					console.log("房主離開房間出錯了",error);
+				}).finally(function(){
+					
+				});
 			}
 			//當被房主踢掉時
 			if("youHaveBeenKickOutOfTheRoom" == action && true == isRoomPage){
-				window.location.href = "${root}/game/playGameLobby";
-				alert("您已被房主踢除房間");
+				axios.get("${root}/game/removeSessionTableCode").then(function(){
+					window.location.href = "${root}/game/playGameLobby";
+					alert("您已被房主踢除房間");
+				}).catch(function(){
+					console.log("房主離開房間出錯了",error);
+				}).finally(function(){
+					
+				});
 			}
 			//當遊戲開始時
 			if("gameStart" == action){
@@ -516,6 +529,7 @@
 							$(".team1WinRequirement").text(json.team1WinRequirement);
 							$(".team2WinRequirement").text(json.team2WinRequirement);
 							$(".gameTrump").text(suit);
+							$(".cardInMyHand").classList.add("canDo");
 						}
 					}else{ //不是我的回合
 						if(json.isBiddingPhase){
@@ -528,6 +542,10 @@
 							$(".gameTrump").text(suit);
 						}
 					}
+				}
+				if("useCard" == json.gameAction){
+					//重新整理頁面，有空改成前端渲染
+					window.location.reload();
 				}
 				
 			}

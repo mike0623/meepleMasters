@@ -19,6 +19,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FavoriteGame;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Order;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
 
 @Entity
@@ -47,7 +49,7 @@ public class Member {
 
 	@Column(name = "memberImg")
 	private byte[] memberImg;
-	
+
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -75,6 +77,14 @@ public class Member {
 	@JsonIgnore
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	private List<ShoppingCart> shoppingCarts;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	private List<FavoriteGame> favoriteGames;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	private List<Order> orders;
 
 	public Member() {
 	}
@@ -139,8 +149,6 @@ public class Member {
 		this.memberImg = memberImg;
 	}
 
-	
-
 	public Date getMemberBirth() {
 		return memberBirth;
 	}
@@ -195,6 +203,22 @@ public class Member {
 
 	public void setShoppingCarts(List<ShoppingCart> shoppingCarts) {
 		this.shoppingCarts = shoppingCarts;
+	}
+
+	public List<FavoriteGame> getFavoriteGames() {
+		return favoriteGames;
+	}
+
+	public void setFavoriteGames(List<FavoriteGame> favoriteGames) {
+		this.favoriteGames = favoriteGames;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
 	}
 
 	@Override

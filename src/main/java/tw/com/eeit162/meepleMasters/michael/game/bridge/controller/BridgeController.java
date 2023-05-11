@@ -150,7 +150,7 @@ public class BridgeController {
 		bridge.setPhase(newPlayer,isBiddingPhase);
 		System.out.println("現在的階段: "+bridge.getPhase());
 		System.out.println("現在是誰的回合: "+bridge.getPlayerNTurn());
-		
+		//-----------------------------------------------------------------------
 		JSONObject jsonObject = new JSONObject();
 		JSONObject wsJson = new JSONObject();
 		wsJson.put("action", "bridgeGame");
@@ -183,16 +183,85 @@ public class BridgeController {
 			wsJson.put("playerNBid", bridge.getPlayerNBid().getName());
 			wsJson.put("playerNTurn", bridge.getPlayerNTurn().getName());
 		}
+		//-----------------------------------------------------------------------
+		for(Member member:game.getPlayers()) {
+			if(!member.getMemberEmail().equals(memberEmail)) {
+				WebsocketUtil.sendMessageByUserEmail(member.getMemberEmail(), wsJson.toString());
+			}
+		}
+		//-----------------------------------------------------------------------
+		
+		
+		return jsonObject.toString();
+	}
+	
+	//出牌時
+	@GetMapping("/bridge/useCard/{tableCode}/{memberEmail}/{card}")
+	@ResponseBody
+	public String useCard(@PathVariable("tableCode") String tableCode,@PathVariable("memberEmail") String memberEmail,@PathVariable("card") Integer card) {
+		Game game = GameRoomUtil.getGameByTableCode(tableCode);
+		Bridge bridge = (Bridge)game;
+		boolean isBiddingPhase = false;
+		//如果是本輪第一張牌，就記錄花色
+		if(bridge.getPerTurnSuit() == null) {
+			bridge.setPerTurnSuit(bridge.getSuitByCard(card));
+		}
+		BridgePlayer oldPlayer = bridge.findBridgePlayerByEmail(memberEmail);
+		bridge.useCard(oldPlayer,card);
+		boolean endOfTheTurn = bridge.isEndOfTheTurn();
+		BridgePlayer newPlayer = bridge.nextTurn(oldPlayer,isBiddingPhase);
+		boolean isTwoPlayerPhaseOne = false;
+		if(endOfTheTurn) {
+			//設定本輪贏家
+			bridge.setPerTurnWinner();
+			//如果使兩人玩，判斷是否還在慮牌階段，如果是就發牌
+			//不是的話就，玩家營下墩數加一，隊伍加一
+			if(bridge.getPlayerSeat().size() == 2 && bridge.getDeskList().size() > 0) {
+				//做完行動後判斷，是否還是第一階段慮牌
+				isTwoPlayerPhaseOne = bridge.twoPlayerPhaseOne();
+			}else {
+				bridge.plusScoreWhenEndOfTheTurn();
+			}
+			//清空使用幾張牌的計數器
+			bridge.setUsedCardPerTurn(0);
+			//清空玩家的已使用牌
+			bridge.resetPlayersUsedCard();
+			//重置本輪花色
+			bridge.setPerTurnSuit(null);
+			//設定新的起始玩家
+			bridge.setPlayerNTurn(bridge.getPerTurnWinner());
+			newPlayer = bridge.getPerTurnWinner();
+		}
+		bridge.setPhase(newPlayer,isBiddingPhase);
+		//判斷是否遊戲結束
+		if(bridge.getPlayer1().getHandCardList().size() == 0) {
+			bridge.setIsEndOfTheGame(true);
+			bridge.makeWinTeam();
+		}
+		//-----------------------------------------------------------------------
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("isEndOfTheTurn", endOfTheTurn);
+		jsonObject.put("playerNTurn", bridge.getPlayerNTurn().getName());
+		jsonObject.put("isTwoPlayerPhaseOne", isTwoPlayerPhaseOne);
+		jsonObject.put("isEndOfTheGame", bridge.getIsEndOfTheGame());
+		jsonObject.put("winTeam", bridge.getWinTeam());
+		jsonObject.put("perTurnWinner", bridge.getPerTurnWinner());
+		
+		
+		
+		//-----------------------------------------------------------------------
+		JSONObject wsJson = new JSONObject();
+		wsJson.put("action", "bridgeGame");
+		wsJson.put("gameAction", "useCard");
 		
 		
 		
 		for(Member member:game.getPlayers()) {
 			if(!member.getMemberEmail().equals(memberEmail)) {
-				System.out.println("有發訊息給"+member.getMemberEmail());
 				WebsocketUtil.sendMessageByUserEmail(member.getMemberEmail(), wsJson.toString());
 			}
 		}
-		
+		//-----------------------------------------------------------------------
 		return jsonObject.toString();
 	}
 	

@@ -262,6 +262,12 @@ ol, ul {
 		$(".inviteFriendToGame").hide();
 		//宣告在ws的js上
 		isRoomPage = true;
+		if(${hasCreatedRoom == "true"}){
+			alert("已經在房間內囉!請先退出再創建新房間!");
+		}
+		if(${hasJoinedRoom == "true"}){
+			alert("已經在房間內囉!請先退出再加入新遊戲!");
+		}
 		
 		//製作熟練度進度條
 		function countDegreePercent(NumOfPlayer,degree){

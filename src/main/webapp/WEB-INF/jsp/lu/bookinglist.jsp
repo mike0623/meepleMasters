@@ -1,8 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ include file="../include/common_link.jsp" %>
 <%@ page import="java.time.LocalDate" %>
 <!DOCTYPE html>
 <html>
@@ -57,6 +57,7 @@
 
 
 
+
 <form action="${root}/booking/continue">
   <label for="date">訂位日期:</label>
   <input type="date" id="date" name="date" min="<%= minDate %>" max="<%= maxDate %>"><br><br>
@@ -71,14 +72,14 @@
 	  <input type="button" value="繼續(選擇座位)" onclick="submitForm()">
 </form>
 	
-	
+</div>
+<jsp:include page="../include/footer.jsp"></jsp:include>
 <script>
     function submitForm() {
         document.forms[0].submit();
     }
 </script>
-	
-</div>
+
 
 </body>
 </html>

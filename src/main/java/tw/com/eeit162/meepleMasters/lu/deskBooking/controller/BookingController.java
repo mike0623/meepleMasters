@@ -1,7 +1,10 @@
 package tw.com.eeit162.meepleMasters.lu.deskBooking.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +37,7 @@ public class BookingController {
 
 	@Autowired
 	private DeskService deskService;
-	
-	
-	
+		
 	
 	// 顯示訂位表單頁面
 	@GetMapping("/bookingForm")
@@ -71,12 +73,9 @@ public class BookingController {
 		model.addAttribute("selectedDate", date);
 	    model.addAttribute("selectedTime", time);
 	    model.addAttribute("tableType", tableType);
-
-	
 	    
 	    return "lu/bookingdisplay";
 	}
-	
 	
 	// 送出訂位資料(包含memberID 日期 時段 桌號)
 	@PostMapping("/booking/Submit")
@@ -85,44 +84,39 @@ public class BookingController {
 	                          @RequestParam("selectedTime") String time,
 	                          @RequestParam("deskId") Integer deskId,
 	                          
-	                          HttpSession session, HttpServletRequest request,Model model) {
+	                          HttpSession session, HttpServletRequest request,Model model) throws ParseException {
 		
 	    // 從 HttpSession 中獲取 memberId
 
 		Member Member = (Member) session.getAttribute("member");
 		Integer memberId = Member.getMemberId();
 	 
-		
-		
-	    String bookTime = date + " " + time;
-
-	    
+		// 創建SimpleDateFormat物件，並設定日期格式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
+     // 使用SimpleDateFormat的parse()方法將日期字串轉成Date物件
+        Date bookDate = sdf.parse(date);
+   
 	    BookingBean bookingbean = new BookingBean();
 	    bookingbean.setBookDeskId(deskId);
 	    bookingbean.setBookMemberId(memberId);
-	    bookingbean.setBookTime(bookTime);
+	    bookingbean.setBookDate(bookDate);
+	    bookingbean.setBookTime(time);
 	    
 	    bookingService.insertBooking(bookingbean);
-
+//	    model.addAttribute("bookingrecord", bookingbean);
+	    DeskBean tableType = deskService.getDeskById(deskId);
+		
+		model.addAttribute("selectedDate", date);
+	    model.addAttribute("selectedTime", time);
+	    model.addAttribute("tableType", tableType);
 	    
-	    // 調用 bookingService 的 insertBooking 方法
-	    
-	    
-
-
-	    
-	    
-	    
-	    return "redirect:/booking/success";
+	    return "lu/Bookingsuccess";
 	}
-	
-	
 //	@PostMapping("/bookingSubmit")
 //	public String bookDesk(@RequestParam("date") String date, @RequestParam("time") String time,
 //			@RequestParam("tableIds") List<Integer> tableIds, HttpSession session) {
-//
-//		// 取得登入的會員ID
-////		int memberId = (int) session.getAttribute("memberId");
+
 //		int memberId =1;
 //		// 計算每種桌子的總數量
 //		int type1Count = 0;
@@ -144,44 +138,41 @@ public class BookingController {
 //				break;
 //			}
 //		}
-//
-//		// 計算每種桌子的價格
-//		int type1Price = deskService.getDeskPrice(1);
-//		int type2Price = deskService.getDeskPrice(2);
-//		int type3Price = deskService.getDeskPrice(3);
-//		int totalPrice = type1Count * type1Price + type2Count * type2Price + type3Count * type3Price;
-//		
-//		// 建立訂位物件並設定屬性
-//        BookingDto bookingDto = new BookingDto();
-//        bookingDto.setCreatedAt(LocalDate.now());
-//        bookingDto.setBookTime(time);
-//        bookingDto.setTableIds(Arrays.asList(1, 2, 3));
-//        
-//        BookingBean bookingBean = bookingService.convertToBookingBean(bookingDto);
-////        bookingBean.setTotalPrice(totalPrice);
-//
-//		// 儲存訂位資料
-//        bookingService.insertBooking(bookingBean);
-//        
 //		return "redirect:/bookingSuccess";
 //	}
 
 	// 顯示訂位成功頁面
-	@GetMapping("/booking/success")
-	public String showBookingSuccessPage(@ModelAttribute("bookingId") int bookingId, Map<String, Object> model) {
-
-		Optional<BookingBean> bookingBean = bookingService.findBookingById(bookingId);
-		model.put("bookingBean", bookingBean);
-		return "bookingSuccess";
-	}
+//	@GetMapping("/booking/success")
+//	public String showBookingSuccessPage(@RequestParam("id") Integer id, Model model    ) {
+//
+//			Optional<BookingBean> booking = bookingService.findBookingById(id);
+//			
+//			model.addAttribute("Booking", booking);
+//
+//
+//		return "lu/Bookingsuccess";
+//	}
+	
+	
 	//顯示訂位紀錄
 	@GetMapping("/booking/record")
-	public String showBookingRecord(Model model) {
-		List<DeskBean> deskList = deskService.findAllDesks();
-		BookingBean bookingBean = new BookingBean();
-		model.addAttribute("deskList", deskList);
-		model.addAttribute("bookingBean", bookingBean);
+	public String showBookingRecord(HttpSession session, HttpServletRequest request,Model model) {
+		
+		Member Member = (Member) session.getAttribute("member");
+		Integer memberId = Member.getMemberId();
+		
+		List<BookingBean> bookingRecord = bookingService.findAllBookingsByMemberId(memberId);
+//		BookingBean bookingBean = new BookingBean();
+		
+		model.addAttribute("bookingrecord", bookingRecord);
 		return "lu/bookingrecord";
+	}
+	
+	@DeleteMapping("")
+	public String deleteBooking(@RequestParam("id") Integer id) {
+		
+		
+		return "";
 	}
 	
 	

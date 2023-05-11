@@ -30,6 +30,14 @@ public class BridgePlayer {
 	public BridgePlayer() {
 	}
 	
+	//使用牌時
+	public void useCard(Integer card) {
+		if(handCardSet.remove(card)) {
+			handCardList.remove(card);
+			playedCard = card;
+		}
+	}
+	
 	public BridgePlayer(Integer playerNumber) {
 		this.playerNumber = playerNumber;
 	}
