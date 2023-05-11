@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ include file="../include/common_link.jsp" %>
+<% String releasedId = request.getParameter("releasedId"); %>
 <!DOCTYPE html>
 <html>
 
@@ -64,6 +65,9 @@
 
         let card = [];
         let member = "${member}"
+
+        var releasedId = '<%= request.getParameter("releasedId") %>';
+        console.log("releasedId" + releasedId);
 
         $.get("${root}/released/ownedCard", function (data) {
 
@@ -196,6 +200,21 @@
                 ev.target.parentNode.classList.remove('inputs--invalid');
             }
         }
+
+        // var submitBtn = document.querySelector('input[type=submit]');
+        // submitBtn.addEventListener('click', onSubmit);
+
+        // function onSubmit(ev) {
+        //     var inputsWrappers = ev.target.parentNode.querySelectorAll('span');
+        //     for (i = 0; i < inputsWrappers.length; i++) {
+        //         input = inputsWrappers[i].querySelector('input[type=text], input[type=email]');
+        //         if (input.checkValidity() == false) {
+        //             inputsWrappers[i].classList.add('inputs--invalid');
+        //         } else if (input.checkValidity() == true) {
+        //             inputsWrappers[i].classList.remove('inputs--invalid');
+        //         }
+        //     }
+        // }
 
         $(".inputSubmit").click(function(e){
             e.preventDefault(); 

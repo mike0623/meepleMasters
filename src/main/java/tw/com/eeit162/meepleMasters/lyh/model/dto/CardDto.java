@@ -12,6 +12,8 @@ public class CardDto {
 	private Integer startPrice;
 	private Integer type;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
+	private Date startTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
 	private Date endTime;
 	private Integer releasedStatus;
 	private Integer cardId;
@@ -20,6 +22,14 @@ public class CardDto {
 	private String cardName;
 	private Integer cardStar;
 	private String memberName;
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
 
 	public String getMemberName() {
 		return memberName;

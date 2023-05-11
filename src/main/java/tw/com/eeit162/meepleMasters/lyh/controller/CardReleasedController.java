@@ -140,7 +140,7 @@ public class CardReleasedController {
 			Card card = cRService.findCardById(cardOwned.getFkCardId());
 			
 			Member member = mService.findMemberById(cardOwned.getFkMemberId());
-			Integer memberId = member.getMemberId();
+			String memberName = member.getMemberName();
 
 			CardDto cardDto = new CardDto();
 
@@ -149,6 +149,7 @@ public class CardReleasedController {
 			cardDto.setDirectPrice(cardReleased.getDirectPrice());
 			cardDto.setStartPrice(cardReleased.getStartPrice());
 			cardDto.setType(cardReleased.getType());
+			cardDto.setStartTime(cardReleased.getStartTime());
 			cardDto.setEndTime(cardReleased.getEndTime());
 			cardDto.setReleasedStatus(cardReleased.getReleasedStatus());
 			cardDto.setCardId(card.getCardId());
@@ -156,7 +157,7 @@ public class CardReleasedController {
 			cardDto.setCardStatus(cardOwned.getCardStatus());
 			cardDto.setCardName(card.getCardName());
 			cardDto.setCardStar(card.getCardStar());
-			cardDto.setMemberId(memberId);
+			cardDto.setMemberName(memberName);
 
 			cDList.add(cardDto);
 		});
@@ -165,6 +166,10 @@ public class CardReleasedController {
 
 		return cDList;
 	}
+	
+//	@GetMapping("/edit/{releasedId}")
+//	@ResponseBody
+//	public CardReleased editReleased()
 
 	@GetMapping("/card/{releasedId}")
 	@ResponseBody
@@ -188,6 +193,7 @@ public class CardReleasedController {
 		cardDto.setDirectPrice(cardReleased.getDirectPrice());
 		cardDto.setStartPrice(cardReleased.getStartPrice());
 		cardDto.setType(cardReleased.getType());
+		cardDto.setStartTime(cardReleased.getStartTime());
 		cardDto.setEndTime(cardReleased.getEndTime());
 		cardDto.setReleasedStatus(cardReleased.getReleasedStatus());
 		cardDto.setCardId(card.getCardId());
@@ -238,6 +244,19 @@ public class CardReleasedController {
 		}
 
 		return "購買失敗";
+	}
+	
+	@PostMapping("/discontinued")
+	@ResponseBody
+	public String discontinuedReleased(@RequestParam("releasedId") Integer releasedId,
+			@RequestParam("ownedId") Integer ownedId) {
+		String discontinued = cRService.discontinued(releasedId, ownedId);
+		
+		if (discontinued != null) {
+			return "下架成功";
+		}
+		
+		return "下架失敗";
 	}
 
 }

@@ -26,5 +26,9 @@ public class CardPageController {
 		return "lyh/newCardRelease";
 	}
 	
+	@GetMapping("/editRelease")
+	public String editCardReleased() {
+		return "lyh/editCardRelease";
+	}
 	
 }

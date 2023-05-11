@@ -46,7 +46,12 @@
             </div>
 
         </div>
+        <form action="${root}/editRelease" method="get" id="forEdit">
+            <input type="hidden" name="releasedId" id="param" hidden>
+            <input type="submit" value="Submit" hidden>
+        </form>
     </div>
+    
 
     <jsp:include page="../include/footer.jsp"></jsp:include>
 
@@ -64,6 +69,7 @@
 
                     let memberId = "${member.memberId}"
                     let memberCoin = "${member.memberCoin}"
+                    let count = 0;
 
                     console.log(res)
 
@@ -74,14 +80,22 @@
                             htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
                             htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
                             htmlstr += `</figure></div></div>`;
+                            count += 1;
                         } else {
                             htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
                             htmlstr += `<figure id="\${res.data[i].releasedId}"><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
                             htmlstr += `<div class="releaseDetail">\${res.data[i].cardName}<br>`;
                             htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i></div>`;
                             htmlstr += `<img src="${root}/img/lyh/shopping.png" class="shopping"/></figure></div></div>`;
+                            count += 1;
                         }
+
                     }
+
+                    if (count == 0) {
+                        htmlstr = `<div style="height: 200px; line-height: 200px;">目前沒有上架中的卡片</div>`
+                    }
+
                     $("#allCardContainer").append(htmlstr);
 
                     $(".edit").click(function () {
@@ -89,9 +103,77 @@
 
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
-                                console.log(res)
 
-                                    ``
+                                var getStartTime = `\${res.data[0].startTime}`;
+                                var startTime = new Date(getStartTime);
+                                var formattedStartTime = startTime.toISOString().substr(0, 10);
+
+                                var getEndTime = `\${res.data[0].endTime}`;
+                                var endTime = new Date(getEndTime);
+                                var formattedEndTime = endTime.toISOString().substr(0, 10);
+
+                                let releasedId = `\${res.data[0].releasedId}`;
+                                $("#param").val(releasedId);
+
+                                let cardHtml = "";
+
+                                cardHtml += `<div class="newCardContainer container text-center"><div class="row">
+                                            <div class="newCardImgDiv col-6">
+                                            <img src="${root}/card/downloadCard/\${res.data[0].cardId}" class="newCardImg"></div><div class="col-6">
+                                            <div class="newCardTitle">\${res.data[0].cardName}</div>
+                                            <div class="cardDetail row">
+                                            <div class="col-2">
+                                                價格<br>上架時間<br>結束時間
+                                            </div>
+                                            <div class="col-4">
+                                                \${res.data[0].directPrice} <i class="fa-solid fa-coins"></i><br>
+                                                \${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
+                                                \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
+                                                </div>
+                                            </div></div></div></div>`
+
+                                Swal.fire({
+                                    title: '',
+                                    html: cardHtml,
+                                    showDenyButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '下架卡片',
+                                    denyButtonText: `編輯上架資訊`,
+                                    confirmButtonColor: '#dc7e6a',
+                                    denyButtonColor: '#647168',
+                                    background: '#dfa661',
+                                    customClass: 'editAlert'
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        axios.post("${root}/released/discontinued?releasedId=" + res.data[0].releasedId + "&ownedId=" + res.data[0].ownedId)
+                                            .then(res => {
+                                                Swal.fire({
+                                                    title: '下架成功',
+                                                    showDenyButton: true,
+                                                    showCancelButton: false,
+                                                    confirmButtonText: '回卡片市集',
+                                                    denyButtonText: `回我的卡片`,
+                                                    confirmButtonColor: '#dc7e6a',
+                                                    denyButtonColor: '#da9255',
+                                                    customClass: 'endAlert'
+                                                }).then((result) => {
+                                                    /* Read more about isConfirmed, isDenied below */
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = "${root}/card/releasedList"
+                                                    } else if (result.isDenied) {
+                                                        window.location.href = `${root}/card/mycard/\${memberId}`
+                                                    }
+                                                })
+                                                console.log(res)
+                                            })
+                                            .catch(err => {
+                                                console.error(err);
+                                            })
+                                    } else if (result.isDenied) {
+                                        $('#forEdit').submit();
+                                    }
+                                })
 
                             })
                             .catch(err => {
@@ -106,13 +188,14 @@
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
 
-                                var getDate = `\${res.data[0].endTime}`;
-                                var date = new Date(getDate);
-                                var formattedDate = date.toISOString().substr(0, 10);
+                                var getStartTime = `\${res.data[0].startTime}`;
+                                var startTime = new Date(getStartTime);
+                                var formattedStartTime = startTime.toISOString().substr(0, 10);
 
-                                console.log(getDate)
-                                console.log(date)
-                                console.log(formattedDate);
+                                var getEndTime = `\${res.data[0].endTime}`;
+                                var endTime = new Date(getEndTime);
+                                var formattedEndTime = endTime.toISOString().substr(0, 10);
+
 
                                 let cardHtml = "";
                                 cardHtml += `<div class="newCardContainer container text-center"><div class="row">
@@ -121,12 +204,13 @@
                                             <div class="newCardTitle">\${res.data[0].cardName}</div>
                                             <div class="cardDetail row">
                                             <div class="col-2">
-                                                價格<br>賣家<br>結束時間<br>我的金幣
+                                                價格<br>賣家<br>上架時間<br>結束時間<br>我的金幣
                                             </div>
                                             <div class="col-4">
                                                 \${res.data[0].directPrice} <i class="fa-solid fa-coins"></i><br>
-                                                \${res.data[0].memberName}<br>
-                                                \${formattedDate} <i class="fa-regular fa-clock"></i><br>
+                                                \${res.data[0].memberName} <i class="fa-solid fa-user"></i><br>
+                                                \${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
+                                                \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
                                                 \${memberCoin} <i class="fa-solid fa-coins"></i>
                                                 </div>
                                             </div></div></div></div>`
@@ -160,13 +244,25 @@
                                                 if (result.isConfirmed) {
                                                     axios.post("${root}/released/buy?releasedId=" + res.data[0].releasedId + "&ownedId=" + res.data[0].ownedId + "&price=" + res.data[0].directPrice)
                                                         .then(res => {
-                                                            // Swal.fire({
-                                                            //     icon: 'success',
-                                                            //     title: '購買成功',
-                                                            //     showConfirmButton: false,
-                                                            //     timer: 1500
-                                                            // })
-                                                            window.location.href = "${root}/card/releasedList"
+                                                            Swal.fire({
+                                                                title: '購買成功！',
+                                                                showDenyButton: true,
+                                                                showCancelButton: false,
+                                                                confirmButtonText: '回卡片市集',
+                                                                denyButtonText: `回我的卡片`,
+                                                                icon: 'success',
+                                                                confirmButtonColor: '#dc7e6a',
+                                                                denyButtonColor: '#da9255',
+                                                                customClass: 'endAlert'
+                                                            }).then((result) => {
+                                                                /* Read more about isConfirmed, isDenied below */
+                                                                if (result.isConfirmed) {
+                                                                    window.location.href = "${root}/card/releasedList"
+                                                                } else if (result.isDenied) {
+                                                                    window.location.href = `${root}/card/mycard/\${memberId}`
+                                                                }
+                                                            })
+
                                                             console.log(res)
                                                         })
                                                         .catch(err => {
@@ -203,6 +299,7 @@
 
                     let htmlstr = "";
 
+                    let count = 0;
 
                     for (i = 0; i < res.data.length; i++) {
                         if (res.data[i].memberId == memberId) {
@@ -211,8 +308,14 @@
                             htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
                             htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
                             htmlstr += `</figure></div></div>`;
+                            count += 1;
                         }
                     }
+
+                    if (count == 0) {
+                        htmlstr = `<div style="height: 200px; line-height: 200px;">目前沒有上架中的卡片</div>`
+                    }
+
                     $("#myCardContainer").append(htmlstr);
 
                     $(".edit").click(function () {

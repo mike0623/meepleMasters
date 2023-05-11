@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
+import tw.com.eeit162.meepleMasters.lyh.model.bean.CardDirect;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardReleased;
 import tw.com.eeit162.meepleMasters.lyh.model.dao.CardDao;
+import tw.com.eeit162.meepleMasters.lyh.model.dao.CardDirectDao;
 import tw.com.eeit162.meepleMasters.lyh.model.dao.CardOwnedDao;
 import tw.com.eeit162.meepleMasters.lyh.model.dao.CardReleasedDao;
 
@@ -33,6 +35,9 @@ public class CardReleasedService {
 	
 	@Autowired
 	private MemberDao mDao;
+	
+	@Autowired
+	private CardDirectDao cDDao;
 	
 	
 	public List<CardOwned> showMyCard(Integer memberId) {
@@ -157,12 +162,34 @@ public class CardReleasedService {
 		Integer seller = cardOwned.get().getFkMemberId();
 		Integer sellerUpdateCoin = mDao.updateMemberCoin(seller, price);
 		
-		if (updateReleased != 0 && updateCardOwned != 0 && buyerUpdateCoin != 0 && sellerUpdateCoin != 0 && newCard != null) {
+//		建立CardDirect
+		CardDirect cD = new CardDirect();
+		
+		cD.setFkReleasedId(releasedId);
+		cD.setFkPurchaserId(memberId);
+		cD.setPurchaseTime(new Date());
+		
+		CardDirect cardDirect = cDDao.save(cD);
+		
+		if (updateReleased != 0 && updateCardOwned != 0 && buyerUpdateCoin != 0 && sellerUpdateCoin != 0 && newCard != null && cardDirect != null) {
 			return "success";
 		}
 		
 		return null;
 		
+	}
+	
+	@Transactional
+	public String discontinued(Integer releasedId, Integer ownedId) {
+		
+		Integer updateReleased = cRDao.updateReleased(releasedId);
+		Integer continuedCardOwned = cODao.continuedCardOwned(ownedId);
+		
+		if (updateReleased != 0 && continuedCardOwned != 0) {
+			return "success";
+		}
+		
+		return null;
 	}
 	
 
