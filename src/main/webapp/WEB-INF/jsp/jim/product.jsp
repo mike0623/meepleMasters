@@ -6,7 +6,7 @@ prefix="c"%>
   <head>
     <meta charset="UTF-8" />
     <title>${webName}</title>
-    <!-- <jsp:include page="../include/common_link.jsp" /> -->
+    <jsp:include page="../include/common_link.jsp" />
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
   </head>
   <body>
@@ -15,6 +15,9 @@ prefix="c"%>
       <div class="container gameCardDiv">
         <div>
           <a href="${root}/mall/shoppingCart">購物車</a>
+        </div>
+        <div>
+          <a href="${root}/mall/order">訂單</a>
         </div>
         <!-- <div>
           <select name="productDifficulty" id="productDifficultySelect">
@@ -36,7 +39,6 @@ prefix="c"%>
       let mId = "${member.memberId}";
       $("#productDifficultySelect").change(function () {
         console.log(this.value);
-		
       });
     </script>
     <script src="${root}/js/jim/product.js"></script>

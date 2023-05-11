@@ -25,7 +25,7 @@ function renderProduct(pList) {
     outputString += '<div class="col-4 d-flex align-items-stretch">';
     outputString += '<div class="card">';
     outputString += '<div class="pic">';
-    outputString += `<img src="${root}/mall/getPhoto?pId=${p.productId}">`;
+    outputString += `<img class="productImg" src="${root}/mall/getPhoto?pId=${p.productId}">`;
     outputString += "</div>";
     outputString += `<div class="card-header">${p.productName}</div>`;
     outputString += '<div class="card-body">';

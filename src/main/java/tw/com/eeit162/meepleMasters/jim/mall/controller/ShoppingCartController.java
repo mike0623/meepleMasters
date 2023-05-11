@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Order;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
 import tw.com.eeit162.meepleMasters.jim.mall.service.ShoppingCartService;
 
@@ -21,7 +22,11 @@ public class ShoppingCartController {
 	// 依照商品ID及會員ID將商品加入購物車
 	@GetMapping("/shoppingCart/addShoppingCart")
 	@ResponseBody
-	public String addShoppingCartAndRemoveItWhenExist(@RequestParam Integer productId, @RequestParam Integer memberId) {
+	public String addShoppingCartAndRemoveItWhenExist(@RequestParam Integer productId,
+			@RequestParam(required = false) Integer memberId) {
+//		if (memberId == null) {
+//			return "redirect:/jack/loginPage";
+//		}
 		return scService.addShoppingCartAndRemoveItWhenExist(productId, memberId);
 	}
 
@@ -35,6 +40,8 @@ public class ShoppingCartController {
 
 	@GetMapping("/shoppingCart/cartToOreder/{memberId}")
 	public void cartToOrder(@PathVariable Integer memberId) {
-		scService.cartToOrder(memberId);
+		Order order = scService.cartToOrder(memberId);
+
+		System.out.println(order);
 	}
 }
