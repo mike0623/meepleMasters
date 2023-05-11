@@ -2,6 +2,8 @@ package tw.com.eeit162.meepleMasters.lyh.model.dto;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class CardDto {
 
 	private Integer releasedId;
@@ -9,6 +11,7 @@ public class CardDto {
 	private Integer directPrice;
 	private Integer startPrice;
 	private Integer type;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
 	private Date endTime;
 	private Integer releasedStatus;
 	private Integer cardId;
@@ -16,6 +19,15 @@ public class CardDto {
 	private Integer cardStatus;
 	private String cardName;
 	private Integer cardStar;
+	private String memberName;
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
 
 	public Integer getReleasedId() {
 		return releasedId;

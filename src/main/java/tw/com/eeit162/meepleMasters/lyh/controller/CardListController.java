@@ -79,8 +79,6 @@ public class CardListController {
 	@GetMapping("/mycard/{memberId}")
 	public String listOwnedCard(@PathVariable(name = "memberId") Integer memberId, Model model) {
 
-		
-		
 		List<CardOwned> list = cListService.listOwnedCard(memberId);
 
 		ArrayList<Card> cardList = new ArrayList<>();
@@ -202,6 +200,7 @@ public class CardListController {
 		return new ResponseEntity<byte[]>(cardFile, headers, HttpStatus.CREATED);
 
 	}
+	
 
 	@PostMapping("/test")
 	@ResponseBody

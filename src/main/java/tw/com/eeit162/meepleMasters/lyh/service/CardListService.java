@@ -115,6 +115,8 @@ public class CardListService {
 		}
 		return allCard;
 	}
+	
+	
 
 	
 	

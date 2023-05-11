@@ -22,23 +22,33 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jack.service.MemberService;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardReleased;
 import tw.com.eeit162.meepleMasters.lyh.model.dto.CardDto;
+import tw.com.eeit162.meepleMasters.lyh.service.CardListService;
 import tw.com.eeit162.meepleMasters.lyh.service.CardReleasedService;
 
 @Controller
-@RequestMapping(path = { "/released" })
+@RequestMapping(path = {"/released"})
 public class CardReleasedController {
+	
+	@Autowired
+	private CardListService cListService;
 
 	@Autowired
 	private CardReleasedService cRService;
+	
+	@Autowired
+	private MemberService mService;
 
 	@GetMapping("/ownedCard")
 	public ResponseEntity<?> showMyCardList(HttpSession session) {
@@ -79,7 +89,6 @@ public class CardReleasedController {
 		Card card = cRService.findCardById(cardId);
 
 		JSONObject jsonObject = new JSONObject();
-		JSONArray dataArray = new JSONArray();
 
 		jsonObject.put("card", card);
 
@@ -110,7 +119,7 @@ public class CardReleasedController {
 
 		cRService.insertCardReleasedDirect(ownedId, price, newDate);
 
-		return "lyh/cardReleased";
+		return "redirect:/card/releasedList";
 	}
 
 	@GetMapping("/all")
@@ -129,6 +138,9 @@ public class CardReleasedController {
 
 			CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
 			Card card = cRService.findCardById(cardOwned.getFkCardId());
+			
+			Member member = mService.findMemberById(cardOwned.getFkMemberId());
+			Integer memberId = member.getMemberId();
 
 			CardDto cardDto = new CardDto();
 
@@ -144,90 +156,52 @@ public class CardReleasedController {
 			cardDto.setCardStatus(cardOwned.getCardStatus());
 			cardDto.setCardName(card.getCardName());
 			cardDto.setCardStar(card.getCardStar());
-			
+			cardDto.setMemberId(memberId);
+
 			cDList.add(cardDto);
 		});
 
 //		cDList.sort((a,b)->b.getDirectPrice()-a.getDirectPrice());
-		
-		
+
 		return cDList;
 	}
 
-	
-	
-//	@GetMapping("/AAA")
-//	public ResponseEntity<?> showAllRelease1() {
-//
-//		List<CardReleased> allReleaseCard = cRService.showAllReleased();
-//
-//		JSONObject jsonObject = new JSONObject();
-//		JSONArray dataArray = new JSONArray();
-//
-//		for (CardReleased card : allReleaseCard) {
-//			if (card.getReleasedStatus() == 1) {
-//				dataArray.put(card);
-//			}
-//		}
-//
-//		jsonObject.put("cardList", dataArray);
-//
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.APPLICATION_JSON);
-//
-//		if (dataArray != null && !dataArray.isEmpty()) {
-//			return new ResponseEntity<>(jsonObject.toMap(), headers, HttpStatus.OK);
-//		} else {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//
-//	}
+	@GetMapping("/card/{releasedId}")
+	@ResponseBody
+	public ArrayList<CardDto> showCardRelease(@PathVariable(name = "releasedId") Integer releasedId) {
 
-//	@GetMapping("/my")
-//	@ResponseBody
-//	public ResponseEntity<?> showMyRelease(HttpSession session) {
-//
-//		Member member = (Member) session.getAttribute("member");
-//		Integer memberId = member.getMemberId();
-//
-////		System.out.println("memberId " + memberId);
-//
-//		// 取得所有card
-//		List<CardReleased> allReleaseCard = cRService.showAllReleased();
-//		// 過濾掉下架的card
-//		List<CardReleased> listedCards = allReleaseCard.stream().filter(card -> card.getReleasedStatus() == 1)
-//				.collect(Collectors.toList());
-//
-//		ArrayList<CardDto> cDList = new ArrayList<CardDto>();
-//
-//		listedCards.stream().forEach(cardReleased -> {
-//			
-//			CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
-//			Card card = cRService.findCardById(cardOwned.getFkCardId());
-//
-//			CardDto cardDto = new CardDto();
-//
-//			cardDto.setReleasedId(cardReleased.getReleasedId());
-//			cardDto.setOwnedId(cardOwned.getOwnedId());
-//			cardDto.setDirectPrice(cardReleased.getDirectPrice());
-//			cardDto.setStartPrice(cardReleased.getStartPrice());
-//			cardDto.setType(cardReleased.getType());
-//			cardDto.setEndTime(cardReleased.getEndTime());
-//			cardDto.setReleasedStatus(cardReleased.getReleasedStatus());
-//			cardDto.setCardId(card.getCardId());
-//			cardDto.setMemberId(cardOwned.getFkMemberId());
-//			cardDto.setCardStatus(cardOwned.getCardStatus());
-//			cardDto.setCardName(card.getCardName());
-//			cardDto.setCardStar(card.getCardStar());
-//			
-//			cDList.add(cardDto);
-//		});
-//
-////		cDList.sort((a,b)->b.getDirectPrice()-a.getDirectPrice());
-//		
-//		
-//		return cDList;
-//	}
+		// 取得所有card
+		CardReleased cardReleased = cRService.showCardReleased(releasedId);
+
+		ArrayList<CardDto> cDList = new ArrayList<CardDto>();
+
+		CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
+		Card card = cRService.findCardById(cardOwned.getFkCardId());
+		
+		Member member = mService.findMemberById(cardOwned.getFkMemberId());
+		String memberName = member.getMemberName();
+
+		CardDto cardDto = new CardDto();
+
+		cardDto.setReleasedId(cardReleased.getReleasedId());
+		cardDto.setOwnedId(cardOwned.getOwnedId());
+		cardDto.setDirectPrice(cardReleased.getDirectPrice());
+		cardDto.setStartPrice(cardReleased.getStartPrice());
+		cardDto.setType(cardReleased.getType());
+		cardDto.setEndTime(cardReleased.getEndTime());
+		cardDto.setReleasedStatus(cardReleased.getReleasedStatus());
+		cardDto.setCardId(card.getCardId());
+		cardDto.setMemberId(cardOwned.getFkMemberId());
+		cardDto.setCardStatus(cardOwned.getCardStatus());
+		cardDto.setCardName(card.getCardName());
+		cardDto.setCardStar(card.getCardStar());
+		cardDto.setMemberName(memberName);
+
+		cDList.add(cardDto);
+
+		return cDList;
+
+	}
 
 	@GetMapping("/owned/{ownedId}")
 	public ResponseEntity<?> showOwnedCard(@PathVariable("ownedId") Integer ownedId) {
@@ -245,6 +219,25 @@ public class CardReleasedController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
+	}
+
+	@PostMapping("/buy")
+	@ResponseBody
+	public String buyCardReleased(/*@RequestBody String body,*/ @RequestParam("releasedId") Integer releasedId,
+			@RequestParam("ownedId") Integer ownedId, @RequestParam("price") Integer price, HttpSession session) {
+//		JSONObject jsonObject = new JSONObject(body);
+//		String price = jsonObject.getString("price");
+		String buyCard = cRService.buyCard(releasedId, ownedId, price, session);
+
+		if (buyCard != null) {
+			Member member = (Member)session.getAttribute("member");
+			Integer memberId = member.getMemberId();
+			member = cListService.findMember(memberId);
+			session.setAttribute("member", member);
+			return "購買成功";
+		}
+
+		return "購買失敗";
 	}
 
 }

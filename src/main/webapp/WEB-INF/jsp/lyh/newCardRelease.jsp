@@ -56,7 +56,7 @@
                     <span>Teacher</span>
                 </label> -->
             </div>
-            <input class="submit" id="submit" value="上架" type="submit">
+            <input class="inputSubmit" value="上架" type="submit">
         </form>
     </main>
     <jsp:include page="../include/footer.jsp"></jsp:include>
@@ -213,7 +213,7 @@
         //     }
         // }
 
-        $("#submit").click(function(e){
+        $(".inputSubmit").click(function(e){
             e.preventDefault(); 
             Swal.fire({
 				title: '確定要上架嗎？',
@@ -226,11 +226,12 @@
 				reverseButtons: true
 			}).then((result) => {
                 if (result.isConfirmed) {
-                    $('form').submit();
+                    console.log($('#formConfirm').serialize());
+                    document.getElementById('formConfirm').submit();
                 }
                 
-                  })
-              });
+            })
+        });
 
 
     </script>

@@ -28,5 +28,8 @@ public interface CardOwnedDao extends JpaRepository<CardOwned, Integer> {
 	@Query("update CardOwned set cardStatus = 3 where ownedId = :ownedId")
 	Integer updateCardStatusToSell(@Param("ownedId") Integer ownedId);
 	
+	@Modifying(clearAutomatically = true)
+	@Query("update CardOwned set cardStatus = 2 where ownedId = :ownedId")
+	Integer updateCardOwned(@Param("ownedId") Integer ownedId);
 	
 }
