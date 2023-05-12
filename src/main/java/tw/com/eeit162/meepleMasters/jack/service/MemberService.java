@@ -115,7 +115,10 @@ public class MemberService {
 
 			byte[] imageData = output.toByteArray();
 			System.out.println(imageData);
-
+			output.close();
+			bis.close();
+			is.close();
+			
 			Member member = new Member();
 
 			member.setMemberEmail(payloadEmail);
@@ -311,5 +314,20 @@ public class MemberService {
 
 		return null;
 	}
+	
+	public Optional<Member> findmemberByName(String memberName) {
+		
+		Optional<Member> member = Optional.ofNullable(memberDao.findMemberByName(memberName));
+		
+		if(member != null) {
+			
+			return member;
+		}
+		
+		return null;
+	}
 
+	public Integer updateMemberCoin(Integer memberId, Integer coin) {
+		return memberDao.updateMemberCoin(memberId, coin);
+	}
 }

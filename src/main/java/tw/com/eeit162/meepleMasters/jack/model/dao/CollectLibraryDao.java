@@ -11,6 +11,6 @@ import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 
 public interface CollectLibraryDao extends JpaRepository<CollectLibrary, Integer> {
 	
-	@Query("FROM Member JOIN CollectLibrary on fk_memberId = memberId JOIN Product on fk_productId = productId WHERE memberId = :memberId")
+	@Query("FROM CollectLibrary JOIN Member on fk_memberId = memberId JOIN Product on productId = fk_productId WHERE memberId = :memberId")
 	List<Object[]> findMemberCollect(@Param(value = "memberId") Integer memberId);
 }
