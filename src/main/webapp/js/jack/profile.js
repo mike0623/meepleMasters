@@ -84,6 +84,22 @@ theImg.addEventListener("change", function () {
   };
 });
 
+const search = document.querySelector("#searchMember");
+$("#result").empty()
+
+search.addEventListener("keydown",function(){
+  axios.get("/meeple-masters/member/findmemberByName",{
+    memberName: search.value
+  })
+  .then(res => {
+    console.log(res)
+  })
+  .catch(err => {
+    console.error(err); 
+  })
+})
+
+
 
 $("#memberBirth").datepicker({
   changeMonth: true,
