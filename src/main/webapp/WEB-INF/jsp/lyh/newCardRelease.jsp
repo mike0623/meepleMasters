@@ -93,13 +93,13 @@
                 card.push(data.cardList[i].fkCardId);
                 cardOwnedId.push(data.cardList[i].ownedId)
             }
-            console.log("cardOwnedId: " + cardOwnedId);
+            // console.log("cardOwnedId: " + cardOwnedId);
 
             let cardIdArray = []
 
             for (i = 0; i < card.length; i++) {
                 let cardid = card[i];
-                console.log("cardid: " + cardid);
+                // console.log("cardid: " + cardid);
                 cardIdArray.push($.get(`${root}/released/getCard/\${cardid}`));
             }
             // console.log(cardIdArray)

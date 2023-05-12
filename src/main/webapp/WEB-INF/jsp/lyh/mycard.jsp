@@ -25,7 +25,8 @@
 			<div class="myCoinDiv">
 				<h2>我的米寶幣</h2>
 				<div class="myCoinTitle">${member.memberCoin} <i class="fa-solid fa-coins"></i></div>
-				<div style="font-size: 10px;" class="coinInfo"><i class="fa-regular fa-circle-question"></i> 如何取得米寶幣</div>
+				<div style="font-size: 10px;" class="coinInfo"><i class="fa-regular fa-circle-question"></i> 如何取得米寶幣
+				</div>
 			</div>
 			<div class="cardListButtons">
 				<!-- <button class="cardAnimeButton" id="showCardAnime">抽卡動畫</button> -->
@@ -42,6 +43,7 @@
 				</button>
 				<ul class="dropdown-menu">
 					<li class="dropdown-item" id="order">獲得順序</li>
+					<li class="dropdown-item" id="orderDESC">最新獲得</li>
 					<li class="dropdown-item" id="starOrderDESC">星數　
 						<i class="fa-solid fa-arrow-down-wide-short"></i>
 					</li>
@@ -52,7 +54,7 @@
 			</div>
 			<div class="sellingNote"><img src="${root}/img/lyh/selling.png" style="width: 60px;">上架中</div>
 
-			
+
 
 			<div class="row container cardContainer justify-content-center" id="cardContainer">
 				<c:forEach var="card" items="${cardList}">
@@ -89,31 +91,35 @@
 		let getCardList = [];
 		let getSellList = [];
 
-		$.get("${root}/card/mycard/${member.memberId}/getOrder", function(data){
-			// console.log("data: " + data[0])
-			getCardListObj = JSON.parse(data).cardList;
-			getCardList = JSON.stringify(getCardListObj)
-			// console.log("getCardList: " + data.cardList)
-			getSellList = JSON.parse(data).sellList;
-			// console.log("getSellList: " + getSellList);
+		$(async function () {
+			await getMyList();
 		})
 
-		// axios.get("${root}/card/mycard/${member.memberId}/getOrder")
-		// .then(res => {
-		// 	for (let i = 0; i < res.data.cardList.length; i++){
-		// 		getCardListId.push(res.data.cardList[i].cardId)
-		// 	}
-		// 	for (let i = 0; i < res.data.sellList.length; i++){
-		// 		getSellListId.push(res.data.sellList[i].cardId)
-		// 	}
-		// 	// console.log("getCardListId: "+getCardListId)
-		// 	// console.log("getSellListId: "+getSellListId)
-		// })
-		// .catch(err => {
-		// 	console.error(err); 
-		// })
+		let cardListArray = [];
+		let sellListArray = [];
 
-		$(".coinInfo").click(function(){
+		function getMyList() {
+			return axios.get("${root}/card/mycard/${member.memberId}/getOrder")
+				.then(res => {
+					console.log(res)
+
+					for (i = 0; i < res.data.length; i++) {
+						if (res.data[i].cardStatus == 1) {
+							cardListArray.push(res.data[i])
+						} else {
+							sellListArray.push(res.data[i])
+						}
+
+					}
+				})
+				.catch(err => {
+					console.error(err);
+				})
+		}
+
+		console.log(cardListArray)
+		console.log(sellListArray)
+		$(".coinInfo").click(function () {
 			Swal.fire({
 				title: '如何取得米寶幣？',
 				html: '新註冊會員可獲得500米寶幣，遊玩一場遊戲可獲得100幣，<br/>贏家還可以再得100幣喔，一起來收集卡片吧！',
@@ -154,16 +160,16 @@
 			});
 
 			let ids = [];
-			for (let i = 0; i < getCardListId.length; i++) {
-				console.log("id:" + getCardListId[i])
-					$('.hanafuda').each(function(){
-					if (this.id == (getCardListId[i])) {
+			for (let i = 0; i < cardListArray.length; i++) {
+				// console.log("id:" + cardListArray[i].cardId)
+				$('.hanafuda').each(function () {
+					if (this.id == (cardListArray[i].cardId)) {
 						$(this).removeClass("d-none")
 					}
-					// console.log(this.id)
+					console.log(this.id)
 				})
 			}
-			
+
 
 			$('.starDiv').click(function () {
 				if ($(this).nextAll().hasClass('d-none')) {
@@ -174,115 +180,169 @@
 					$(this).children(".caret").css("transform", "none").addClass('fa-beat');
 				}
 
-				
+
 			})
 		})
-
-		$("#showCardAnime").click(function () {
-			// Swal.fire({
-			// 	imageUrl: '${root}/img/lyh/gift-box.gif',
-			// 	imageHeight: "300px",
-			// 	timer: '1500',
-			// 	showCloseButton: false,
-			// 	showConfirmButton: false,
-			// 	customClass: 'swal-gift'
-			// })
-
-			// console.log(member)
-		})
-
-		function showCardAnime() {
-			Swal.fire({
-				imageUrl: '${root}/img/lyh/gift-box.gif',
-				imageHeight: 300,
-				showCloseButton: false,
-				showConfirmButton: false
-			})
-
-			setTimeout(function () {
-				Swal.close();
-			}, 3000);
-		}
 
 		$("#order").click(function () {
-			axios.get("${root}/card/mycard/${member.memberId}/getOrder").then(function (response) {
-				// console.log(response.data.cardList[0].cardId)
 
-				let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
-				for (let i = 0; i < response.data.cardList.length; i++) {
-					ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-					ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.cardList[i].cardId}" class="hanafuda">`;
-					ajaxString += `<figcaption>\${response.data.cardList[i].cardName}</figcaption>`;
-					ajaxString += `</figure></div></div>`;
-				}
+			cardListArray.sort(function (a, b) {
 
-				for (let i = 0; i < response.data.sellList.length; i++) {
-					ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-					ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.sellList[i].cardId}" class="hanafuda">`;
-					ajaxString += `<figcaption>\${response.data.sellList[i].cardName}</figcaption>`;
-					ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
-				}
-				ajaxString += `</div>`;
-				// console.log(`getSellList: ${getSellList[i].cardName}`)
-				$(".cardContainer").remove();
-				$(".mycardContainer").append(ajaxString);
-			}).catch(function (error) {
-				console.log("排序時錯誤", error);
-			}).finally()
+				return a.ownedId - b.ownedId
+			});
+
+			sellListArray.sort(function (a, b) {
+
+				return a.ownedId - b.ownedId
+			});
+
+			let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
+			for (let i = 0; i < cardListArray.length; i++) {
+				ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+				ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${cardListArray[i].cardId}" class="hanafuda">`;
+				ajaxString += `<figcaption>\${cardListArray[i].cardName}</figcaption>`;
+				ajaxString += `</figure></div></div>`;
+			}
+
+			for (let i = 0; i < sellListArray.length; i++) {
+				ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+				ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${sellListArray[i].cardId}" class="hanafuda">`;
+				ajaxString += `<figcaption>\${sellListArray[i].cardName}</figcaption>`;
+				ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
+			}
+			ajaxString += `</div>`;
+			// console.log(`getSellList: ${getSellList[i].cardName}`)
+			$(".cardContainer").remove();
+			$(".mycardContainer").append(ajaxString);
+
 		})
 
+		$("#orderDESC").click(function () {
+
+			cardListArray.sort(function (a, b) {
+
+				return b.ownedId - a.ownedId
+			});
+
+			sellListArray.sort(function (a, b) {
+
+				return b.ownedId - a.ownedId
+			});
+
+			let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
+			for (let i = 0; i < cardListArray.length; i++) {
+				ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+				ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${cardListArray[i].cardId}" class="hanafuda">`;
+				ajaxString += `<figcaption>\${cardListArray[i].cardName}</figcaption>`;
+				ajaxString += `</figure></div></div>`;
+			}
+
+			for (let i = 0; i < sellListArray.length; i++) {
+				ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+				ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${sellListArray[i].cardId}" class="hanafuda">`;
+				ajaxString += `<figcaption>\${sellListArray[i].cardName}</figcaption>`;
+				ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
+			}
+			ajaxString += `</div>`;
+			// console.log(`getSellList: ${getSellList[i].cardName}`)
+			$(".cardContainer").remove();
+			$(".mycardContainer").append(ajaxString);
+
+		})
+
+
+
 		$("#starOrderDESC").click(function () {
-			axios.get("${root}/card/mycard/${member.memberId}/starOrderDESC").then(function (response) {
-				// console.log(response.data.cardList[0].cardId)
 
-				let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
-				for (let i = 0; i < response.data.cardList.length; i++) {
-					ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-					ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.cardList[i].cardId}" class="hanafuda">`;
-					ajaxString += `<figcaption>\${response.data.cardList[i].cardName}</figcaption>`;
-					ajaxString += `</figure></div></div>`;
+			cardListArray.sort(function (a, b) {
+
+				let stara = a.cardStar
+				let starb = b.cardStar
+
+				if (stara === starb) {
+					return a.cardId - b.cardId
 				}
 
-				for (let i = 0; i < response.data.sellList.length; i++) {
-					ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-					ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.sellList[i].cardId}" class="hanafuda">`;
-					ajaxString += `<figcaption>\${response.data.sellList[i].cardName}</figcaption>`;
-					ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
-				}
-				ajaxString += `</div>`;
+				return starb - stara
+			});
 
-				$(".cardContainer").remove();
-				$(".mycardContainer").append(ajaxString);
-			}).catch(function (error) {
-				console.log("排序時錯誤", error);
-			}).finally()
+			sellListArray.sort(function (a, b) {
+
+				let stara = a.cardStar
+				let starb = b.cardStar
+
+				if (stara === starb) {
+					return a.cardId - b.cardId
+				}
+
+				return starb - stara
+			});
+
+			let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
+			for (let i = 0; i < cardListArray.length; i++) {
+				ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+				ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${cardListArray[i].cardId}" class="hanafuda">`;
+				ajaxString += `<figcaption>\${cardListArray[i].cardName}</figcaption>`;
+				ajaxString += `</figure></div></div>`;
+			}
+
+			for (let i = 0; i < sellListArray.length; i++) {
+				ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+				ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${sellListArray[i].cardId}" class="hanafuda">`;
+				ajaxString += `<figcaption>\${sellListArray[i].cardName}</figcaption>`;
+				ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
+			}
+			ajaxString += `</div>`;
+
+			$(".cardContainer").remove();
+			$(".mycardContainer").append(ajaxString);
+
 		})
 
 		$("#starOrderASC").click(function () {
-			axios.get("${root}/card/mycard/${member.memberId}/starOrderASC").then(function (response) {
-				// console.log(response.data.cardList[0].cardId)
 
-				let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
-				for (let i = 0; i < response.data.cardList.length; i++) {
-					ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-					ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.cardList[i].cardId}" class="hanafuda">`;
-					ajaxString += `<figcaption>\${response.data.cardList[i].cardName}</figcaption>`;
-					ajaxString += `</figure></div></div>`;
+			cardListArray.sort(function (a, b) {
+
+				let stara = a.cardStar
+				let starb = b.cardStar
+
+				if (stara === starb) {
+					return a.cardId - b.cardId
 				}
 
-				for (let i = 0; i < response.data.sellList.length; i++) {
-					ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-					ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.sellList[i].cardId}" class="hanafuda">`;
-					ajaxString += `<figcaption>\${response.data.sellList[i].cardName}</figcaption>`;
-					ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
-				}
-				ajaxString += `</div>`;
+				return stara - starb
+			});
 
-				$(".cardContainer").remove();
-				$(".mycardContainer").append(ajaxString);
-			}).catch(function (error) {
-				console.log("排序時錯誤", error);
-			}).finally()
+			sellListArray.sort(function (a, b) {
+
+				let stara = a.cardStar
+				let starb = b.cardStar
+
+				if (stara === starb) {
+					return a.cardId - b.cardId
+				}
+
+				return stara - starb
+			});
+
+			let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
+			for (let i = 0; i < cardListArray.length; i++) {
+				ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+				ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${cardListArray[i].cardId}" class="hanafuda">`;
+				ajaxString += `<figcaption>\${cardListArray[i].cardName}</figcaption>`;
+				ajaxString += `</figure></div></div>`;
+			}
+
+			for (let i = 0; i < sellListArray.length; i++) {
+				ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+				ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${sellListArray[i].cardId}" class="hanafuda">`;
+				ajaxString += `<figcaption>\${sellListArray[i].cardName}</figcaption>`;
+				ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
+			}
+			ajaxString += `</div>`;
+
+			$(".cardContainer").remove();
+			$(".mycardContainer").append(ajaxString);
 
 		})
 
@@ -296,87 +356,87 @@
 			if (member == "") {
 				window.location.href = "${root}/login";
 			} else if (coin < 100) {
-				Swal.fire({title:'餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert'})
-			} 	else {
+				Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
+			} else {
 				Swal.fire({
-				title: '確定要花100米寶幣抽卡嗎？',
-				showCancelButton: true,
-				confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
-				cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
-				confirmButtonColor: '#CA7159',
-				cancelButtonColor: '#CBC0AA',
-				customClass: 'confirmAlert',
-				reverseButtons: true
-			}).then((result) => {
-				
-				if (result.isConfirmed) {
+					title: '確定要花100米寶幣抽卡嗎？',
+					showCancelButton: true,
+					confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
+					cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
+					confirmButtonColor: '#CA7159',
+					cancelButtonColor: '#CBC0AA',
+					customClass: 'confirmAlert',
+					reverseButtons: true
+				}).then((result) => {
 
-					let newCardString = "";
-					let isNew = false;
-					axios.post("${root}/card/getNewCard").then(response => {
-						var str = response.data.newCard;
-						// console.log(str)
-						var cardId = str.split("cardId=")[1].split(",")[0];
-						var cardName = str.split("cardName=")[1].split(",")[0];
-						newCardString += `<div class="container newCardContainer"><div class="newCardImgDiv"><img src="${root}/card/downloadCard/\${cardId}" class="newCardImg"><img src="${root}/img/lyh/pop_new.png" class="newIcon d-none"></div><div class="newCardTitle">\${cardName}</div><div class="ribbonAnime"><lottie-player src="${root}/json/123225-ribbon.json"  background="transparent" speed="1" style="width: 500px; height: 600px;" loop autoplay></lottie-player></div></div>`;
+					if (result.isConfirmed) {
+
+						let newCardString = "";
+						let isNew = false;
+						axios.post("${root}/card/getNewCard").then(response => {
+							var str = response.data.newCard;
+							// console.log(str)
+							var cardId = str.split("cardId=")[1].split(",")[0];
+							var cardName = str.split("cardName=")[1].split(",")[0];
+							newCardString += `<div class="container newCardContainer"><div class="newCardImgDiv"><img src="${root}/card/downloadCard/\${cardId}" class="newCardImg"><img src="${root}/img/lyh/pop_new.png" class="newIcon d-none"></div><div class="newCardTitle">\${cardName}</div><div class="ribbonAnime"><lottie-player src="${root}/json/123225-ribbon.json"  background="transparent" speed="1" style="width: 500px; height: 600px;" loop autoplay></lottie-player></div></div>`;
 
 
-						Swal.fire({
-							title: '',
-							html: newCardString,
-							color: '#FFF',
-							showCloseButton: true,
-							focusConfirm: false,
-							background: '#dfa661',
-							confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
-							confirmButtonColor: '#CA7159',
-							customClass: 'swal-newCard'
-						});
+							Swal.fire({
+								title: '',
+								html: newCardString,
+								color: '#FFF',
+								showCloseButton: true,
+								focusConfirm: false,
+								background: '#dfa661',
+								confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
+								confirmButtonColor: '#CA7159',
+								customClass: 'swal-newCard'
+							});
 
-						if (response.data.isNew == true) {
-							// console.log("isNew is true.");
-							$(".newIcon").removeClass("d-none");
-						}
-						console.log(response.data.isNew)
-						console.log(response.data.memberCoin)
-
-						let coin = response.data.memberCoin
-						$(".myCoinTitle").empty();
-						$(".myCoinTitle").append(coin + ` <i class="fa-solid fa-coins"></i>`)
-
-						axios.get("${root}/card/mycard/${member.memberId}/getOrder").then(function (response) {
-							// console.log(response.data.cardList[0].cardId)
-
-							let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
-							for (let i = 0; i < response.data.cardList.length; i++) {
-								ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-								ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.cardList[i].cardId}" class="hanafuda">`;
-								ajaxString += `<figcaption>\${response.data.cardList[i].cardName}</figcaption>`;
-								ajaxString += `</figure></div></div>`;
+							if (response.data.isNew == true) {
+								// console.log("isNew is true.");
+								$(".newIcon").removeClass("d-none");
 							}
+							console.log(response.data.isNew)
+							console.log(response.data.memberCoin)
 
-							for (let i = 0; i < response.data.sellList.length; i++) {
-								ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-								ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.sellList[i].cardId}" class="hanafuda">`;
-								ajaxString += `<figcaption>\${response.data.sellList[i].cardName}</figcaption>`;
-								ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
-							}
-							ajaxString += `</div>`;
+							let coin = response.data.memberCoin
+							$(".myCoinTitle").empty();
+							$(".myCoinTitle").append(coin + ` <i class="fa-solid fa-coins"></i>`)
 
-							$(".cardContainer").remove();
-							$(".mycardContainer").append(ajaxString);
-						}).catch(function (error) {
-							console.log("排序時錯誤", error);
-						}).finally()
-					})
-						.catch(error => {
-							console.error(error);
+							axios.get("${root}/card/mycard/${member.memberId}/getOrder").then(function (response) {
+								// console.log(response.data.cardList[0].cardId)
+
+								let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
+								for (let i = 0; i < response.data.cardList.length; i++) {
+									ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+									ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.cardList[i].cardId}" class="hanafuda">`;
+									ajaxString += `<figcaption>\${response.data.cardList[i].cardName}</figcaption>`;
+									ajaxString += `</figure></div></div>`;
+								}
+
+								for (let i = 0; i < response.data.sellList.length; i++) {
+									ajaxString += `<div class="col-3 d-flex"><div class="card">`;
+									ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.sellList[i].cardId}" class="hanafuda">`;
+									ajaxString += `<figcaption>\${response.data.sellList[i].cardName}</figcaption>`;
+									ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
+								}
+								ajaxString += `</div>`;
+
+								$(".cardContainer").remove();
+								$(".mycardContainer").append(ajaxString);
+							}).catch(function (error) {
+								console.log("排序時錯誤", error);
+							}).finally()
 						})
-				}
-			})
+							.catch(error => {
+								console.error(error);
+							})
+					}
+				})
 			}
 
-			
+
 
 
 		})

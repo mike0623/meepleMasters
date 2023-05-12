@@ -192,6 +192,16 @@ public class CardReleasedService {
 		return null;
 	}
 	
+	public String editMyReleased(Integer releasedId, Integer directPrice, Date endTime) {
+		Integer editMyReleased = cRDao.editMyReleased(releasedId, directPrice, endTime);
+		
+		if (editMyReleased != 0) {
+			return "success";
+		}
+		
+		return null;
+	}
+	
 
 
 }

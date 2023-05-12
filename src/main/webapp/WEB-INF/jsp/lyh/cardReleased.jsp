@@ -61,9 +61,10 @@
             await getAllList();
             await getMyList();
         })
+        let status = 2;
 
         function getAllList() {
-            return axios.get("${root}/released/all")
+            return axios.get("${root}/released/all/" + status)
                 .then(res => {
                     let htmlstr = "";
 
@@ -292,7 +293,7 @@
         }
 
         function getMyList() {
-            return axios.get("${root}/released/all")
+            return axios.get("${root}/released/all/1")
                 .then(res => {
 
                     let memberId = "${member.memberId}"
@@ -323,11 +324,83 @@
 
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
-                                console.log(res)
+
+                                var getStartTime = `\${res.data[0].startTime}`;
+                                var startTime = new Date(getStartTime);
+                                var formattedStartTime = startTime.toISOString().substr(0, 10);
+
+                                var getEndTime = `\${res.data[0].endTime}`;
+                                var endTime = new Date(getEndTime);
+                                var formattedEndTime = endTime.toISOString().substr(0, 10);
+
+                                let releasedId = `\${res.data[0].releasedId}`;
+                                $("#param").val(releasedId);
+
+                                let cardHtml = "";
+
+                                cardHtml += `<div class="newCardContainer container text-center"><div class="row">
+                                            <div class="newCardImgDiv col-6">
+                                            <img src="${root}/card/downloadCard/\${res.data[0].cardId}" class="newCardImg"></div><div class="col-6">
+                                            <div class="newCardTitle">\${res.data[0].cardName}</div>
+                                            <div class="cardDetail row">
+                                            <div class="col-2">
+                                                價格<br>上架時間<br>結束時間
+                                            </div>
+                                            <div class="col-4">
+                                                \${res.data[0].directPrice} <i class="fa-solid fa-coins"></i><br>
+                                                \${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
+                                                \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
+                                                </div>
+                                            </div></div></div></div>`
+
+                                Swal.fire({
+                                    title: '',
+                                    html: cardHtml,
+                                    showDenyButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '下架卡片',
+                                    denyButtonText: `編輯上架資訊`,
+                                    confirmButtonColor: '#dc7e6a',
+                                    denyButtonColor: '#647168',
+                                    background: '#dfa661',
+                                    customClass: 'editAlert'
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        axios.post("${root}/released/discontinued?releasedId=" + res.data[0].releasedId + "&ownedId=" + res.data[0].ownedId)
+                                            .then(res => {
+                                                Swal.fire({
+                                                    title: '下架成功',
+                                                    showDenyButton: true,
+                                                    showCancelButton: false,
+                                                    confirmButtonText: '回卡片市集',
+                                                    denyButtonText: `回我的卡片`,
+                                                    confirmButtonColor: '#dc7e6a',
+                                                    denyButtonColor: '#da9255',
+                                                    customClass: 'endAlert'
+                                                }).then((result) => {
+                                                    /* Read more about isConfirmed, isDenied below */
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = "${root}/card/releasedList"
+                                                    } else if (result.isDenied) {
+                                                        window.location.href = `${root}/card/mycard/\${memberId}`
+                                                    }
+                                                })
+                                                console.log(res)
+                                            })
+                                            .catch(err => {
+                                                console.error(err);
+                                            })
+                                    } else if (result.isDenied) {
+                                        $('#forEdit').submit();
+                                    }
+                                })
+
                             })
                             .catch(err => {
                                 console.error(err);
                             })
+
                     })
 
                 })

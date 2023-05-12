@@ -33,7 +33,7 @@ import tw.com.eeit162.meepleMasters.jack.service.MemberService;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardReleased;
-import tw.com.eeit162.meepleMasters.lyh.model.dto.CardDto;
+import tw.com.eeit162.meepleMasters.lyh.model.dto.CardReleasedDto;
 import tw.com.eeit162.meepleMasters.lyh.service.CardListService;
 import tw.com.eeit162.meepleMasters.lyh.service.CardReleasedService;
 
@@ -122,9 +122,9 @@ public class CardReleasedController {
 		return "redirect:/card/releasedList";
 	}
 
-	@GetMapping("/all")
+	@GetMapping("/all/{status}")
 	@ResponseBody
-	public ArrayList<CardDto> showAllRelease() {
+	public ArrayList<CardReleasedDto> showAllRelease(@PathVariable(name = "status") Integer status) {
 
 		// 取得所有card
 		List<CardReleased> allReleaseCard = cRService.showAllReleased();
@@ -132,7 +132,7 @@ public class CardReleasedController {
 		List<CardReleased> listedCards = allReleaseCard.stream().filter(card -> card.getReleasedStatus() == 1)
 				.collect(Collectors.toList());
 
-		ArrayList<CardDto> cDList = new ArrayList<CardDto>();
+		ArrayList<CardReleasedDto> cDList = new ArrayList<CardReleasedDto>();
 
 		listedCards.stream().forEach(cardReleased -> {
 
@@ -142,7 +142,7 @@ public class CardReleasedController {
 			Member member = mService.findMemberById(cardOwned.getFkMemberId());
 			String memberName = member.getMemberName();
 
-			CardDto cardDto = new CardDto();
+			CardReleasedDto cardDto = new CardReleasedDto();
 
 			cardDto.setReleasedId(cardReleased.getReleasedId());
 			cardDto.setOwnedId(cardOwned.getOwnedId());
@@ -162,7 +162,16 @@ public class CardReleasedController {
 			cDList.add(cardDto);
 		});
 
-//		cDList.sort((a,b)->b.getDirectPrice()-a.getDirectPrice());
+		if (status == 2) {
+			/* 星數大到小 */
+			cDList.sort((a,b) -> b.getCardStar()-a.getCardStar());
+		} else if (status == 3) {
+			/* 星數小到大 */
+			cDList.sort((a,b) -> a.getCardStar()-b.getCardStar());
+		} else {
+			/* 預設為最新上架 */
+			cDList.sort((a,b)->b.getReleasedId()-a.getReleasedId());
+		}
 
 		return cDList;
 	}
@@ -173,12 +182,12 @@ public class CardReleasedController {
 
 	@GetMapping("/card/{releasedId}")
 	@ResponseBody
-	public ArrayList<CardDto> showCardRelease(@PathVariable(name = "releasedId") Integer releasedId) {
+	public ArrayList<CardReleasedDto> showCardRelease(@PathVariable(name = "releasedId") Integer releasedId) {
 
 		// 取得所有card
 		CardReleased cardReleased = cRService.showCardReleased(releasedId);
 
-		ArrayList<CardDto> cDList = new ArrayList<CardDto>();
+		ArrayList<CardReleasedDto> cDList = new ArrayList<CardReleasedDto>();
 
 		CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
 		Card card = cRService.findCardById(cardOwned.getFkCardId());
@@ -186,7 +195,7 @@ public class CardReleasedController {
 		Member member = mService.findMemberById(cardOwned.getFkMemberId());
 		String memberName = member.getMemberName();
 
-		CardDto cardDto = new CardDto();
+		CardReleasedDto cardDto = new CardReleasedDto();
 
 		cardDto.setReleasedId(cardReleased.getReleasedId());
 		cardDto.setOwnedId(cardOwned.getOwnedId());
@@ -257,6 +266,30 @@ public class CardReleasedController {
 		}
 		
 		return "下架失敗";
+	}
+	
+	@PostMapping("/edit")
+	public String editMyReleased(@RequestParam("releasedId") Integer releasedId,
+			@RequestParam("directPrice") Integer directPrice, @RequestParam("endTime") String endTime) throws ParseException {
+		
+		Date date = null;
+
+		date = new SimpleDateFormat("yyyy-MM-dd").parse(endTime);
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 1);
+
+		Date newDate = cal.getTime();
+		
+		String editMyReleased = cRService.editMyReleased(releasedId, directPrice, newDate);
+		
+		if (editMyReleased != null ) {
+			return "redirect:/card/releasedList";
+		}
+		
+		return null;
+		
 	}
 
 }

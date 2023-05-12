@@ -95,6 +95,10 @@
     bottom: 20px;
 }
 
+.cardContainer {
+    margin-top: 40px;
+}
+
 /* 卡片視窗 */
 
 .swal-newCard {
