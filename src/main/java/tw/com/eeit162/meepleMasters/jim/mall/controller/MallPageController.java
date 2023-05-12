@@ -44,8 +44,4 @@ public class MallPageController {
 		return "jim/shoppingCart";
 	}
 
-	@GetMapping("mall/order")
-	public String order() {
-		return "jim/order";
-	}
 }

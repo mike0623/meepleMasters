@@ -2,6 +2,8 @@ package tw.com.eeit162.meepleMasters.jim.mall.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Order;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.OrderDetail;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
 import tw.com.eeit162.meepleMasters.jim.mall.service.ShoppingCartService;
 
@@ -38,10 +41,17 @@ public class ShoppingCartController {
 		return cartByMember;
 	}
 
+	// 透過會員ID將購物車轉換成訂單
 	@GetMapping("/shoppingCart/cartToOreder/{memberId}")
-	public void cartToOrder(@PathVariable Integer memberId) {
+	public String cartToOrder(@PathVariable Integer memberId, HttpSession session) {
 		Order order = scService.cartToOrder(memberId);
 
-		System.out.println(order);
+		session.setAttribute("order", order);
+
+		List<OrderDetail> orderDetails = order.getOrderDetails();
+
+		session.setAttribute("orderDetails", orderDetails);
+
+		return "jim/order";
 	}
 }

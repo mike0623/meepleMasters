@@ -17,7 +17,10 @@ prefix="c"%>
           <a href="${root}/mall/shoppingCart">購物車</a>
         </div>
         <div>
-          <a href="${root}/mall/order">訂單</a>
+          <form action="${root}/mall/order/" method="get">
+            <input type="hidden" value="${member.memberId}" name="memberId" />
+            <button>訂單</button>
+          </form>
         </div>
         <!-- <div>
           <select name="productDifficulty" id="productDifficultySelect">

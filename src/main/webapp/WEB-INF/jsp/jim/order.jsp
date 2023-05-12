@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
+pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -17,9 +18,11 @@ pageEncoding="UTF-8"%>
         font-size: 17px;
         padding: 8px;
       }
+
       * {
         box-sizing: border-box;
       }
+
       .row {
         display: -ms-flexbox; /* IE10 */
         display: flex;
@@ -27,29 +30,35 @@ pageEncoding="UTF-8"%>
         flex-wrap: wrap;
         margin: 0 -16px;
       }
+
       .col-25 {
         -ms-flex: 25%; /* IE10 */
         flex: 25%;
       }
+
       .col-50 {
         -ms-flex: 50%; /* IE10 */
         flex: 50%;
       }
+
       .col-75 {
         -ms-flex: 75%; /* IE10 */
         flex: 75%;
       }
+
       .col-25,
       .col-50,
       .col-75 {
         padding: 0 16px;
       }
+
       .container2 {
         background-color: #f2f2f2;
         padding: 5px 20px 15px 20px;
         border: 1px solid lightgrey;
         border-radius: 3px;
       }
+
       input[type="text"] {
         width: 100%;
         margin-bottom: 20px;
@@ -57,15 +66,18 @@ pageEncoding="UTF-8"%>
         border: 1px solid #ccc;
         border-radius: 3px;
       }
+
       label {
         margin-bottom: 10px;
         display: block;
       }
+
       .icon-container {
         margin-bottom: 20px;
         padding: 7px 0;
         font-size: 24px;
       }
+
       .btn2 {
         background-color: #04aa6d;
         color: white;
@@ -77,15 +89,19 @@ pageEncoding="UTF-8"%>
         cursor: pointer;
         font-size: 17px;
       }
+
       .btn:hover {
         background-color: #45a049;
       }
+
       a {
         color: #2196f3;
       }
+
       hr {
         border: 1px solid lightgrey;
       }
+
       span.price {
         float: right;
         color: grey;
@@ -135,7 +151,7 @@ pageEncoding="UTF-8"%>
                     disabled
                   />
                   <label for="city"
-                    ><i class="fa fa-institution"></i> 城市</label
+                    ><i class="fa fa-institution"></i> 居住城市</label
                   >
                   <input
                     type="text"
@@ -146,7 +162,7 @@ pageEncoding="UTF-8"%>
                     disabled
                   />
                   <label for="adr"
-                    ><i class="fa fa-address-card-o"></i> 電話</label
+                    ><i class="fa fa-address-card-o"></i> 聯絡電話</label
                   >
                   <input
                     type="text"
@@ -154,62 +170,64 @@ pageEncoding="UTF-8"%>
                     value="${member.memberTel}"
                     disabled
                   />
-                  <!-- <div class="row">
-                    <div class="col-50">
-                      <label for="state">State</label>
-                      <input
-                        type="text"
-                        id="state"
-                        name="state"
-                        placeholder="NY"
-                      />
-                    </div>
-                    <div class="col-50">
-                      <label for="zip">Zip</label>
-                      <input
-                        type="text"
-                        id="zip"
-                        name="zip"
-                        placeholder="10001"
-                      />
-                    </div>
-                  </div> -->
                 </div>
+
                 <div class="col-50">
                   <div class="container">
                     <h4>
-                      購物車
-                      <span class="price" style="color: black"
-                        ><i class="fa fa-shopping-cart"></i> <b>4</b></span
+                      購物車<span class="price" style="color: black">
+                        <i class="fa fa-shopping-cart"></i>
+                        <b>${orderDetails.size()}</b></span
                       >
                     </h4>
-                    <p>
-                      <a href="#">Product 1</a> <span class="price">$15</span>
-                    </p>
-                    <p>
-                      <a href="#">Product 2</a> <span class="price">$5</span>
-                    </p>
-                    <p>
-                      <a href="#">Product 3</a> <span class="price">$8</span>
-                    </p>
-                    <p>
-                      <a href="#">Product 4</a> <span class="price">$2</span>
-                    </p>
+                    <c:forEach items="${orderDetails}" var="od">
+                      <p>
+                        <span>${od.product.productName}</span>
+                        <span class="price">${od.product.productPrice}</span>
+                      </p>
+                    </c:forEach>
                     <hr />
                     <p>
                       總價
-                      <span class="price" style="color: black"><b>$30</b></span>
+                      <span class="price" style="color: black"
+                        ><b>${order.totalPrice}</b></span
+                      >
                     </p>
+                    <label for="paymentMethod">付款方式</label>
+                    <select name="paymentMethod" id="paymentMethod">
+                      <option value="綠界">綠界</option>
+                      <option value="LinePay">LinePay</option>
+                      <option value="信用卡">信用卡</option>
+                    </select>
                     <input type="submit" value="確定送出" class="btn2" />
                   </div>
                 </div>
               </div>
             </form>
+
+            <div id="testEcpay">
+              <div id="ECPayPayment"></div>
+            </div>
           </div>
         </div>
         <div class="col-25"></div>
       </div>
     </div>
     <jsp:include page="../include/footer.jsp" />
+    <script src="https://ecpg-stage.ecpay.com.tw/Scripts/sdk-1.0.0.js?t=20210121100116"></script>
+    <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
+
+    <script>
+      ECPay.initialize("Stage", function (errMsg) {
+        ECPay.createPayment(
+          "token",
+          ECPay.Language.zhTW,
+          function (errMsg) {},
+          "V2"
+        );
+      });
+
+      ECPay.getPayToken(function (paymentInfo, errMsg) {});
+    </script>
   </body>
 </html>
