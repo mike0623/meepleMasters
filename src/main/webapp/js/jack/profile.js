@@ -7,6 +7,7 @@ const img = document.querySelector("#memberImg");
 
 const inputs = [memberName, address, tel, gender, birth];
 
+
 if (performance.navigation.type == 2) {
   console.log("Doing reload");
   location.reload(true);
@@ -82,6 +83,22 @@ theImg.addEventListener("change", function () {
       });
   };
 });
+
+const search = document.querySelector("#searchMember");
+$("#result").empty()
+
+search.addEventListener("keydown",function(){
+  axios.get("/meeple-masters/member/findmemberByName",{
+    memberName: search.value
+  })
+  .then(res => {
+    console.log(res)
+  })
+  .catch(err => {
+    console.error(err); 
+  })
+})
+
 
 
 $("#memberBirth").datepicker({

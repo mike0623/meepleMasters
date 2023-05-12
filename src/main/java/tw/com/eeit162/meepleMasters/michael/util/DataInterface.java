@@ -37,12 +37,12 @@ public class DataInterface {
 		
 		member.setMemberId(memberJson.getInt("memberId"));
 		member.setMemberEmail(memberJson.getString("memberEmail"));
-		member.setMemberPwd(memberJson.getString("memberPwd"));
+//		member.setMemberPwd(memberJson.getString("memberPwd"));
 		member.setMemberName(memberJson.getString("memberName"));
 //		member.setMemberAge(memberJson.getInt("memberAge"));
-		member.setMemberGender(memberJson.getString("memberGender"));
-		member.setMemberTel(memberJson.getString("memberTel"));
-		member.setMemberAddress(memberJson.getString("memberAddress"));
+//		member.setMemberGender(memberJson.getString("memberGender"));
+//		member.setMemberTel(memberJson.getString("memberTel"));
+//		member.setMemberAddress(memberJson.getString("memberAddress"));
 		
 		
 		return member;
@@ -66,12 +66,12 @@ public class DataInterface {
 
 		member.setMemberId(memberJson.getInt("memberId"));
 		member.setMemberEmail(memberJson.getString("memberEmail"));
-		member.setMemberPwd(memberJson.getString("memberPwd"));
+//		member.setMemberPwd(memberJson.getString("memberPwd"));
 		member.setMemberName(memberJson.getString("memberName"));
 //		member.setMemberAge(memberJson.getInt("memberAge"));
-		member.setMemberGender(memberJson.getString("memberGender"));
-		member.setMemberTel(memberJson.getString("memberTel"));
-		member.setMemberAddress(memberJson.getString("memberAddress"));
+//		member.setMemberGender(memberJson.getString("memberGender"));
+//		member.setMemberTel(memberJson.getString("memberTel"));
+//		member.setMemberAddress(memberJson.getString("memberAddress"));
 		
 		
 		return member;
