@@ -64,7 +64,7 @@
 				//回合結束
 				if(json.isEndOfTheTurn){
 					$(".showGameProgress").text(`
-						一輪結束，${bridge.perTurnWinner.team} (${bridge.perTurnWinner.name})贏得此墩
+						一輪結束，`+json.winTeam+` (`+json.perTurnWinner+`)贏得此墩
 							`);
 					setTimeout(function(){
 						$(".myShowCardArea img").remove();

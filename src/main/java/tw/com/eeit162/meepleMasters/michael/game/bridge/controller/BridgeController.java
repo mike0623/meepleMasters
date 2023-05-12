@@ -245,6 +245,7 @@ public class BridgeController {
 		jsonObject.put("isTwoPlayerPhaseOne", isTwoPlayerPhaseOne);
 		jsonObject.put("isEndOfTheGame", bridge.getIsEndOfTheGame());
 		jsonObject.put("winTeam", bridge.getWinTeam());
+		jsonObject.put("perTurnWinner", bridge.getPerTurnWinner());
 		
 		
 		
