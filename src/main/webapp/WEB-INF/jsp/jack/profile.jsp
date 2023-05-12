@@ -87,19 +87,28 @@
 
 						<div class="container rounded mt-5 mb-5">
 							<!-- Topbar Search -->
-							<form
+							<div
 								class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 p-3 py-5">
 								<div class="input-group">
-									<input type="text" class="form-control bg-light border-0 small" placeholder="搜尋會員"
-										aria-label="Search" aria-describedby="basic-addon2">
-									<div class="input-group-append">
-										<button class="btn btn-warning" type="button">
+									<div class="input-group-append" >
+										<button class="btn btn-warning" type="button" style="border-radius: 5px">
 											<i class="fas fa-search fa-sm"></i>
 										</button>
 									</div>
+									<input type="text" class="form-control bg-light border-0 small" placeholder="搜尋會員"
+										aria-label="Search" aria-describedby="basic-addon2" id="searchMember" style="width: 400px; border-radius: 5px">
+										
 								</div>
-							</form>
-
+								<div class="list-group" id="result" style="width: 400px; border-radius: 5px; margin-left: auto;">
+									<a href="#" class="list-group-item list-group-item-action">
+									  Cras justo odio
+									</a>
+									<a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
+									<a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
+									<a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+								</div>
+							</div>
+							
 
 							<div class="row profile">
 								<div class="col-md-6 border-right">

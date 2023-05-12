@@ -35,7 +35,7 @@ public interface MemberDao extends JpaRepository<Member, Integer> {
 	@Query(value="update Member set memberImg = :memberImg where memberId = :memberId")
 	Integer updateImgById(@Param(value = "memberId") Integer memberId, @Param(value = "memberImg") byte[] memberImg);
 	
-	@Query(value="from Member where memberName like :memberName")
+	@Query(value="from Member where memberName like %:memberName%")
 	Member findMemberByName(@Param(value = "memberName") String memberName);
 	
 	

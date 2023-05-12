@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
@@ -326,8 +327,10 @@ public class MemberService {
 		
 		return null;
 	}
-
+	
+	@Transactional
 	public Integer updateMemberCoin(Integer memberId, Integer coin) {
+		
 		return memberDao.updateMemberCoin(memberId, coin);
 	}
 }

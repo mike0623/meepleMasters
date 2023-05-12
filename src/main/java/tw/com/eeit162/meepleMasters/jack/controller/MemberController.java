@@ -276,12 +276,12 @@ public class MemberController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/findmemberByName")
+	@GetMapping("/member/findmemberByName")
 	public Member findmemberByName(@RequestBody String body) {
 		JSONObject jsonObject = new JSONObject(body);
-		jsonObject.put("memberName", "%"+body+"%");
-		System.out.println(jsonObject.getString("memberName"));
-		Optional<Member> member = mService.findmemberByName(jsonObject.getString("memberName"));
+		String name = jsonObject.getString("memberName");
+		
+		Optional<Member> member = mService.findmemberByName(name);
 		
 		if(member != null) {
 			System.out.println(member.get().getMemberName());
