@@ -337,3 +337,7 @@
         #option-1:checked:checked~.option-1 span {
             color: #fff;
         }
+
+        .fa-arrow-left-long{
+            color: #74bdb7;
+        }

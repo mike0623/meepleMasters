@@ -3,7 +3,10 @@ package tw.com.eeit162.meepleMasters.lyh.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collector;
@@ -163,11 +166,21 @@ public class CardReleasedController {
 		});
 
 		if (status == 2) {
+			Collections.sort(cDList, new Comparator<CardReleasedDto>() {
+	            @Override
+	            public int compare(CardReleasedDto dto1, CardReleasedDto dto2) {
+	            	System.out.println("dto1: " + dto1.toString());
+	            	System.out.println("dto2: " + dto2.toString());
+	                return dto1.getEndTime().compareTo(dto2.getEndTime());
+	            }
+	        });
+			System.out.println(cDList.toString());
+		} else if (status == 3) {
 			/* 星數大到小 */
 			cDList.sort((a,b) -> b.getCardStar()-a.getCardStar());
-		} else if (status == 3) {
+		} else if (status == 4) {
 			/* 星數小到大 */
-			cDList.sort((a,b) -> a.getCardStar()-b.getCardStar());
+				cDList.sort((a,b) -> a.getCardStar()-b.getCardStar());
 		} else {
 			/* 預設為最新上架 */
 			cDList.sort((a,b)->b.getReleasedId()-a.getReleasedId());

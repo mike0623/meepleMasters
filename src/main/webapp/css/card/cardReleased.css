@@ -144,3 +144,18 @@
     width: 400px !important;
     height: 150px !important;
 }
+
+.btn-group {
+    width: 130px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 0;
+}
+
+.expire {
+    position: absolute;
+    width: 30px;
+    right: 15px;
+    bottom: 70px;
+}

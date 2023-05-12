@@ -135,4 +135,14 @@ public class CardReleasedDto {
 		this.cardStar = cardStar;
 	}
 
+	@Override
+	public String toString() {
+		return "CardReleasedDto [releasedId=" + releasedId + ", ownedId=" + ownedId + ", directPrice=" + directPrice
+				+ ", startPrice=" + startPrice + ", type=" + type + ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", releasedStatus=" + releasedStatus + ", cardId=" + cardId + ", memberId=" + memberId
+				+ ", cardStatus=" + cardStatus + ", cardName=" + cardName + ", cardStar=" + cardStar + ", memberName="
+				+ memberName + "]";
+	}
+
+	
 }

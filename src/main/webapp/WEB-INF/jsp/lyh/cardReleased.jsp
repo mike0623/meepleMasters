@@ -26,15 +26,32 @@
                 <!-- Nav pills -->
                 <ul class="nav nav-pills" role="tablist" style="background: none; height: auto;">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="pill" href="#allCard">所有上架卡片</a>
+                        <a class="nav-link active nav-all" data-toggle="pill" href="#allCard">所有上架卡片</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#myCard">我的上架卡片</a>
+                        <a class="nav-link nav-my" data-toggle="pill" href="#myCard">我的上架卡片</a>
                     </li>
                 </ul>
 
+
                 <!-- Tab panes -->
                 <div class="tab-content">
+                    <div class="btn-group row justify-content-end">
+                        <button type="button" class="btn btn-outline-warning dropdown-toggle d-none" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            上架排序
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item" id="newList">最新上架</li>
+                            <li class="dropdown-item" id="endTimeList">下架時間</li>
+                            <li class="dropdown-item" id="starDESCList">星數　
+                                <i class="fa-solid fa-arrow-down-wide-short"></i>
+                            </li>
+                            <li class="dropdown-item" id="starASCList">星數　
+                                <i class="fa-solid fa-arrow-up-short-wide"></i>
+                            </li>
+                        </ul>
+                    </div>
                     <div id="allCard" class="container tab-pane active">
                         <div class="row container cardContainer justify-content-center" id="allCardContainer"></div>
                     </div>
@@ -61,7 +78,31 @@
             await getAllList();
             await getMyList();
         })
-        let status = 2;
+        let status = 1;
+
+        $("#newList").click(function(){
+            status = 1;
+            getAllList()
+        })
+
+        $("#endTimeList").click(function(){
+            status = 2;
+            getAllList()
+        })
+
+        $("#starDESCList").click(function(){
+            status = 3;
+            getAllList()
+        })
+
+        $("#starASCList").click(function(){
+            status = 4;
+            getAllList()
+        })
+
+        
+
+        
 
         function getAllList() {
             return axios.get("${root}/released/all/" + status)
@@ -73,6 +114,12 @@
                     let count = 0;
 
                     console.log(res)
+                    const today = new Date();
+                    let getEndTime;
+                    let endTime;
+                    let times = 0;
+                    let diffInMs;
+                    let diffInDays;
 
                     for (i = 0; i < res.data.length; i++) {
                         if (res.data[i].memberId == memberId) {
@@ -87,17 +134,35 @@
                             htmlstr += `<figure id="\${res.data[i].releasedId}"><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
                             htmlstr += `<div class="releaseDetail">\${res.data[i].cardName}<br>`;
                             htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i></div>`;
-                            htmlstr += `<img src="${root}/img/lyh/shopping.png" class="shopping"/></figure></div></div>`;
+                            htmlstr += `<img src="${root}/img/lyh/shopping.png" class="shopping"/><img src="${root}/img/lyh/sunadokei.png" class="expire d-none"></figure></div></div>`;
                             count += 1;
                         }
 
-                    }
+                        getEndTime = `\${res.data[i].endTime}`;
+                        endTime = new Date(getEndTime);
+                        diffInMs = endTime - today;
+                        diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
+                        if (diffInDays <= 1) {
+                            times += 1;
+                        }
+
+                    }
+                    console.log("times: "+times)
                     if (count == 0) {
                         htmlstr = `<div style="height: 200px; line-height: 200px;">目前沒有上架中的卡片</div>`
                     }
 
+                    if ($('.nav-all').hasClass('active')) {
+                    console.log(1)
+                    $(".dropdown-toggle").removeClass("d-none");
+                    }
+
                     $("#allCardContainer").append(htmlstr);
+
+                    if (diffInDays <= 1) {
+                            $(".expire").removeClass("d-none");
+                        }
 
                     $(".edit").click(function () {
                         let id = $(this).parent().attr('id')
@@ -105,13 +170,14 @@
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
 
-                                var getStartTime = `\${res.data[0].startTime}`;
-                                var startTime = new Date(getStartTime);
-                                var formattedStartTime = startTime.toISOString().substr(0, 10);
+                                let getStartTime = `\${res.data[0].startTime}`;
+                                let formattedStartTime = getStartTime.substr(0, 10);
+                                // console.log("formattedStartTime:"+formattedStartTime)
 
-                                var getEndTime = `\${res.data[0].endTime}`;
-                                var endTime = new Date(getEndTime);
-                                var formattedEndTime = endTime.toISOString().substr(0, 10);
+                                let getEndTime = `\${res.data[0].endTime}`;
+                                let endTime = new Date(getEndTime);
+                                let formattedEndTime = endTime.toISOString().substr(0, 10);
+                                // console.log("formattedEndTime:"+formattedEndTime)
 
                                 let releasedId = `\${res.data[0].releasedId}`;
                                 $("#param").val(releasedId);
@@ -189,13 +255,14 @@
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
 
-                                var getStartTime = `\${res.data[0].startTime}`;
-                                var startTime = new Date(getStartTime);
-                                var formattedStartTime = startTime.toISOString().substr(0, 10);
+                                let getStartTime = `\${res.data[0].startTime}`;
+                                let formattedStartTime = getStartTime.substr(0, 10);
+                                // console.log("formattedStartTime:"+formattedStartTime)
 
-                                var getEndTime = `\${res.data[0].endTime}`;
-                                var endTime = new Date(getEndTime);
-                                var formattedEndTime = endTime.toISOString().substr(0, 10);
+                                let getEndTime = `\${res.data[0].endTime}`;
+                                let endTime = new Date(getEndTime);
+                                let formattedEndTime = endTime.toISOString().substr(0, 10);
+                                // console.log("formattedEndTime:"+formattedEndTime)
 
 
                                 let cardHtml = "";
@@ -304,7 +371,7 @@
 
                     for (i = 0; i < res.data.length; i++) {
                         if (res.data[i].memberId == memberId) {
-                            htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
+                            htmlstr += `<div class="col-3 d-flex"><div class="card">`;
                             htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
                             htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
                             htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
@@ -316,7 +383,10 @@
                     if (count == 0) {
                         htmlstr = `<div style="height: 200px; line-height: 200px;">目前沒有上架中的卡片</div>`
                     }
-
+                    if ($('.nav-my').hasClass('active')) {
+            console.log(2)
+            $(".dropdown-toggle").addClass("d-none");
+        }
                     $("#myCardContainer").append(htmlstr);
 
                     $(".edit").click(function () {
@@ -325,13 +395,14 @@
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
 
-                                var getStartTime = `\${res.data[0].startTime}`;
-                                var startTime = new Date(getStartTime);
-                                var formattedStartTime = startTime.toISOString().substr(0, 10);
+                                let getStartTime = `\${res.data[0].startTime}`;
+                                let formattedStartTime = getStartTime.substr(0, 10);
+                                // console.log("formattedStartTime:"+formattedStartTime)
 
-                                var getEndTime = `\${res.data[0].endTime}`;
-                                var endTime = new Date(getEndTime);
-                                var formattedEndTime = endTime.toISOString().substr(0, 10);
+                                let getEndTime = `\${res.data[0].endTime}`;
+                                let endTime = new Date(getEndTime);
+                                let formattedEndTime = endTime.toISOString().substr(0, 10);
+                                // console.log("formattedEndTime:"+formattedEndTime)
 
                                 let releasedId = `\${res.data[0].releasedId}`;
                                 $("#param").val(releasedId);

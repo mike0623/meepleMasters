@@ -64,6 +64,7 @@
     </main>
     <jsp:include page="../include/footer.jsp"></jsp:include>
     <script>
+        
 
         let card = [];
         const member = "${member}"

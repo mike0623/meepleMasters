@@ -406,19 +406,28 @@
 
 							axios.get("${root}/card/mycard/${member.memberId}/getOrder").then(function (response) {
 								// console.log(response.data.cardList[0].cardId)
+								cardListArray = [];
+								sellListArray = [];
+								for (i = 0; i < response.data.length; i++) {
+									if (response.data[i].cardStatus == 1) {
+									cardListArray.push(response.data[i])
+									} else {
+									sellListArray.push(response.data[i])
+									}
+								}
 
 								let ajaxString = `<div class="row container cardContainer justify-content-center" id="cardContainer">`;
-								for (let i = 0; i < response.data.cardList.length; i++) {
+								for (let i = 0; i < cardListArray.length; i++) {
 									ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-									ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.cardList[i].cardId}" class="hanafuda">`;
-									ajaxString += `<figcaption>\${response.data.cardList[i].cardName}</figcaption>`;
+									ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${cardListArray[i].cardId}" class="hanafuda">`;
+									ajaxString += `<figcaption>\${cardListArray[i].cardName}</figcaption>`;
 									ajaxString += `</figure></div></div>`;
 								}
 
-								for (let i = 0; i < response.data.sellList.length; i++) {
+								for (let i = 0; i < sellListArray.length; i++) {
 									ajaxString += `<div class="col-3 d-flex"><div class="card">`;
-									ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${response.data.sellList[i].cardId}" class="hanafuda">`;
-									ajaxString += `<figcaption>\${response.data.sellList[i].cardName}</figcaption>`;
+									ajaxString += `<figure><img alt="" src="${root}/card/downloadCard/\${sellListArray[i].cardId}" class="hanafuda">`;
+									ajaxString += `<figcaption>\${sellListArray[i].cardName}</figcaption>`;
 									ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
 								}
 								ajaxString += `</div>`;
