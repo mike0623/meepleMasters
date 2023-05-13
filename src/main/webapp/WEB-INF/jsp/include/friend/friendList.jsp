@@ -12,6 +12,7 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="${root}/css/friend/friendList.css" rel="stylesheet">
+
 <jsp:include page="friendButtonControll.jsp"></jsp:include>
 </head>
 <body>
@@ -90,11 +91,11 @@
   </div>
  	</div>
 	<div class="controllerDialogBox closedChatRoom" onclick="openCloseChatRoom()">
-		<span>聊天室</span>
+		<span style="margin-left:60px"><i class="fa fa-user" style="margin-right: 10px; color: black"></i>聊天室</span>
 	</div>
 	
-	<div class="getNewMessage" style="display:none;" onclick="openCloseChatRoom()">
-			<span>new message!</span>
+	<div class="getNewMessage" onclick="openCloseChatRoom()">
+			<span> <i class="fa fa-comments" style="color:SlateBlue ; font-size:30px ; margin-top:1px"></i></span>
 		</div>
 	
 	
@@ -109,6 +110,7 @@
 		var isSelectedPage = false;
 		var isRoomPage = false;
 		var isGameLobbyPage = false;
+		var isBridgeGamePage = false;
 		
 
 		
@@ -185,29 +187,29 @@
 				//重新製作tag
 				//如果本來就在，把本來的刪掉
 				let idTag = changeToIdType(json.sender)+"tag";
-				//傳訊息來的人本來就是active
-				if($("#"+idTag).length != 0 && $("#"+idTag).hasClass("active")){
+				//傳訊息來的人本來就是chatActive
+				if($("#"+idTag).length != 0 && $("#"+idTag).hasClass("chatActive")){
 					$("#"+idTag).remove();
 					makeChatTag(json.sender,json.senderName,0);
-					changeToActive($(".active")[0].id);
-				//傳訊息來的人本來存在列表內，但是不是active
+					changeToChatActive($(".chatActive")[0].id);
+				//傳訊息來的人本來存在列表內，但是不是chatActive
 				}else if($("#"+idTag).length != 0){
 					$("#"+idTag).remove();
 					makeChatTag(json.sender,json.senderName,json.notRead);
-					$(".chatListTag")[0].classList.remove("active");
+					$(".chatListTag")[0].classList.remove("chatActive");
 				//傳訊息來的人本來不在列表內
 				}else{
-					//如果原本有active存在，要拿掉自己的active
-					if($(".active").length != 0){
+					//如果原本有chatActive存在，要拿掉自己的chatActive
+					if($(".chatActive").length != 0){
 						makeChatTag(json.sender,json.senderName,json.notRead);
-						$(".chatListTag")[0].classList.remove("active");
+						$(".chatListTag")[0].classList.remove("chatActive");
 					}
-					//我就是active，並且要更新已讀，秀出右邊頁面
+					//我就是chatActive，並且要更新已讀，秀出右邊頁面
 					makeChatTag(json.sender,json.senderName,0);
-					changeToActive($(".active")[0].id);
+					changeToChatActive($(".chatActive")[0].id);
 				}
-				//把active的show畫面
-				showChatContent(changeToOriginEmail($(".active")[0].id.replace("tag","")));
+				//把chatActive的show畫面
+				showChatContent(changeToOriginEmail($(".chatActive")[0].id.replace("tag","")));
 				//呼叫資料庫更新順序
 				updateChatRoomOrder();
 			}
@@ -220,13 +222,13 @@
 					$("#"+idTypeTag).remove();
 				}
 				updateChatRoomOrder();
-				//如果他剛好是active，就重新給active並更新右邊畫面
-				if($(".active").id == idTypeTag){
-					theIsActive = true;
+				//如果他剛好是chatActive，就重新給chatActive並更新右邊畫面
+				if($(".chatActive").id == idTypeTag){
+					theIsChatActive = true;
 				}
-				//重給active並更新畫面
+				//重給chatActive並更新畫面
 				if($(".chatListTag").length != 0){
-					$(".chatListTag")[0].classList.add("active");
+					$(".chatListTag")[0].classList.add("chatActive");
 					showChatContent(changeToOriginEmail($(".chatListTag")[0].id.replace("tag","")));
 				}else{
 					$("#chatRoom").empty();							
@@ -365,12 +367,13 @@
 				//有空時改成直接調整畫面，已確認重新整理沒問題
 				//window.location.reload();
 				//是不是房主，玩家名，玩家熟練度，玩家id
+				console.log("有進來ws，用ws渲染的");
 				let playerName = json.playerName;
 				let playerId = json.playerId;
 				let playerEmaiil = json.playerEmaiil;
 				let playerDegree = json.playerDegree;
 				let playerDegreePercent = parseInt(playerDegree)/10 + "%";
-				let ishost = json.ishost;
+				let ishost = json.ishost; 
 				if(ishost){
 					$(".freeSeat:eq(0)").html(`
 							<div class="container text-center">
@@ -379,7 +382,7 @@
 									<img style="width: 100px;"
 										src="${root}/member/findMemberImg/`+playerId+`" alt="">
 									<span>`+playerName+`</span><br/>
-									<span onclick="kickPlayerOut(`+playerEmaiil+`,`+playerName+`)" style="cursor: pointer;">踢出玩家</span>
+									<span onclick="kickPlayerOut('`+playerEmaiil+`','`+playerName+`')" style="cursor: pointer;">踢出玩家</span>
 								</div>
 								<div class="col-8">
 									<div class="degreeLine">
@@ -461,7 +464,7 @@
 				window.location.href = "${root}/game/enterGameView/"+gameName+"/"+tableCode+"/${member.memberEmail}";
 			}
 			//橋牌遊戲
-			if("bridgeGame" == action){
+			if("bridgeGame" == action && true == isBridgeGamePage){
 				//按下喊王按鈕時
 				if("pressBidButton" == json.gameAction){
 					let suit = json.trumpAndLevel.substring(0,2);
@@ -543,10 +546,34 @@
 						}
 					}
 				}
+				//有人使用卡片時
 				if("useCard" == json.gameAction){
 					//重新整理頁面，有空改成前端渲染
 					window.location.reload();
 				}
+				//對方按下快轉時
+				if("forTwoPlayersfastForward" == json.gameAction){
+					//重新整理頁面，有空改成前端渲染
+					window.location.reload();
+				}
+				//遊戲結束時
+				if("infoWhenEndOfGame" == json.gameAction){
+					//消滅session 
+					axios.get("${root}/game/removeSessionTableCode").then(function(response){
+						$(".myShowCardArea img").remove();
+						$(".player2ShowCardArea img").remove();
+						$(".player3ShowCardArea img").remove();
+						$(".player4ShowCardArea img").remove();
+						//寫在bridge.jsp裡面
+						makeEndingView(json);
+					}).catch(function(error){
+						
+					}).finally(function(){
+						
+					});
+				}
+				
+				
 				
 			}
 			
@@ -683,8 +710,8 @@
 				//若存在就先刪掉，重新新增到第一位
 				$("#"+userEmailStr+"tag").remove();
 			}
-			//先將目前active關掉
-			$(".active").removeClass("active");
+			//先將目前chatActive關掉
+			$(".chatActive").removeClass("chatActive");
 			
 			let notReadNum = 0;
 			//執行製作tag
@@ -700,10 +727,10 @@
 		var fork = false;
 //		//按下關閉按鈕後關閉聊天室窗
 		function removeTag(obj){
-			//用來判斷被關掉的視窗是不是有active，目前正在用的視窗
+			//用來判斷被關掉的視窗是不是有chatActive，目前正在用的視窗
 			let controll = false;
-			//我按下的叉叉就是目前的active
-			if( $("#"+obj.closest(".chatListTag").id).hasClass("active") ){
+			//我按下的叉叉就是目前的chatActive
+			if( $("#"+obj.closest(".chatListTag").id).hasClass("chatActive") ){
 				controll = true;
 			}
 			$("#"+obj.closest(".chatListTag").id).remove();
@@ -714,7 +741,7 @@
 			}
 			//接上面，是的話就把新的第一個變成使用中
 			if(controll){
-				$(".chatListTag:eq(0)").addClass("active");
+				$(".chatListTag:eq(0)").addClass("chatActive");
 				let userEmail = $(".chatListTag:eq(0)")[0].id.replace("com",".com").replace("gmail","@gmail").replace("tag","");
 				//呼叫後端顯示右邊的聊天內容
 				showChatContent(userEmail);
@@ -758,8 +785,8 @@
 		}
 		
 		
-//		//切換active
-		function changeToActive(userEmailInId){
+//		//切換chatActive
+		function changeToChatActive(userEmailInId){
 			//更新資料庫是否已讀
 			let theOther = changeToOriginEmail(userEmailInId.replace("tag",""));
 			haveRead(theOther);
@@ -779,9 +806,9 @@
 			if($(".chatListTag").length==0){
 				controll = false;
 			}
-			if($(".chatListTag").hasClass("active") && controll){
-				$(".active").removeClass("active");
-				$("#"+userEmailInId).addClass("active");
+			if($(".chatListTag").hasClass("chatActive") && controll){
+				$(".chatActive").removeClass("chatActive");
+				$("#"+userEmailInId).addClass("chatActive");
 			}
 			//呼叫後端顯示右邊的聊天內容
 			showChatContent(userEmail);
@@ -803,9 +830,9 @@
 					let userName = responseArray[responseArray.length-1-i].chatToWhomName;
 					let notReadNum = responseArray[responseArray.length-1-i].notRead;
 					makeChatTag(memberEmail,userName,notReadNum);
-					//除了第一位其他都移除active
+					//除了第一位其他都移除chatActive
 					if(i != responseArray.length-1){
-						$(".chatListTag")[0].classList.remove("active");
+						$(".chatListTag")[0].classList.remove("chatActive");
 					}
 					//顯示右邊聊天畫面
 					if(i == responseArray.length-1){
@@ -813,8 +840,8 @@
 						showChatContent(memberEmail);
 					}
 				}
-				//active的人要秀畫面
-				changeToActive($(".active")[0].id);
+				//chatActive的人要秀畫面
+				changeToChatActive($(".chatActive")[0].id);
 				//排序完後傳到資料庫
 				updateChatRoomOrder();
 			}).catch(function(error){
@@ -827,7 +854,7 @@
 		
 //		//傳送貼圖
 		function useSticker(stickerId){
-			let idType = ""+$(".active")[0].id.replace("tag","");
+			let idType = ""+$(".chatActive")[0].id.replace("tag","");
 			let responseJson = {
 					"sender":"${member.memberEmail}",
 					"receiver":changeToOriginEmail(idType),
@@ -842,8 +869,8 @@
 				//清空input
 				$(".sendMsg").val("");
 				//變成最上面的tag
-				let userName = $(".active>.mytext>.name").text();
-				$(".active").remove();			
+				let userName = $(".chatActive>.mytext>.name").text();
+				$(".chatActive").remove();			
 				makeChatTag(changeToOriginEmail(idType),userName,0);
 				//傳訊息給後端告訴後端我有傳訊息給朋友
 				let info = {
@@ -864,7 +891,7 @@
 			if("" == $(".sendMsg").val()){
 				return;
 			}
-			let idType = ""+$(".active")[0].id.replace("tag","");
+			let idType = ""+$(".chatActive")[0].id.replace("tag","");
 			let responseJson = {
 					"sender":"${member.memberEmail}",
 					"receiver":changeToOriginEmail(idType),
@@ -879,8 +906,8 @@
 				//清空input
 				$(".sendMsg").val("");
 				//變成最上面的tag
-				let userName = $(".active>.mytext>.name").text();
-				$(".active").remove();			
+				let userName = $(".chatActive>.mytext>.name").text();
+				$(".chatActive").remove();			
 				makeChatTag(changeToOriginEmail(idType),userName,0);
 				//傳訊息給後端告訴後端我有傳訊息給朋友
 				let info = {
@@ -983,7 +1010,7 @@
 			//判斷是否有未讀訊息，如果有就顯示
 			if(notReadNum!=0){
 				$("#myChatList").prepend(`
-						<div class="chatListTag active personalMessage" id="`+tagId+`" onclick="changeToActive(this.id)">
+						<div class="chatListTag chatActive personalMessage" id="`+tagId+`" onclick="changeToChatActive(this.id)">
 				        	<div class="head"><img src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+memberEmail+`" alt=""></div>
 				        		<div class="mytext">
 				          			<div class="name">`+userName+`</div>
@@ -995,7 +1022,7 @@
 			//沒有未讀訊息就顯示關閉按鈕，可以讓使用者關閉對話框
 			if(notReadNum == 0){
 				$("#myChatList").prepend(`
-						<div class="chatListTag active personalMessage" id="`+tagId+`" onclick="changeToActive(this.id)">
+						<div class="chatListTag chatActive personalMessage" id="`+tagId+`" onclick="changeToChatActive(this.id)">
 				        	<div class="head"><img src="http://localhost:8080/meeple-masters/member/emailFindMemberImg/`+memberEmail+`" alt=""></div>
 				        		<div class="mytext">
 				          			<div class="name">`+userName+`</div>
