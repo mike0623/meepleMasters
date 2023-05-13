@@ -32,6 +32,11 @@ pageEncoding="UTF-8"%>
         box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
         vertical-align: middle;
       }
+      .shoppingCartImg {
+        width: 100px;
+        height: 100px;
+        vertical-align: middle;
+      }
     </style>
   </head>
   <body>
@@ -121,7 +126,7 @@ pageEncoding="UTF-8"%>
                 </div>
               </div>
             </div>
-            <form action="#">
+            <form action="${root}/shoppingCart/cartToOreder/${member.memberId}">
               <div class="float-right">
                 <button type="submit" class="btn btn-lg btn-primary mt-2">
                   結帳
@@ -153,7 +158,10 @@ pageEncoding="UTF-8"%>
           })
           .then((response) => {
             if (response.data.length == 0) {
-              $(".card-body").html("尚未加入商品");
+              $(".card-body").html(
+                "尚未加入商品" +
+                  "<hr><a href='${root}/mall/product'>返回商品列表</a>"
+              );
             } else {
               renderShoppingCart(response.data);
               addCartButton();
@@ -169,7 +177,7 @@ pageEncoding="UTF-8"%>
         let totalPrice = 0;
         for (let cartItem of cartList) {
           outputString += "<tr><td>";
-          outputString += `<img src='${root}/mall/getPhoto?pId=\${cartItem.product.productId}' class='d-block ui-w-40 ui-bordered mr-4'/>`;
+          outputString += `<img class="shoppingCartImg" src='${root}/mall/getPhoto?pId=\${cartItem.product.productId}' class='d-block ui-w-40 ui-bordered mr-4'/>`;
           outputString += "</td>";
           outputString += "<td class='text-center p-4'>";
           outputString += "<div class='media align-items-center'>";

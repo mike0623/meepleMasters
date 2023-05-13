@@ -23,7 +23,7 @@
 	.showGameProgress{
 		background-color:lightBlue;
 		height:5vh;
-		width:100vw;
+		width:100%;
 		text-align:center;
 		font-size:28px;
 	}
@@ -48,11 +48,12 @@
 /* 		background-color:black; */
 		height:200px;
 		position:absolute;
-		bottom:20px;
+		bottom:40px;
 		left:5%;
 	}
 	.cardInMyHand{
-		width:85px
+		width:85px;
+		opacity: 0.5;
 	}
 	.playerImg{
 		position:absolute;
@@ -67,6 +68,7 @@
 		height:100px;
 		margin-bottom:5px;
 		background-color:#CBC0AA;
+		border-radius:5px;
 	}
 	.playerInfo1{
 		position:absolute;
@@ -187,7 +189,49 @@
 	}
 	.canDo{
 		cursor: pointer;
+		opacity: 1;
 	}
+	.canDo:hover{
+		position:relative;
+		bottom:20px;
+	}
+	.giveUpButtonDiv{
+		margin-top:3px;
+		margin-bottom:3px;
+		position:relative;
+		height:40px;
+	}
+	.giveUpButton{
+		position:absolute;
+		right:0px;
+		top:0px;
+	}
+	.endGameStyle{
+		width:1200px;
+	}
+	.endPersonalInfo{
+            border-collapse:collapse;
+            text-align: center;
+            border:1px solid black;
+            margin-bottom: 10px;
+    }
+    .endPersonalInfo tr td{
+        width:200px;
+        border: 1px solid black;
+        background-color: azure;
+        
+    }
+    .endTeamInfo{
+        border-collapse:collapse;
+        text-align: center;
+        border:1px solid black;
+        margin-bottom: 10px;
+    }
+    .endTeamInfo tr td{
+        width:200px;
+        border: 1px solid black;
+        background-color: azure; 
+    }
 </style>
 </head>
 <body>
@@ -378,10 +422,6 @@
 							</c:if>
 						</div>
 					</c:if>
-<!-- 					<div class="discardArea"> -->
-<!-- 						<span>棄牌堆</span> -->
-<%-- 						<img class="cardInDiscardArea" src="${root}/poker/0"> --%>
-<!-- 					</div> -->
 				</div>
 				<div class="myHand">
 				<h2>我的手牌</h2>
@@ -393,8 +433,14 @@
 				</div>
 		    </div>
 		    <div class="col-3 rightSide">
+		    	<div class="giveUpButtonDiv">
+		    		<c:if test="${bridge.finalNumOfPlayer == 2 && bridge.deskList.size() > 0 && bridge.isEndOfTheGame == false}">
+		    			<form action="${root}/bridge/forTwoPlayersfastForward"><button class="btn btn-primary">快轉到牌庫剩一張</button></form>
+		    		</c:if>
+		    		<button class="giveUpButton btn btn-secondary" onclick="giveUpTheGame()">投降</button>
+		    	</div>
 		    	<c:forEach items="${myArray}" var="playerN">
-		    		<div class="playerArea">
+		    		<div class="playerArea ${playerN.name}">
 					<img class="playerImg" src="${root}/member/emailFindMemberImg/${playerN.email}">
 					<div class="playerInfo1">
 						<span>${playerN.name}</span><br/>
@@ -423,7 +469,7 @@
 								<c:when test="${bridge.team1WinRequirement != null}"><td class="team1WinRequirement">${bridge.team1WinRequirement}</td></c:when>
 								<c:when test="${bridge.team1WinRequirement == null}"><td class="team1WinRequirement">?</td></c:when>
 							</c:choose>
-							<td>${bridge.team1WonTricks}</td>
+							<td class="team1WonTricks">${bridge.team1WonTricks}</td>
 						</tr>
 						<tr>
 							<td>藍隊</td>
@@ -431,7 +477,7 @@
 								<c:when test="${bridge.team2WinRequirement != null}"><td class="team2WinRequirement">${bridge.team2WinRequirement}</td></c:when>
 								<c:when test="${bridge.team2WinRequirement == null}"><td class="team2WinRequirement">?</td></c:when>
 							</c:choose>
-							<td>${bridge.team2WonTricks}</td>
+							<td class="team2WonTricks">${bridge.team2WonTricks}</td>
 						</tr>
 					</table>
 				</div>

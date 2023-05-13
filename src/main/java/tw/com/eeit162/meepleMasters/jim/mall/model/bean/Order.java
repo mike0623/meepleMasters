@@ -2,7 +2,9 @@ package tw.com.eeit162.meepleMasters.jim.mall.model.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,6 +21,7 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 
@@ -47,26 +51,33 @@ public class Order implements Serializable {
 	@Column(name = "paymentMethod")
 	private String paymentMethod;
 
-	@JoinColumn(name = "fk_productId", referencedColumnName = "productId", nullable = false)
-	@ManyToOne
-	private Product product;
-
 	@JoinColumn(name = "fk_memberId", referencedColumnName = "memberId", nullable = false)
 	@ManyToOne
 	private Member member;
 
-	@JoinColumn(name = "fk_receiver", referencedColumnName = "memberId", nullable = false)
+	@JoinColumn(name = "fk_receiver", referencedColumnName = "memberId")
 	@ManyToOne
 	private Member receiver;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+	private List<OrderDetail> OrderDetails;
 
 	@PrePersist
 	public void onCreate() {
 		if (orderDate == null) {
 			orderDate = new Date();
 		}
+		if (orderStatus == null) {
+			orderStatus = "未付款";
+		}
 	}
 
 	public Order() {
+	}
+
+	public Order(Member member) {
+		this.member = member;
 	}
 
 	public Integer getOrderId() {
@@ -109,14 +120,6 @@ public class Order implements Serializable {
 		this.paymentMethod = paymentMethod;
 	}
 
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-
 	public Member getMember() {
 		return member;
 	}
@@ -131,6 +134,14 @@ public class Order implements Serializable {
 
 	public void setReceiver(Member receiver) {
 		this.receiver = receiver;
+	}
+
+	public List<OrderDetail> getOrderDetails() {
+		return OrderDetails;
+	}
+
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		OrderDetails = orderDetails;
 	}
 
 }

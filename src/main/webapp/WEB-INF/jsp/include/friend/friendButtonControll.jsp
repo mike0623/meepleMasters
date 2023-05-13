@@ -29,17 +29,17 @@
 							"theOther":theOther
 					}
 					axios.post("http://localhost:8080/meeple-masters/friend/delete",json).then(function(response) {
-						let theIsActive = false;
+						let theIsChatActive = false;
 						let theOtherEmail = changeToIdType(theOther);
 						let idTypeTag = theOtherEmail+"tag";
 						$(".friendButtonDiv").empty();
 						$(".friendButtonDiv").append(`
 								<button onclick="sendFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">加好友</button>
 								`);
-						if($(".active").length != 0){
-							//如果他剛好是active，就重新給active並更新右邊畫面
-							if($(".active")[0].id == idTypeTag){
-								theIsActive = true;
+						if($(".chatActive").length != 0){
+							//如果他剛好是chatActive，就重新給chatActive並更新右邊畫面
+							if($(".chatActive")[0].id == idTypeTag){
+								theIsChatActive = true;
 							}
 						}
 						//刪除好友欄與對話框
@@ -49,9 +49,9 @@
 						}
 						//刪除排序資料表我跟他有關的排序
 						updateChatRoomOrder();
-						//重給active並更新畫面
+						//重給chatActive並更新畫面
 						if($(".chatListTag").length != 0){
-							$(".chatListTag")[0].classList.add("active");
+							$(".chatListTag")[0].classList.add("chatActive");
 							showChatContent(changeToOriginEmail($(".chatListTag")[0].id.replace("tag","")));
 						}else{
 							$("#chatRoom").empty();							

@@ -12,4 +12,5 @@ public interface ShoppingCartDAO extends JpaRepository<ShoppingCart, Integer> {
 	ShoppingCart findByMemberAndProduct(Member m, Product p);
 
 	List<ShoppingCart> findByMember(Member m);
+
 }

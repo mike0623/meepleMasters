@@ -39,8 +39,4 @@ public class MallPageController {
 		return "jim/adminProduct";
 	}
 
-	@GetMapping("/mall/shoppingCart")
-	public String shoppingCartPage() {
-		return "jim/shoppingCart";
-	}
 }
