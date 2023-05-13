@@ -158,7 +158,10 @@ pageEncoding="UTF-8"%>
           })
           .then((response) => {
             if (response.data.length == 0) {
-              $(".card-body").html("尚未加入商品");
+              $(".card-body").html(
+                "尚未加入商品" +
+                  "<hr><a href='${root}/mall/product'>返回商品列表</a>"
+              );
             } else {
               renderShoppingCart(response.data);
               addCartButton();

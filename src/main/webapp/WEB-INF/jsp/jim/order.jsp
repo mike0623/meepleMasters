@@ -131,7 +131,7 @@ prefix="c"%>
         <div class="col-50">
           <h2>確認訂單</h2>
           <div class="container2">
-            <form action="#">
+            <form action="${root}/order/ecPay">
               <div class="row">
                 <div class="col-50">
                   <h3>帳單地址</h3>
@@ -197,37 +197,17 @@ prefix="c"%>
                     <select name="paymentMethod" id="paymentMethod">
                       <option value="綠界">綠界</option>
                       <option value="LinePay">LinePay</option>
-                      <option value="信用卡">信用卡</option>
                     </select>
                     <input type="submit" value="確定送出" class="btn2" />
                   </div>
                 </div>
               </div>
             </form>
-
-            <div id="testEcpay">
-              <div id="ECPayPayment"></div>
-            </div>
           </div>
         </div>
         <div class="col-25"></div>
       </div>
     </div>
     <jsp:include page="../include/footer.jsp" />
-    <script src="https://ecpg-stage.ecpay.com.tw/Scripts/sdk-1.0.0.js?t=20210121100116"></script>
-    <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
-
-    <script>
-      ECPay.initialize("Stage", function (errMsg) {
-        ECPay.createPayment(
-          "token",
-          ECPay.Language.zhTW,
-          function (errMsg) {},
-          "V2"
-        );
-      });
-
-      ECPay.getPayToken(function (paymentInfo, errMsg) {});
-    </script>
   </body>
 </html>

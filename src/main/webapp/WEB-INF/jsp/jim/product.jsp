@@ -14,13 +14,10 @@ prefix="c"%>
     <div class="bodyContainer">
       <div class="container gameCardDiv">
         <div>
-          <a href="${root}/mall/shoppingCart">購物車</a>
+          <a href="${root}/shoppingCart">購物車</a>
         </div>
         <div>
-          <form action="${root}/mall/order/" method="get">
-            <input type="hidden" value="${member.memberId}" name="memberId" />
-            <button>訂單</button>
-          </form>
+          <a href="${root}/order/">訂單</a>
         </div>
         <!-- <div>
           <select name="productDifficulty" id="productDifficultySelect">

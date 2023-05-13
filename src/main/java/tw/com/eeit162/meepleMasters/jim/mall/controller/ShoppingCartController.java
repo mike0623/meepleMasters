@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Order;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.OrderDetail;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
@@ -22,14 +23,21 @@ public class ShoppingCartController {
 	@Autowired
 	private ShoppingCartService scService;
 
+	// 進入購物車頁面
+	@GetMapping("/shoppingCart")
+	public String shoppingCartPage(HttpSession session) {
+		Member member = (Member) session.getAttribute("member");
+		if (member == null) {
+			return "jack/loginPage";
+		}
+		return "jim/shoppingCart";
+	}
+
 	// 依照商品ID及會員ID將商品加入購物車
 	@GetMapping("/shoppingCart/addShoppingCart")
 	@ResponseBody
 	public String addShoppingCartAndRemoveItWhenExist(@RequestParam Integer productId,
 			@RequestParam(required = false) Integer memberId) {
-//		if (memberId == null) {
-//			return "redirect:/jack/loginPage";
-//		}
 		return scService.addShoppingCartAndRemoveItWhenExist(productId, memberId);
 	}
 
