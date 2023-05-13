@@ -69,7 +69,7 @@ input:focus {
 	cursor: pointer;
 }
 
-.myIcon.active {
+.myIcon.chatActive {
 	background-color: #444444;
 }
 
@@ -139,7 +139,7 @@ input:focus {
 	z-index: 0.5;
 }
 
-.chatListTag.active {
+.chatListTag.chatActive {
 	background-color: #666666;
 }
 
@@ -453,12 +453,12 @@ input:focus {
 
 .getNewMessage {
 	position: fixed;
-	left: 80px;
-	bottom: 0;
+	left: 160px;
+	bottom: 0px;
 	height: 35px;
-	background-color: red;
 	z-index: 11;
 	cursor:pointer;
+	display:none;
 }
 
 .memberImg {

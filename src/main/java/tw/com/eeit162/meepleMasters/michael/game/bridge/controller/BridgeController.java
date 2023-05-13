@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
@@ -20,10 +21,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.michael.game.Game;
 import tw.com.eeit162.meepleMasters.michael.game.bridge.Bridge;
 import tw.com.eeit162.meepleMasters.michael.game.bridge.BridgePlayer;
 import tw.com.eeit162.meepleMasters.michael.game.room.GameRoomUtil;
+import tw.com.eeit162.meepleMasters.michael.util.DataInterface;
 import tw.com.eeit162.meepleMasters.michael.websocket.util.WebsocketUtil;
 
 @Controller
@@ -198,7 +201,9 @@ public class BridgeController {
 	//出牌時
 	@GetMapping("/bridge/useCard/{tableCode}/{memberEmail}/{card}")
 	@ResponseBody
-	public String useCard(@PathVariable("tableCode") String tableCode,@PathVariable("memberEmail") String memberEmail,@PathVariable("card") Integer card) {
+	public String useCard(@PathVariable("tableCode") String tableCode,@PathVariable("memberEmail") String memberEmail,@PathVariable("card") Integer card,HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		JSONObject wsJson = new JSONObject();
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
 		Bridge bridge = (Bridge)game;
 		boolean isBiddingPhase = false;
@@ -214,9 +219,15 @@ public class BridgeController {
 		if(endOfTheTurn) {
 			//設定本輪贏家
 			bridge.setPerTurnWinner();
+			//判斷這回合是不是phase1
+			jsonObject.put("isThisTurnTwoPlayerPhaseOne", false);
 			//如果使兩人玩，判斷是否還在慮牌階段，如果是就發牌
 			//不是的話就，玩家營下墩數加一，隊伍加一
 			if(bridge.getPlayerSeat().size() == 2 && bridge.getDeskList().size() > 0) {
+				//贏家獲得的牌
+				jsonObject.put("winnerGetCardInTwoPlayerPhaseOne", bridge.getStringByCard(bridge.getForTwoPlayersCard()));
+				//這回合是不是phase1
+				jsonObject.put("isThisTurnTwoPlayerPhaseOne", true);
 				//做完行動後判斷，是否還是第一階段慮牌
 				isTwoPlayerPhaseOne = bridge.twoPlayerPhaseOne();
 			}else {
@@ -231,26 +242,36 @@ public class BridgeController {
 			//設定新的起始玩家
 			bridge.setPlayerNTurn(bridge.getPerTurnWinner());
 			newPlayer = bridge.getPerTurnWinner();
+			//-------------------------------------------------------------
+			jsonObject.put("perTurnWinnerName", bridge.getPerTurnWinner().getName());
+			jsonObject.put("perTurnWinnerTeam", bridge.getPerTurnWinner().getTeam());
+			jsonObject.put("perTurnWinnerWonTricks", bridge.getPerTurnWinner().getWonTricks());
+			jsonObject.put("perTurnWinnerEmail", bridge.getPerTurnWinner().getEmail());
 		}
 		bridge.setPhase(newPlayer,isBiddingPhase);
 		//判斷是否遊戲結束
 		if(bridge.getPlayer1().getHandCardList().size() == 0) {
 			bridge.setIsEndOfTheGame(true);
 			bridge.makeWinTeam();
+			//結束遊戲呼叫的方法，回傳需要回傳的json
+			JSONObject InfoWhenEndOfGame = doWhenEnding(session);
+			
+			return InfoWhenEndOfGame.toString();
 		}
 		//-----------------------------------------------------------------------
-		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("isEndOfTheTurn", endOfTheTurn);
 		jsonObject.put("playerNTurn", bridge.getPlayerNTurn().getName());
+		jsonObject.put("playerNTurnEmail", bridge.getPlayerNTurn().getEmail());
+		//之後還是不是phase1
 		jsonObject.put("isTwoPlayerPhaseOne", isTwoPlayerPhaseOne);
 		jsonObject.put("isEndOfTheGame", bridge.getIsEndOfTheGame());
-		jsonObject.put("winTeam", bridge.getWinTeam());
-		jsonObject.put("perTurnWinner", bridge.getPerTurnWinner());
+		jsonObject.put("team1WonTricks", bridge.getTeam1WonTricks());
+		jsonObject.put("team2WonTricks", bridge.getTeam2WonTricks());
+		
 		
 		
 		
 		//-----------------------------------------------------------------------
-		JSONObject wsJson = new JSONObject();
 		wsJson.put("action", "bridgeGame");
 		wsJson.put("gameAction", "useCard");
 		
@@ -263,6 +284,105 @@ public class BridgeController {
 		}
 		//-----------------------------------------------------------------------
 		return jsonObject.toString();
+	}
+	
+	//放棄遊戲
+	@GetMapping("/bridge/giveUpGame")
+	@ResponseBody
+	public String giveUpGame(HttpSession session) {
+		Member member = (Member)session.getAttribute("member");
+		String tableCode = (String)session.getAttribute("tableCode");
+		Game game = GameRoomUtil.getGameByTableCode(tableCode);
+		Bridge bridge = (Bridge)game;
+		
+		
+		bridge.setIsEndOfTheGame(true);
+		Integer teamNum = bridge.findBridgePlayerByEmail(member.getMemberEmail()).getTeam();
+		if(teamNum == 1) {
+			bridge.setWinTeam("藍隊");
+		}else {
+			bridge.setWinTeam("紅隊");
+		}
+		//結束遊戲呼叫的方法，回傳需要回傳的json
+		JSONObject InfoWhenEndOfGame = doWhenEnding(session);
+		
+		return InfoWhenEndOfGame.toString();
+	}
+	
+	//兩人遊戲快轉到牌庫剩一張
+	@GetMapping("/bridge/forTwoPlayersfastForward")
+	public String forTwoPlayersfastForward(HttpSession session) {
+		String tableCode = (String)session.getAttribute("tableCode");
+		Member member = (Member)session.getAttribute("member");
+		String memberEmail = member.getMemberEmail();
+		
+		Game game = GameRoomUtil.getGameByTableCode(tableCode);
+		Bridge bridge = (Bridge)game;
+		if(bridge.getDeskList().size() > 0) {
+			bridge.forTwoPlayersfastForward();
+		}
+		
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("action", "bridgeGame");
+		jsonObject.put("gameAction", "forTwoPlayersfastForward");
+		for(BridgePlayer player:bridge.getPlayerSeat()) {
+			if(!player.getEmail().equals(memberEmail)) {
+				WebsocketUtil.sendMessageByUserEmail(player.getEmail(), jsonObject.toString());
+			}
+		}
+		
+		return "redirect:/bridge/enterGameView/"+tableCode+"/"+memberEmail;
+	}
+	
+	//遊戲結束時做的事情，方法非controller
+	public JSONObject doWhenEnding(HttpSession session) {
+		String tableCode = (String)session.getAttribute("tableCode");
+		Game game = GameRoomUtil.getGameByTableCode(tableCode);
+		Bridge bridge = (Bridge)game;
+		//玩家加減熟練度
+		//發遊戲幣給玩家
+		Product product = DataInterface.getProductByProductName(game.getGameName());
+		Integer winTeamInt = 0;
+		if("紅隊".equals(bridge.getWinTeam())) {
+			winTeamInt = 1;
+		}
+		if("藍隊".equals(bridge.getWinTeam())) {
+			winTeamInt = 2;
+		}
+		Integer averageScore = 0;
+		for(BridgePlayer player:bridge.getPlayerSeat()) {
+			averageScore += player.getBridgeDegree();
+		}
+		averageScore = (int)Math.ceil(averageScore/game.getFinalNumOfPlayer());
+		for(BridgePlayer player:bridge.getPlayerSeat()) {
+			Member member = DataInterface.getMemberByEmail(player.getEmail());
+			if(player.getTeam() == winTeamInt) {
+				Integer changeScore = DataInterface.updateGameDegreeByBoth(true, averageScore, member.getMemberId(), product.getProductId());
+				player.setChangeScore(changeScore);
+				DataInterface.updateMemberCoin(member.getMemberId(),200);
+			}
+			if(player.getTeam() != winTeamInt) {
+				Integer changeScore = DataInterface.updateGameDegreeByBoth(false, averageScore, member.getMemberId(), product.getProductId());
+				player.setChangeScore(changeScore);
+				DataInterface.updateMemberCoin(member.getMemberId(),100);
+			}
+		}
+		//遊戲結束直接回傳結束資訊
+		JSONObject InfoWhenEndOfGame =  bridge.InfoWhenEndOfGame();
+		//通知ws
+		Member member = (Member)session.getAttribute("member");
+		for(BridgePlayer player:bridge.getPlayerSeat()) {
+			if(!player.getEmail().equals(member.getMemberEmail())) {
+				WebsocketUtil.sendMessageByUserEmail(player.getEmail(), InfoWhenEndOfGame.toString());
+			}
+		}
+		//消滅session
+		session.removeAttribute("tableCode");
+		//消滅遊戲桌
+		GameRoomUtil.removeGameByTableCode(tableCode);
+		
+		return InfoWhenEndOfGame;
 	}
 	
 	

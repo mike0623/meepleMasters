@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.json.JSONObject;
+
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.michael.game.Game;
@@ -29,7 +31,7 @@ public class Bridge extends Game{
 
 	private Integer team2WonTricks = 0;
 	
-	private Set<Integer> discardSet;
+	private Set<Integer> discardSet; //沒用到
 	
 	private Integer forTwoPlayersCard;
 	
@@ -50,7 +52,7 @@ public class Bridge extends Game{
 	
 	private ArrayList<BridgePlayer> playerSeat = new ArrayList<>();
 	
-	private ArrayList<Integer> simplePlayOrder = new ArrayList<>();
+//	private ArrayList<Integer> simplePlayOrder = new ArrayList<>();
 	
 	private Integer usedCardPerTurn = 0;
 	
@@ -58,7 +60,7 @@ public class Bridge extends Game{
 	
 	private boolean isEndOfTheGame = false;
 	
-	private String winTeam; 
+	private String winTeam; //紅隊或藍隊
 	
 	
 	
@@ -166,22 +168,22 @@ public class Bridge extends Game{
 			if(temp.get(i) == 1) {
 				playerSeat.add(player1);
 				player1.setTeam(1);
-				simplePlayOrder.add(1);
+//				simplePlayOrder.add(1);
 			}
 			if(temp.get(i) == 2) {
 				playerSeat.add(player2);
 				player2.setTeam(2);
-				simplePlayOrder.add(2);
+//				simplePlayOrder.add(2);
 			}
 			if(temp.get(i) == 3) {
 				playerSeat.add(player3);
 				player3.setTeam(1);
-				simplePlayOrder.add(3);
+//				simplePlayOrder.add(3);
 			}
 			if(temp.get(i) == 4) {
 				playerSeat.add(player4);
 				player4.setTeam(2);
-				simplePlayOrder.add(4);
+//				simplePlayOrder.add(4);
 			}
 			temp.remove(i);
 		}
@@ -275,6 +277,34 @@ public class Bridge extends Game{
 		return testSuits;
 	}
 	
+	//用牌找到對應花色及數字
+	public String getStringByCard(Integer card) {
+		String suits = "back";
+		Integer number = 0;
+		if(card != 0) {
+			Integer testSuits = Math.floorDiv(card, 13);
+			Integer testNumber =  card % 13;
+			number = testNumber;
+			if(testNumber == 0) {
+				testSuits -= 1;
+				number = 13;
+			}
+			if(testSuits == 0) {
+				suits = "黑桃";
+			}
+			if(testSuits == 1) {
+				suits = "紅心";
+			}
+			if(testSuits == 2) {
+				suits = "方塊";
+			}
+			if(testSuits == 3) {
+				suits = "梅花";
+			}
+		}
+		return suits+number;
+	}
+	
 	//用王牌數字找到對應文字
 	public String transTrumpFromStringAndInteger(Integer integer) {
 		if(integer == 0) {
@@ -304,6 +334,15 @@ public class Bridge extends Game{
 			}
 		}
 		return index;
+	}
+	
+	//兩人遊戲時，phase1快轉到牌庫剩一張
+	public void forTwoPlayersfastForward() {
+		Integer deskCard = deskList.get(0);
+		deskList.clear();
+		deskSet.clear();
+		deskList.add(deskCard);
+		deskSet.add(deskCard);
 	}
 	
 	//按下喊王按鈕時的方法，回傳是否還是喊王階段
@@ -459,53 +498,6 @@ public class Bridge extends Game{
 				}
 				continue;
 			}
-			//---------------------------------------------
-//			if(perTurnSuit == trump) {
-//				if(challengerCardSuit != trump) {
-//					System.out.println("花色為王，挑戰非王");
-//					continue;
-//				}
-//				if(winnerCardSuit != trump) {
-//					winner = player;
-//					System.out.println("花色為王，衛冕非王");
-//					continue;
-//				}
-//				//比賽囉
-//				if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
-//					winner = player;
-//					continue;
-//				}
-//				
-//			}
-//			if(challengerCardSuit != perTurnSuit && challengerCardSuit != trump) {
-//				System.out.println("挑戰非當，挑戰非王");
-//				continue;
-//			}
-//			if(challengerCardSuit != perTurnSuit && challengerCardSuit == trump) {
-//				if(winnerCardSuit != trump) {
-//					winner = player;
-//					System.out.println("挑戰非當，挑戰為王，衛冕非王");
-//					continue;
-//				}else {
-//					//比賽囉
-//					if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
-//						winner = player;
-//						System.out.println("挑戰非當，挑戰為王，衛冕為王");
-//						continue;
-//					}
-//				}
-//			}
-//			if(winnerCardSuit != perTurnSuit && winnerCardSuit != trump) {
-//				winner = player;
-//				System.out.println("衛冕非當，衛冕非王");
-//				continue;
-//			}
-//			//比賽囉
-//			if((challengerCard+11) % 13 > (winnerCard+11) % 13) {
-//				winner = player;
-//				continue;
-//			}
-			//---------------------------------------------
 		}
 		perTurnWinner = winner;
 	}
@@ -574,9 +566,66 @@ public class Bridge extends Game{
 		}
 	}
 	
-	
+	//製作遊戲結束時的資訊，11項資訊
+	public JSONObject InfoWhenEndOfGame() {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("action", "bridgeGame");
+		jsonObject.put("gameAction", "infoWhenEndOfGame");
+		jsonObject.put("isEndOfTheGame", getIsEndOfTheGame());
+		Integer winTeamInt = 0;
+		if("紅隊".equals(winTeam)) {
+			winTeamInt = 1;
+		}
+		if("藍隊".equals(winTeam)) {
+			winTeamInt = 2;
+		}
+		List<BridgePlayer> winTeamPlayers = new ArrayList<>();
+		List<BridgePlayer> loseTeamPlayers = new ArrayList<>();
+		for(BridgePlayer player:playerSeat) {
+			if(player.getTeam() == winTeamInt) {
+				winTeamPlayers.add(player);
+			}else {
+				loseTeamPlayers.add(player);
+			}
+		}
+		jsonObject.put("winTeamPlayers", winTeamPlayers);
+		jsonObject.put("loseTeamPlayers", loseTeamPlayers);
+		if(winTeamInt == 1) {
+			jsonObject.put("winTeamRequirement", team1WinRequirement);
+			jsonObject.put("loseTeamRequirement", team2WinRequirement);
+			jsonObject.put("winTeamWonTricks", team1WonTricks);
+			jsonObject.put("loseTeamWonTricks", team2WonTricks);
+		}
+		if(winTeamInt == 2) {
+			jsonObject.put("winTeamRequirement", team2WinRequirement);
+			jsonObject.put("loseTeamRequirement", team1WinRequirement);
+			jsonObject.put("winTeamWonTricks", team2WonTricks);
+			jsonObject.put("loseTeamWonTricks", team1WonTricks);
+		}
+		jsonObject.put("playerNBid", playerNBid.getName());
+		if(trump == 0) {
+			jsonObject.put("trump", "黑桃");
+		}
+		if(trump == 1) {
+			jsonObject.put("trump", "紅心");
+		}
+		if(trump == 2) {
+			jsonObject.put("trump", "方塊");
+		}
+		if(trump == 3) {
+			jsonObject.put("trump", "梅花");
+		}
+		if(trump == 4) {
+			jsonObject.put("trump", "無王");
+		}
+		jsonObject.put("trumpLevel", trumpLevel);
+		jsonObject.put("winTeam", winTeam);
+		jsonObject.put("playerSeat", playerSeat);
+		
+		
+		return jsonObject;
+	}
 
-	
 	
 	
 	
@@ -777,14 +826,14 @@ public class Bridge extends Game{
 	}
 
 
-	public ArrayList<Integer> getSimplePlayOrder() {
-		return simplePlayOrder;
-	}
-
-
-	public void setSimplePlayOrder(ArrayList<Integer> simplePlayOrder) {
-		this.simplePlayOrder = simplePlayOrder;
-	}
+//	public ArrayList<Integer> getSimplePlayOrder() {
+//		return simplePlayOrder;
+//	}
+//
+//
+//	public void setSimplePlayOrder(ArrayList<Integer> simplePlayOrder) {
+//		this.simplePlayOrder = simplePlayOrder;
+//	}
 
 
 	public Integer getCountBidPass() {

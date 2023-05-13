@@ -210,8 +210,8 @@ ol, ul {
 				//重新製作右邊聊天室內容
 				showChatContent(changeToOriginEmail(idType));
 				//變成最上面的tag
-				let userName = $(".active>.mytext>.name").text();
-				$(".active").remove();			
+				let userName = $(".chatActive>.mytext>.name").text();
+				$(".chatActive").remove();			
 				makeChatTag(changeToOriginEmail(idType),userName,0);
 				//傳訊息給後端告訴後端我有傳訊息給朋友
 				let info = {
@@ -240,8 +240,9 @@ ol, ul {
 		//踢出玩家
 		function kickPlayerOut(playerEmail,playerName){
 			axios.get("${root}/game/kickPlayerOut/${tableCode}/"+playerEmail).then(function(response){
-				$(".hasSeat."+playerName).remove();
-				$(".players").append(`<div class="player freeSeat">自由位</div>`);
+				//當有人離開時，ws會更改頁面，這邊就不再做一次
+				//$(".hasSeat."+playerName).remove();
+				//$(".players").append(`<div class="player freeSeat">自由位</div>`);
 			}).catch(function(error){
 				console.log("踢出玩家出錯啦",error);
 			}).finally(function(){

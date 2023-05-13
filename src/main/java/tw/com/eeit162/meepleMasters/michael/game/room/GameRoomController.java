@@ -195,7 +195,7 @@ public class GameRoomController {
 		return "redirect:/game/playGameLobby";
 	}
 	
-	//房主離開遊戲，或玩家被房主踢掉時，其他玩家用ajax來消滅session
+	//房主離開遊戲，或玩家被房主踢掉時，或遊戲結束時，其他玩家用ajax來消滅session
 	@GetMapping("/game/removeSessionTableCode")
 	@ResponseBody
 	public void removeSessionTableCode(HttpSession session) {
@@ -293,10 +293,8 @@ public class GameRoomController {
 		System.out.println("還有幾個人在房間裡"+game.getPlayers());
 		if(memberEmail.equals(game.getHostEmail())) {
 			model.addAttribute("ishost", true);
-			jsonObject.put("ishost", true);
 		}else {
 			model.addAttribute("ishost", false);
-			jsonObject.put("ishost",false);
 		}
 		model.addAttribute("degreeScoreList", degreeScoreList);
 		model.addAttribute("finalNumOfPlayer", game.getFinalNumOfPlayer());
@@ -306,6 +304,11 @@ public class GameRoomController {
 		
 		for(Member member:game.getPlayers()) {
 			if(!member.getMemberEmail().equals(memberEmail)) {
+				if(member.getMemberEmail().equals(game.getHostEmail())) {
+					jsonObject.put("ishost", true);
+				}else {
+					jsonObject.put("ishost",false);
+				}
 				WebsocketUtil.sendMessageByUserEmail(member.getMemberEmail(), jsonObject.toString());
 			}
 		}
@@ -351,6 +354,8 @@ public class GameRoomController {
 	public String startGame(@PathVariable("gameName") String gameName,@PathVariable("tableCode") String tableCode,@PathVariable("memberEmail") String memberEmail) {
 		//通知房間內所有人開始遊戲
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
+		//關閉開放在大廳的房間
+		GameRoomUtil.removeOpenedRoom(tableCode);
 		//這邊不更改遊戲狀態，等起始設置好了後才更改
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("action", "gameStart");
