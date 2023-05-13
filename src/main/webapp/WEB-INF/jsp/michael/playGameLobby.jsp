@@ -14,11 +14,13 @@
 <title>Insert title here</title>
 <style type="text/css">
 ol, ul {
-     padding-left: 0rem;
+	padding-left: 0rem;
 }
-body{ 
- 	color: #858796; 
- } 
+
+body {
+	color: #858796;
+}
+
 .box {
 	width: 60%;
 	margin: auto;
@@ -27,79 +29,88 @@ body{
 .showExistGameArea {
 	margin-top: 20px;
 	background-color: #F0EBE2;
-	margin-bottom: 50px;
 }
 
 .myLove {
 	background-color: #F0EBE2;
-	margin-bottom: 50px;
 }
 
 .searchGame {
 	background-color: #F0EBE2;
-	margin-bottom: 50px;
 }
-.chooseGame{
-	margin:20px 10px;
+
+.chooseGame {
+	margin: 20px 10px;
 	border: gray solid 1px;
-    border-radius: 10px;
+	border-radius: 10px;
 }
-.existCertainGameArea{
+
+.existCertainGameArea {
 	
 }
-.playerImgCircle{
-	width:40px;
-	height:40px;
-	border:1px black solid;
-	border-radius:50%;
+
+.playerImgCircle {
+	width: 40px;
+	height: 40px;
+	border: 1px black solid;
+	border-radius: 50%;
 }
-.waitingTable{
-	border:1px black solid;
-	border-radius:10px;
-	display:flex;
-	margin-top:10px;
+
+.waitingTable {
+	border: 1px black solid;
+	border-radius: 10px;
+	display: flex;
+	margin-top: 10px;
 }
-.playerN{
-	display:flex; 
-	margin-right:20px;
- 	position:relative; 
+
+.playerN {
+	display: flex;
+	margin-right: 20px;
+	position: relative;
 }
-.joinRoom{
- 	position:absolute; 
- 	right:20px; 
+
+.joinRoom {
+	position: absolute;
+	right: 20px;
 }
-.leaveRoom{
- 	position:absolute; 
- 	right:20px; 
+
+.leaveRoom {
+	position: absolute;
+	right: 20px;
 }
-.myLove{
-	display:flex;
+
+.myLoveGameArea {
+	display: flex;
 }
-.lovedGameImg{
-	width:225px;
-	height:225px;
+
+.lovedGameImg {
+	width: 225px;
+	height: 225px;
 }
-.lovedGame{
-	text-align:center;
+
+.lovedGame {
+	text-align: center;
 }
 </style>
 </head>
 <body>
-	<div class="box">
-		<div class="showExistGameArea">
-			
-		</div>
-		<div class="myLove">
-			<h3>我的最愛</h3>
-			<div class="lovedGame">
-				<img class="lovedGameImg" src="${root}/mall/getPhoto?pId=3"><br/>
-				<span style="font-size:20px;">Bridge</span><br/>
-				<button onclick="showExistGameArea(this.id)" id="Bridge">尋找可加入的房間</button>
+	<div style="width: 100%; position: relative; top: 75px;">
+		<div class="box">
+			<div class="showExistGameArea"></div>
+			<div class="myLove">
+				<h3>我的最愛</h3>
+				<div class="myLoveGameArea">
+					<div class="lovedGame">
+						<img class="lovedGameImg" src="${root}/mall/getPhoto?pId=3"><br />
+						<span style="font-size: 20px;">Bridge</span><br />
+						<button onclick="showExistGameArea(this.id)" id="Bridge">尋找可加入的房間</button>
+					</div>
+				</div>
 			</div>
+			<div class="searchGame"></div>
 		</div>
-		<div class="searchGame"></div>
 	</div>
-	
+
 	<script type="text/javascript">
 		//宣告在ws的js上
 		isGameLobbyPage = true;

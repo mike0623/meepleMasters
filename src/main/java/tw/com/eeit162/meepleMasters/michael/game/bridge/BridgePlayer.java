@@ -25,6 +25,8 @@ public class BridgePlayer {
 	
 	private Integer playedCard; //目前打出的牌
 	
+	private Integer changeScore; //給遊戲結束用的，紀錄改變了多少分數
+	
 	
 
 	public BridgePlayer() {
@@ -116,6 +118,14 @@ public class BridgePlayer {
 
 	public void setPlayedCard(Integer playedCard) {
 		this.playedCard = playedCard;
+	}
+
+	public Integer getChangeScore() {
+		return changeScore;
+	}
+
+	public void setChangeScore(Integer changeScore) {
+		this.changeScore = changeScore;
 	}
 
 	@Override

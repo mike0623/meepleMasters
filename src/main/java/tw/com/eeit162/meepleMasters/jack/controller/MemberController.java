@@ -265,4 +265,30 @@ public class MemberController {
 		
 		
 	}
+	
+	@ResponseBody
+	@PostMapping("/member/updateMemberCoin")
+	public Integer updateMemberCoin(@RequestBody String body) {
+		JSONObject jsonObject = new JSONObject(body);
+		int memberId = jsonObject.getInt("memberId");
+		int coin = jsonObject.getInt("coin");
+		return mService.updateMemberCoin(memberId, coin);
+	}
+	
+	@ResponseBody
+	@GetMapping("/member/findmemberByName")
+	public Member findmemberByName(@RequestBody String body) {
+		JSONObject jsonObject = new JSONObject(body);
+		String name = jsonObject.getString("memberName");
+		
+		Optional<Member> member = mService.findmemberByName(name);
+		
+		if(member != null) {
+			System.out.println(member.get().getMemberName());
+			return member.get();
+		}
+		
+		System.out.println("null");
+		return null;
+	}
 }

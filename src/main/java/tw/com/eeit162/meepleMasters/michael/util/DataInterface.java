@@ -37,12 +37,12 @@ public class DataInterface {
 		
 		member.setMemberId(memberJson.getInt("memberId"));
 		member.setMemberEmail(memberJson.getString("memberEmail"));
-		member.setMemberPwd(memberJson.getString("memberPwd"));
+//		member.setMemberPwd(memberJson.getString("memberPwd"));
 		member.setMemberName(memberJson.getString("memberName"));
 //		member.setMemberAge(memberJson.getInt("memberAge"));
-		member.setMemberGender(memberJson.getString("memberGender"));
-		member.setMemberTel(memberJson.getString("memberTel"));
-		member.setMemberAddress(memberJson.getString("memberAddress"));
+//		member.setMemberGender(memberJson.getString("memberGender"));
+//		member.setMemberTel(memberJson.getString("memberTel"));
+//		member.setMemberAddress(memberJson.getString("memberAddress"));
 		
 		
 		return member;
@@ -66,16 +66,32 @@ public class DataInterface {
 
 		member.setMemberId(memberJson.getInt("memberId"));
 		member.setMemberEmail(memberJson.getString("memberEmail"));
-		member.setMemberPwd(memberJson.getString("memberPwd"));
+//		member.setMemberPwd(memberJson.getString("memberPwd"));
 		member.setMemberName(memberJson.getString("memberName"));
 //		member.setMemberAge(memberJson.getInt("memberAge"));
-		member.setMemberGender(memberJson.getString("memberGender"));
-		member.setMemberTel(memberJson.getString("memberTel"));
-		member.setMemberAddress(memberJson.getString("memberAddress"));
+//		member.setMemberGender(memberJson.getString("memberGender"));
+//		member.setMemberTel(memberJson.getString("memberTel"));
+//		member.setMemberAddress(memberJson.getString("memberAddress"));
 		
 		
 		return member;
 	}
+	
+	public static Integer updateMemberCoin(Integer memberId, Integer coin) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("memberId", memberId);
+		jsonObject.put("coin", coin);
+		
+		URI uri = URI.create("http://localhost:8080/meeple-masters/member/updateMemberCoin");
+		RequestEntity<String> requset = RequestEntity.post(uri).headers(headers).accept(MediaType.APPLICATION_JSON).body(jsonObject.toString());
+		ResponseEntity<Integer> response = template.exchange(requset, Integer.class);
+		return response.getBody();
+	}
+	
+	
 	
 	public static Integer getNotRead(Integer senderId,Integer receiverId) {
 		HttpHeaders headers = new HttpHeaders();
@@ -146,6 +162,23 @@ public class DataInterface {
 		URI uri = URI.create("http://localhost:8080/meeple-masters/GameDegree/findGameDegree/"+memberId+"/"+productId);
 		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<GameDegree> response = template.exchange(requset, GameDegree.class);
+		return response.getBody();
+	}
+	
+	public static Integer updateGameDegreeByBoth(boolean isWin,Integer averageScore,Integer memberId,Integer productId) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("isWin", isWin);
+		jsonObject.put("averageScore", averageScore);
+		jsonObject.put("memberId", memberId);
+		jsonObject.put("productId", productId);
+		
+		
+		URI uri = URI.create("http://localhost:8080/meeple-masters/GameDegree/updateGameDegreeByBoth");
+		RequestEntity<String> requset = RequestEntity.post(uri).headers(headers).accept(MediaType.APPLICATION_JSON).body(jsonObject.toString());
+		ResponseEntity<Integer> response = template.exchange(requset, Integer.class);
 		return response.getBody();
 	}
 	
