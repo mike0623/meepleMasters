@@ -21,7 +21,7 @@ document.querySelector("#edit").addEventListener("click", function () {
   inputs.forEach(function (el, index) {
     el.removeAttribute("readonly");
     el.removeAttribute("disabled");
-    
+
     if (index === 0) {
       el.focus();
     }
@@ -79,7 +79,7 @@ theImg.addEventListener("change", function () {
         console.log("content after ajax: " + fileReader.result);
       })
       .catch((err) => {
-         console.error(err);
+        console.error(err);
       });
   };
 });
@@ -87,29 +87,48 @@ theImg.addEventListener("change", function () {
 const search = document.querySelector("#searchMember");
 $("#result").empty()
 
-search.addEventListener("keydown",function(){
-  axios.get("/meeple-masters/member/findmemberByName",{
+search.addEventListener("keyup", function () {
+  axios.post("/meeple-masters/member/findmemberByName", {
     memberName: search.value
   })
-  .then(res => {
-    console.log(res)
-  })
-  .catch(err => {
-    console.error(err); 
-  })
+    .then(res => {
+
+      console.log(res)
+      $("#result").empty()
+      if (search.value !== "") {
+        $.each(res.data, function (index, member) {
+          $("#result").append(
+            '<a href="' + root + '/otherMember/' + member.memberId + '"' + 'class="list-group-item list-group-item-action">' +
+            '<img src="' + root + '/member/findMemberImg/' + member.memberId + '"' + 'class="rounded-circle" width="50px" height="50px">' +
+            '&nbsp; &nbsp;' + member.memberName + '</a>'
+
+          );
+        });
+      }
+     
+    })
+    .catch(err => {
+      console.error(err);
+    })
 })
+
+
+result.addEventListener("click", function () {
+  $("#result").empty()
+})
+
 
 
 
 $("#memberBirth").datepicker({
   changeMonth: true,
   changeYear: true,
-  dateFormat:'yy-mm-dd',
-  yearRange:'-120:+0',
-  maxDate:0
+  dateFormat: 'yy-mm-dd',
+  yearRange: '-120:+0',
+  maxDate: 0
 })
 
-$("#memberBirth").on("keydown", function(event) {
+$("#memberBirth").on("keydown", function (event) {
   event.preventDefault();
 });
 
