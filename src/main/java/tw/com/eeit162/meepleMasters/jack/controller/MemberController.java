@@ -3,6 +3,7 @@ package tw.com.eeit162.meepleMasters.jack.controller;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
@@ -276,15 +277,15 @@ public class MemberController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/member/findmemberByName")
-	public Member findmemberByName(@RequestBody String body) {
+	@PostMapping("/member/findmemberByName")
+	public List<Member> findmemberByName(@RequestBody String body) {
 		JSONObject jsonObject = new JSONObject(body);
 		String name = jsonObject.getString("memberName");
 		
-		Optional<Member> member = mService.findmemberByName(name);
+		Optional<List<Member>> member = mService.findmemberByName(name);
 		
 		if(member != null) {
-			System.out.println(member.get().getMemberName());
+			System.out.println(member.get());
 			return member.get();
 		}
 		

@@ -10,6 +10,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.json.JSONException;
@@ -41,6 +42,7 @@ public class MemberService {
 
 	/**
 	 * 註冊會員
+	 * 
 	 * @param json
 	 * @return Member
 	 * @throws IOException
@@ -49,9 +51,9 @@ public class MemberService {
 	 */
 	public Member createMember(String json) throws IOException, Exception, ParseException {
 		JSONObject jObject = new JSONObject(json);
-		
+
 		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(jObject.getString("memberBirth"));
-		
+
 		String email = jObject.getString("memberEmail");
 		String password = jObject.getString("memberPwd");
 		String name = jObject.getString("memberName");
@@ -92,6 +94,7 @@ public class MemberService {
 
 	/**
 	 * google登入 註冊會員
+	 * 
 	 * @param payloadEmail
 	 * @param payloadName
 	 * @param payloadPicture
@@ -119,7 +122,7 @@ public class MemberService {
 			output.close();
 			bis.close();
 			is.close();
-			
+
 			Member member = new Member();
 
 			member.setMemberEmail(payloadEmail);
@@ -127,6 +130,7 @@ public class MemberService {
 			member.setMemberImg(imageData);
 			member.setMemberLevel("一般會員");
 			member.setMemberActive(1);
+			member.setCreateTime(new Date());
 
 			return memberDao.save(member);
 		}
@@ -136,6 +140,7 @@ public class MemberService {
 
 	/**
 	 * 寄認證信
+	 * 
 	 * @param member
 	 */
 	public void sendVerificationEmail(Member member) {
@@ -151,6 +156,7 @@ public class MemberService {
 
 	/**
 	 * 會員認證
+	 * 
 	 * @param token
 	 */
 	public void activeAccount(String token) {
@@ -166,6 +172,7 @@ public class MemberService {
 
 	/**
 	 * 登入
+	 * 
 	 * @param json
 	 * @return Optional
 	 */
@@ -189,6 +196,7 @@ public class MemberService {
 
 	/**
 	 * 更新密碼
+	 * 
 	 * @param id
 	 * @param json
 	 * @return Integer
@@ -205,6 +213,7 @@ public class MemberService {
 
 	/**
 	 * 更新會員資料
+	 * 
 	 * @param id
 	 * @param json
 	 * @return Integer
@@ -216,11 +225,16 @@ public class MemberService {
 
 		Optional<Member> memberData = memberDao.findById(id);
 		Member member = memberData.get();
-		
-		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(jObject.getString("memberBirth"));
+
+		System.out.println(jObject);
 
 		String name = jObject.isNull("memberName") ? member.getMemberName() : jObject.getString("memberName");
-		Date birth = jObject.isNull("memberBirth") ? member.getMemberBirth() : date;
+		Date birth;
+		if (jObject.isNull("memberBirth")) {
+			birth = member.getMemberBirth();
+		} else {
+			birth = new SimpleDateFormat("yyyy-MM-dd").parse(jObject.getString("memberBirth"));
+		}
 		String gender = jObject.isNull("memberGender") ? member.getMemberGender() : jObject.getString("memberGender");
 		String tel = jObject.isNull("memberTel") ? member.getMemberTel() : jObject.getString("memberTel");
 		String address = jObject.isNull("memberAddress") ? member.getMemberAddress()
@@ -234,6 +248,7 @@ public class MemberService {
 
 	/**
 	 * 更新會員圖片
+	 * 
 	 * @param id
 	 * @param memberImg
 	 * @return Integer
@@ -253,6 +268,7 @@ public class MemberService {
 
 	/**
 	 * id找會員
+	 * 
 	 * @param id
 	 * @return Member
 	 */
@@ -266,9 +282,10 @@ public class MemberService {
 
 		return null;
 	}
-	
+
 	/**
 	 * email找會員
+	 * 
 	 * @param memberEmail
 	 * @return Member
 	 */
@@ -281,9 +298,10 @@ public class MemberService {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * id找會員圖片
+	 * 
 	 * @param memberId
 	 * @return byte[]
 	 */
@@ -298,9 +316,10 @@ public class MemberService {
 
 		return null;
 	}
-	
+
 	/**
 	 * email找會員圖片
+	 * 
 	 * @param memberEmail
 	 * @return byte[]
 	 */
@@ -315,22 +334,22 @@ public class MemberService {
 
 		return null;
 	}
-	
-	public Optional<Member> findmemberByName(String memberName) {
-		
-		Optional<Member> member = Optional.ofNullable(memberDao.findMemberByName(memberName));
-		
-		if(member != null) {
-			
+
+	public Optional<List<Member>> findmemberByName(String memberName) {
+
+		Optional<List<Member>> member = Optional.ofNullable(memberDao.findMemberByName(memberName));
+
+		if (member != null) {
+
 			return member;
 		}
-		
+
 		return null;
 	}
-	
+
 	@Transactional
 	public Integer updateMemberCoin(Integer memberId, Integer coin) {
-		
+
 		return memberDao.updateMemberCoin(memberId, coin);
 	}
 }

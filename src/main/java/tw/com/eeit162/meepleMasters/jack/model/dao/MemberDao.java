@@ -1,6 +1,7 @@
 package tw.com.eeit162.meepleMasters.jack.model.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -36,7 +37,7 @@ public interface MemberDao extends JpaRepository<Member, Integer> {
 	Integer updateImgById(@Param(value = "memberId") Integer memberId, @Param(value = "memberImg") byte[] memberImg);
 	
 	@Query(value="from Member where memberName like %:memberName%")
-	Member findMemberByName(@Param(value = "memberName") String memberName);
+	List<Member> findMemberByName(@Param(value = "memberName") String memberName);
 	
 	
 	//Card
