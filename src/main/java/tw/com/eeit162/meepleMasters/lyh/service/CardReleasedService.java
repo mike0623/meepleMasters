@@ -91,6 +91,26 @@ public class CardReleasedService {
 		return newRelease;
 	}
 	
+	@Transactional
+	public CardReleased insertCardReleasedAuction(Integer ownedId, Integer startPrice, Integer directPrice, Date endTime) {
+		
+		CardReleased cr = new CardReleased();
+		
+		cODao.updateCardStatusToSell(ownedId);
+		
+		cr.setFkOwnedId(ownedId);
+		cr.setStartPrice(startPrice);
+		cr.setDirectPrice(directPrice);
+		cr.setType(2);
+		cr.setStartTime(new Date());
+		cr.setEndTime(endTime);
+		cr.setReleasedStatus(1);
+		
+		CardReleased newRelease = cRDao.save(cr);
+		
+		return newRelease;
+	}
+	
 	public List<CardReleased> showMyReleased(Integer memberId) {
 		List<CardReleased> releaseList = cRDao.myReleased(memberId);
 		

@@ -41,15 +41,15 @@ import tw.com.eeit162.meepleMasters.lyh.service.CardListService;
 import tw.com.eeit162.meepleMasters.lyh.service.CardReleasedService;
 
 @Controller
-@RequestMapping(path = {"/released"})
+@RequestMapping(path = { "/released" })
 public class CardReleasedController {
-	
+
 	@Autowired
 	private CardListService cListService;
 
 	@Autowired
 	private CardReleasedService cRService;
-	
+
 	@Autowired
 	private MemberService mService;
 
@@ -125,6 +125,26 @@ public class CardReleasedController {
 		return "redirect:/card/releasedList";
 	}
 
+	@PostMapping("/insertCardAuction")
+	public String insertCardAuction(@RequestParam("ownedId") Integer ownedId,
+			@RequestParam("startPrice") Integer startPrice, @RequestParam("directPrice") Integer directPrice,
+			@RequestParam("endTime") String endTime) throws ParseException {
+
+		Date date = null;
+
+		date = new SimpleDateFormat("yyyy-MM-dd").parse(endTime);
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 1);
+
+		Date newDate = cal.getTime();
+
+		cRService.insertCardReleasedAuction(ownedId, startPrice, directPrice, newDate);
+
+		return "redirect:/card/releasedList";
+	}
+
 	@GetMapping("/all/{status}")
 	@ResponseBody
 	public ArrayList<CardReleasedDto> showAllRelease(@PathVariable(name = "status") Integer status) {
@@ -141,7 +161,7 @@ public class CardReleasedController {
 
 			CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
 			Card card = cRService.findCardById(cardOwned.getFkCardId());
-			
+
 			Member member = mService.findMemberById(cardOwned.getFkMemberId());
 			String memberName = member.getMemberName();
 
@@ -167,28 +187,34 @@ public class CardReleasedController {
 
 		if (status == 2) {
 			Collections.sort(cDList, new Comparator<CardReleasedDto>() {
-	            @Override
-	            public int compare(CardReleasedDto dto1, CardReleasedDto dto2) {
-	            	System.out.println("dto1: " + dto1.toString());
-	            	System.out.println("dto2: " + dto2.toString());
-	                return dto1.getEndTime().compareTo(dto2.getEndTime());
-	            }
-	        });
+				@Override
+				public int compare(CardReleasedDto dto1, CardReleasedDto dto2) {
+					System.out.println("dto1: " + dto1.toString());
+					System.out.println("dto2: " + dto2.toString());
+					return dto1.getEndTime().compareTo(dto2.getEndTime());
+				}
+			});
 			System.out.println(cDList.toString());
 		} else if (status == 3) {
 			/* 星數大到小 */
-			cDList.sort((a,b) -> b.getCardStar()-a.getCardStar());
+			cDList.sort((a, b) -> b.getCardStar() - a.getCardStar());
 		} else if (status == 4) {
 			/* 星數小到大 */
-				cDList.sort((a,b) -> a.getCardStar()-b.getCardStar());
+			cDList.sort((a, b) -> a.getCardStar() - b.getCardStar());
+		} else if (status == 5) {
+			/* 價格大到小 */
+			cDList.sort((a, b) -> b.getDirectPrice() - a.getDirectPrice());
+		} else if (status == 6) {
+			/* 價格大到小 */
+			cDList.sort((a, b) -> a.getDirectPrice() - b.getDirectPrice());
 		} else {
 			/* 預設為最新上架 */
-			cDList.sort((a,b)->b.getReleasedId()-a.getReleasedId());
+			cDList.sort((a, b) -> b.getReleasedId() - a.getReleasedId());
 		}
 
 		return cDList;
 	}
-	
+
 //	@GetMapping("/edit/{releasedId}")
 //	@ResponseBody
 //	public CardReleased editReleased()
@@ -204,7 +230,7 @@ public class CardReleasedController {
 
 		CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
 		Card card = cRService.findCardById(cardOwned.getFkCardId());
-		
+
 		Member member = mService.findMemberById(cardOwned.getFkMemberId());
 		String memberName = member.getMemberName();
 
@@ -251,14 +277,14 @@ public class CardReleasedController {
 
 	@PostMapping("/buy")
 	@ResponseBody
-	public String buyCardReleased(/*@RequestBody String body,*/ @RequestParam("releasedId") Integer releasedId,
+	public String buyCardReleased(/* @RequestBody String body, */ @RequestParam("releasedId") Integer releasedId,
 			@RequestParam("ownedId") Integer ownedId, @RequestParam("price") Integer price, HttpSession session) {
 //		JSONObject jsonObject = new JSONObject(body);
 //		String price = jsonObject.getString("price");
 		String buyCard = cRService.buyCard(releasedId, ownedId, price, session);
 
 		if (buyCard != null) {
-			Member member = (Member)session.getAttribute("member");
+			Member member = (Member) session.getAttribute("member");
 			Integer memberId = member.getMemberId();
 			member = cListService.findMember(memberId);
 			session.setAttribute("member", member);
@@ -267,24 +293,25 @@ public class CardReleasedController {
 
 		return "購買失敗";
 	}
-	
+
 	@PostMapping("/discontinued")
 	@ResponseBody
 	public String discontinuedReleased(@RequestParam("releasedId") Integer releasedId,
 			@RequestParam("ownedId") Integer ownedId) {
 		String discontinued = cRService.discontinued(releasedId, ownedId);
-		
+
 		if (discontinued != null) {
 			return "下架成功";
 		}
-		
+
 		return "下架失敗";
 	}
-	
+
 	@PostMapping("/edit")
 	public String editMyReleased(@RequestParam("releasedId") Integer releasedId,
-			@RequestParam("directPrice") Integer directPrice, @RequestParam("endTime") String endTime) throws ParseException {
-		
+			@RequestParam("directPrice") Integer directPrice, @RequestParam("endTime") String endTime)
+			throws ParseException {
+
 		Date date = null;
 
 		date = new SimpleDateFormat("yyyy-MM-dd").parse(endTime);
@@ -294,15 +321,15 @@ public class CardReleasedController {
 		cal.add(Calendar.DATE, 1);
 
 		Date newDate = cal.getTime();
-		
+
 		String editMyReleased = cRService.editMyReleased(releasedId, directPrice, newDate);
-		
-		if (editMyReleased != null ) {
+
+		if (editMyReleased != null) {
 			return "redirect:/card/releasedList";
 		}
-		
+
 		return null;
-		
+
 	}
 
 }

@@ -37,13 +37,19 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="btn-group row justify-content-end">
-                        <button type="button" class="btn btn-outline-warning dropdown-toggle d-none" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <button type="button" class="btn btn-outline-warning dropdown-toggle d-none"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             上架排序
                         </button>
                         <ul class="dropdown-menu">
                             <li class="dropdown-item" id="newList">最新上架</li>
                             <li class="dropdown-item" id="endTimeList">下架時間</li>
+                            <li class="dropdown-item" id="priceDESCList">價格　
+                                <i class="fa-solid fa-arrow-down-wide-short"></i>
+                            </li>
+                            <li class="dropdown-item" id="priceASCList">價格　
+                                <i class="fa-solid fa-arrow-up-short-wide"></i>
+                            </li>
                             <li class="dropdown-item" id="starDESCList">星數　
                                 <i class="fa-solid fa-arrow-down-wide-short"></i>
                             </li>
@@ -68,7 +74,7 @@
             <input type="submit" value="Submit" hidden>
         </form>
     </div>
-    
+
 
     <jsp:include page="../include/footer.jsp"></jsp:include>
 
@@ -80,31 +86,51 @@
         })
         let status = 1;
 
-        $("#newList").click(function(){
+        $("#newList").click(function () {
             status = 1;
-            getAllList()
+            getAllList();
+            getMyList();
         })
 
-        $("#endTimeList").click(function(){
+        $("#endTimeList").click(function () {
             status = 2;
-            getAllList()
+            getAllList();
+            getMyList();
         })
 
-        $("#starDESCList").click(function(){
+        $("#starDESCList").click(function () {
             status = 3;
-            getAllList()
+            getAllList();
+            getMyList();
         })
 
-        $("#starASCList").click(function(){
+        $("#starASCList").click(function () {
             status = 4;
-            getAllList()
+            getAllList();
+            getMyList();
         })
 
-        
+        $("#priceDESCList").click(function () {
+            status = 5;
+            getAllList();
+            getMyList();
+        })
 
-        
+        $("#priceASCList").click(function () {
+            status = 6;
+            getAllList();
+            getMyList();
+        })
+
+        const today = new Date();
+        let getEndTime;
+        let endTime;
+        let times = 0;
+        let diffInMs;
+        let diffInDays;
 
         function getAllList() {
+            console.log("製作畫面");
             return axios.get("${root}/released/all/" + status)
                 .then(res => {
                     let htmlstr = "";
@@ -114,55 +140,63 @@
                     let count = 0;
 
                     console.log(res)
-                    const today = new Date();
-                    let getEndTime;
-                    let endTime;
-                    let times = 0;
-                    let diffInMs;
-                    let diffInDays;
+
 
                     for (i = 0; i < res.data.length; i++) {
-                        if (res.data[i].memberId == memberId) {
-                            htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
-                            htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
-                            htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
-                            htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
-                            htmlstr += `</figure></div></div>`;
-                            count += 1;
-                        } else {
-                            htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
-                            htmlstr += `<figure id="\${res.data[i].releasedId}"><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
-                            htmlstr += `<div class="releaseDetail">\${res.data[i].cardName}<br>`;
-                            htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i></div>`;
-                            htmlstr += `<img src="${root}/img/lyh/shopping.png" class="shopping"/><img src="${root}/img/lyh/sunadokei.png" class="expire d-none"></figure></div></div>`;
-                            count += 1;
-                        }
-
                         getEndTime = `\${res.data[i].endTime}`;
                         endTime = new Date(getEndTime);
                         diffInMs = endTime - today;
                         diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
-                        if (diffInDays <= 1) {
-                            times += 1;
+                        if (diffInDays < 0) {
+                            axios.post("${root}/released/discontinued?releasedId=" + res.data[i].releasedId + "&ownedId=" + res.data[i].ownedId)
                         }
 
+                        if (diffInDays <= 1) {
+                            if (res.data[i].memberId == memberId) {
+                                htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
+                                htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
+                                htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
+                                htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
+                                htmlstr += `<img src="${root}/img/lyh/hourglass.png" class="expire"></figure></div></div>`;
+                                count += 1;
+                            } else {
+                                htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
+                                htmlstr += `<figure id="\${res.data[i].releasedId}"><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
+                                htmlstr += `<div class="releaseDetail">\${res.data[i].cardName}<br>`;
+                                htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i></div>`;
+                                htmlstr += `<img src="${root}/img/lyh/shopping.png" class="shopping"/><img src="${root}/img/lyh/hourglass.png" class="expire"></figure></div></div>`;
+                                count += 1;
+                            }
+                        } else {
+                            if (res.data[i].memberId == memberId) {
+                                htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
+                                htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
+                                htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
+                                htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
+                                htmlstr += `</figure></div></div>`;
+                                count += 1;
+                            } else {
+                                htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
+                                htmlstr += `<figure id="\${res.data[i].releasedId}"><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
+                                htmlstr += `<div class="releaseDetail">\${res.data[i].cardName}<br>`;
+                                htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i></div>`;
+                                htmlstr += `<img src="${root}/img/lyh/shopping.png" class="shopping"/></figure></div></div>`;
+                                count += 1;
+                            }
+                        }
                     }
-                    console.log("times: "+times)
                     if (count == 0) {
                         htmlstr = `<div style="height: 200px; line-height: 200px;">目前沒有上架中的卡片</div>`
                     }
 
                     if ($('.nav-all').hasClass('active')) {
-                    console.log(1)
-                    $(".dropdown-toggle").removeClass("d-none");
+                        console.log(1)
+                        $(".dropdown-toggle").removeClass("d-none");
                     }
-
+                    
+                    $("#allCardContainer").empty();
                     $("#allCardContainer").append(htmlstr);
-
-                    if (diffInDays <= 1) {
-                            $(".expire").removeClass("d-none");
-                        }
 
                     $(".edit").click(function () {
                         let id = $(this).parent().attr('id')
@@ -360,33 +394,50 @@
         }
 
         function getMyList() {
-            return axios.get("${root}/released/all/1")
+            return axios.get("${root}/released/all/" + status)
                 .then(res => {
 
                     let memberId = "${member.memberId}"
-
                     let htmlstr = "";
-
                     let count = 0;
 
                     for (i = 0; i < res.data.length; i++) {
-                        if (res.data[i].memberId == memberId) {
-                            htmlstr += `<div class="col-3 d-flex"><div class="card">`;
-                            htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
-                            htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
-                            htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
-                            htmlstr += `</figure></div></div>`;
-                            count += 1;
+                        getEndTime = `\${res.data[i].endTime}`;
+                        endTime = new Date(getEndTime);
+                        diffInMs = endTime - today;
+                        diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+                        if (diffInDays < 0) {
+                            axios.post("${root}/released/discontinued?releasedId=" + res.data[i].releasedId + "&ownedId=" + res.data[i].ownedId)
                         }
+
+                        if (diffInDays <= 1) {
+                            if (res.data[i].memberId == memberId) {
+                                htmlstr += `<div class="col-3 d-flex"><div class="card">`;
+                                htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
+                                htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
+                                htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
+                                htmlstr += `<img src="${root}/img/lyh/hourglass.png" class="expire"></figure></div></div>`;
+                                count += 1;
+                            }
+                        } else {
+                            if (res.data[i].memberId == memberId) {
+                                htmlstr += `<div class="col-3 d-flex"><div class="card">`;
+                                htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
+                                htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
+                                htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
+                                htmlstr += `</figure></div></div>`;
+                                count += 1;
+                            }
+                        }
+
                     }
 
                     if (count == 0) {
                         htmlstr = `<div style="height: 200px; line-height: 200px;">目前沒有上架中的卡片</div>`
                     }
-                    if ($('.nav-my').hasClass('active')) {
-            console.log(2)
-            $(".dropdown-toggle").addClass("d-none");
-        }
+                    
+                    $("#myCardContainer").empty();
                     $("#myCardContainer").append(htmlstr);
 
                     $(".edit").click(function () {

@@ -22,7 +22,7 @@
             </picture>
         </figure>
 
-        <form action="${root}/released/insertCardDirect" method="post" id="formConfirm">
+        <form action="${root}/released/insertCardAuction" method="post" id="formConfirm" style="bottom: 10px;">
 
             <span class="headline">
                 <i class="fa-solid fa-arrow-left-long" onclick="location.href='${root}/card/releasedList'"></i>
@@ -37,10 +37,16 @@
                 </label>
             </span>
             <span class="form-group mb-3">
-                <label for="price" class="text-small-uppercase form-label">售出價</label>
-                <input class="text-body" id="price" name="price" type="text"
+                <label for="startPrice" class="text-small-uppercase form-label">拍賣起價</label>
+                <input class="text-body" id="startPrice" name="startPrice" type="text"
                     onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')"
-                    path="directPrice" required />
+                    path="startPrice" required />
+            </span>
+            <span class="form-group mb-3">
+                <label for="directPrice" class="text-small-uppercase form-label">直購價（選填）</label>
+                <input class="text-body" id="directPrice" name="directPrice" type="text"
+                    onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')"
+                    path="directPrice" />
             </span>
             <span class="form-group mb-3">
                 <label for="endTime" class="text-small-uppercase form-label">結束時間（至選擇日期的23:59截止）</label>
@@ -48,9 +54,10 @@
             </span>
             <div class="wrapper form-group mb-3">
                 <input type="radio" name="select" id="option-1" checked>
-                <label for="option-1" class="option option-1 form-label">
+                <label for="option-1" class="option option-1 form-label"
+                    style="width: 120px; position: absolute; bottom: 130px;">
                     <div class="dot"></div>
-                    <span>直接出價</span>
+                    <span>拍賣</span>
                 </label>
             </div>
             <input class="inputSubmit" value="上架" type="submit">
@@ -195,7 +202,7 @@
         }
 
         $(".inputSubmit").click(function (e) {
-            e.preventDefault();
+            e.preventDefault(); 
             Swal.fire({
                 title: '確定要上架嗎？',
                 showCancelButton: true,

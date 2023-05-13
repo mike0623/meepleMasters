@@ -92,13 +92,42 @@
 		let getSellList = [];
 
 		$(async function () {
-			await getMyList();
+			await getMyList().then(() => {
+			for (let i = 4; i >= 0; i--) {
+				outputString += `<div class='row container cardContainer justify-content-center' id='card'>`;
+				outputString += `<div class='starDiv' id='starDiv'>`;
+				outputString += `<img src='${root}/img/lyh/star/star\${i+1}.png' class='star' id='star'>`;
+				outputString += ` <i class="fa-solid fa-caret-down fa-beat fa-2xl caret" style="color: #F0EBE2;"></i></div>`;
+
+
+				for (let item of cardList[i].imgs) {
+					let matchedCard = cardListArray.find(card => card.cardId === item.id);
+					if (matchedCard) {
+						// 有符合cardListArray中擁有的卡片ID
+						outputString += "<div class='col-3 d-flex d-none' id='cardContent'>";
+						outputString += "<div class='card'>";
+						outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda' id='\${item.id}'>`;
+						outputString += `<figcaption>\${item.name}</figcaption>`;
+						outputString += `<img src="${root}/img/lyh/having.png" class="sellingCard"></figure></div></div>`;
+					} else {
+						outputString += "<div class='col-3 d-flex d-none' id='cardContent'>";
+						outputString += "<div class='card'>";
+						outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda' id='\${item.id}'>`;
+						outputString += `<figcaption>\${item.name}</figcaption>`;
+						outputString += `</figure></div></div>`;
+					}
+				}
+
+				outputString += "</div>";
+			}
+		});
 		})
 
 		let cardListArray = [];
 		let sellListArray = [];
 
 		function getMyList() {
+			console.log("執行了getMyList");
 			return axios.get("${root}/card/mycard/${member.memberId}/getOrder")
 				.then(res => {
 					console.log(res)
@@ -118,7 +147,7 @@
 		}
 
 		console.log(cardListArray)
-		console.log(sellListArray)
+		// console.log(sellListArray)
 		$(".coinInfo").click(function () {
 			Swal.fire({
 				title: '如何取得米寶幣？',
@@ -129,24 +158,38 @@
 			})
 		})
 
-		let outputString = "<div class='cardStarTableDiv'><table class='cardStarTable'><tr><td colspan='2'>總機率</td></tr><tr><td><img src='${root}/img/lyh/star/star5.png'class='cardStarlabel'></td><td>2%</td></tr><tr><td><img src='${root}/img/lyh/star/star4.png'class='cardStarlabel'></td><td>6%</td></tr><tr><td><img src='${root}/img/lyh/star/star3.png'class='cardStarlabel'></td><td>10%</td></tr><tr><td><img src='${root}/img/lyh/star/star2.png'class='cardStarlabel'></td><td>22%</td></tr><tr><td><img src='${root}/img/lyh/star/star1.png'class='cardStarlabel'></td><td>60%</td></tr></table></div>";
+		let outputString = "<div class='cardStarTableDiv'><table class='cardStarTable'><tr><td colspan='2'>總機率</td></tr><tr><td><img src='${root}/img/lyh/star/star5.png'class='cardStarlabel'></td><td>2%</td></tr><tr><td><img src='${root}/img/lyh/star/star4.png'class='cardStarlabel'></td><td>6%</td></tr><tr><td><img src='${root}/img/lyh/star/star3.png'class='cardStarlabel'></td><td>10%</td></tr><tr><td><img src='${root}/img/lyh/star/star2.png'class='cardStarlabel'></td><td>22%</td></tr><tr><td><img src='${root}/img/lyh/star/star1.png'class='cardStarlabel'></td><td>60%</td></tr></table></div><div class='sellingNote'><img src='${root}/img/lyh/having.png' style='width: 60px;''> 已擁有卡片</div>";
+
+		// getMyList().then(() => {
+		// 	for (let i = 4; i >= 0; i--) {
+		// 		outputString += `<div class='row container cardContainer justify-content-center' id='card'>`;
+		// 		outputString += `<div class='starDiv' id='starDiv'>`;
+		// 		outputString += `<img src='${root}/img/lyh/star/star\${i+1}.png' class='star' id='star'>`;
+		// 		outputString += ` <i class="fa-solid fa-caret-down fa-beat fa-2xl caret" style="color: #F0EBE2;"></i></div>`;
 
 
-		for (let i = 4; i >= 0; i--) {
-			outputString += `<div class='row container cardContainer justify-content-center' id='card'>`;
-			outputString += `<div class='starDiv' id='starDiv'>`;
-			outputString += `<img src='${root}/img/lyh/star/star\${i+1}.png' class='star' id='star'>`;
-			outputString += ` <i class="fa-solid fa-caret-down fa-beat fa-2xl caret" style="color: #F0EBE2;"></i></div>`;
+		// 		for (let item of cardList[i].imgs) {
+		// 			let matchedCard = cardListArray.find(card => card.cardId === item.id);
+		// 			if (matchedCard) {
+		// 				// 有符合cardListArray中擁有的卡片ID
+		// 				outputString += "<div class='col-3 d-flex d-none' id='cardContent'>";
+		// 				outputString += "<div class='card'>";
+		// 				outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda' id='\${item.id}'>`;
+		// 				outputString += `<figcaption>\${item.name}</figcaption>`;
+		// 				outputString += `<img src="${root}/img/lyh/having.png" class="sellingCard"></figure></div></div>`;
+		// 			} else {
+		// 				outputString += "<div class='col-3 d-flex d-none' id='cardContent'>";
+		// 				outputString += "<div class='card'>";
+		// 				outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda' id='\${item.id}'>`;
+		// 				outputString += `<figcaption>\${item.name}</figcaption>`;
+		// 				outputString += `</figure></div></div>`;
+		// 			}
+		// 		}
 
-			for (let item of cardList[i].imgs) {
-				outputString += "<div class='col-3 d-flex d-none' id='cardContent'>";
-				outputString += "<div class='card'>";
-				outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda' id='\${item.id}'>`;
-				outputString += `<figcaption>\${item.name}</figcaption>`;
-				outputString += `<img src="${root}/img/lyh/having.png" class="sellingCard d-none"></figure></div></div>`;
-			}
-			outputString += "</div>";
-		}
+		// 		outputString += "</div>";
+		// 	}
+		// })
+
 
 		$("#showCardList").click(function () {
 			Swal.fire({
@@ -166,7 +209,7 @@
 					if (this.id == (cardListArray[i].cardId)) {
 						$(this).removeClass("d-none")
 					}
-					console.log(this.id)
+					// console.log(this.id)
 				})
 			}
 
@@ -185,7 +228,7 @@
 		})
 
 		$("#order").click(function () {
-
+			console.log("按下排序按鈕");
 			cardListArray.sort(function (a, b) {
 
 				return a.ownedId - b.ownedId
@@ -211,7 +254,6 @@
 				ajaxString += `<img src="${root}/img/lyh/selling.png" class="sellingCard"></figure></div></div>`;
 			}
 			ajaxString += `</div>`;
-			// console.log(`getSellList: ${getSellList[i].cardName}`)
 			$(".cardContainer").remove();
 			$(".mycardContainer").append(ajaxString);
 
@@ -410,9 +452,9 @@
 								sellListArray = [];
 								for (i = 0; i < response.data.length; i++) {
 									if (response.data[i].cardStatus == 1) {
-									cardListArray.push(response.data[i])
+										cardListArray.push(response.data[i])
 									} else {
-									sellListArray.push(response.data[i])
+										sellListArray.push(response.data[i])
 									}
 								}
 

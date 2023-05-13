@@ -31,4 +31,9 @@ public class CardPageController {
 		return "lyh/editCardRelease";
 	}
 	
+	@GetMapping("/newAuction")
+	public String newCardAuction() {
+		return "lyh/newCardAuction";
+	}
+	
 }
