@@ -41,42 +41,12 @@
 							.profile {
 								margin-top: 50px;
 							}
-
-							/* Table css */
-							#productTable>div>div {}
-
-							.card-header {
-								background-color: #f0d8cf;
+							
+							div.list-group{
+								position: absolute;
+								z-index: 1;
 							}
 
-							.card-body {
-								background-color: #f2f2f2;
-							}
-
-							.text-primary {
-								color: #dc7e6a !important;
-							}
-
-							.table-bordered>:not(caption)>*>* {
-								border-width: 0 0px;
-							}
-
-							.sorting {
-								width: 200px !important;
-							}
-
-							.table td,
-							.table th {
-								text-align: center;
-								vertical-align: middle;
-							}
-
-							a {
-								color: #dc7e6a;
-							}
-
-
-							/* Table css */
 						</style>
 					</head>
 
@@ -90,25 +60,28 @@
 							<div
 								class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 p-3 py-5">
 								<div class="input-group">
-									<div class="input-group-append" >
+									<div class="input-group-append">
 										<button class="btn btn-warning" type="button" style="border-radius: 5px">
 											<i class="fas fa-search fa-sm"></i>
 										</button>
 									</div>
 									<input type="text" class="form-control bg-light border-0 small" placeholder="搜尋會員"
-										aria-label="Search" aria-describedby="basic-addon2" id="searchMember" style="width: 400px; border-radius: 5px">
-										
+										aria-label="Search" aria-describedby="basic-addon2" id="searchMember"
+										style="width: 400px; border-radius: 5px">
 								</div>
-								<div class="list-group" id="result" style="width: 400px; border-radius: 5px; margin-left: auto;">
+								<div class="list-group" id="result"
+									style="width: 400px; border-radius: 5px; margin-left:auto;">
 									<a href="#" class="list-group-item list-group-item-action">
-									  Cras justo odio
+										Cras justo odio
 									</a>
-									<a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
+									<a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis
+										in</a>
 									<a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-									<a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+									<a href="#" class="list-group-item list-group-item-action">Porta ac consectetur
+										ac</a>
 								</div>
 							</div>
-							
+
 
 							<div class="row profile">
 								<div class="col-md-6 border-right">
