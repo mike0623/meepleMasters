@@ -228,53 +228,53 @@ public class CardReleasedController {
 
 	@GetMapping("/card/{releasedId}")
 	@ResponseBody
-	public ArrayList<CardReleasedDto> showCardRelease(@PathVariable(name = "releasedId") Integer releasedId) {
+	public CardReleasedDto showCardRelease(@PathVariable(name = "releasedId") Integer releasedId) {
 
-		// 取得所有card
+		// 從JSP表單得到releasedId取得CardReleased
 		CardReleased cardReleased = cRService.showCardReleased(releasedId);
 
-		ArrayList<CardReleasedDto> cDList = new ArrayList<CardReleasedDto>();
-
+		// 取得CardOwned和Card內容
 		CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
 		Card card = cRService.findCardById(cardOwned.getFkCardId());
+		
 		
 		CardAuction cardAuction = null;
 		String purchaserName = "";
 		
-		if (cardReleased.getType() == 2) {
-			cardAuction = cRService.findAuctionById(releasedId);
-			if (cardAuction != null) {
-				Member purchaser = mService.findMemberById(cardAuction.getFkPurchaserId());
-				purchaserName = purchaser.getMemberName();
-			}
-		}
+//		if (cardReleased.getType() == 2) {
+//			cardAuction = cRService.findAuctionById(releasedId);
+//			if (cardAuction != null) {
+//				Member purchaser = mService.findMemberById(cardAuction.getFkPurchaserId());
+//				purchaserName = purchaser.getMemberName();
+//			}
+//		}
 
 		Member member = mService.findMemberById(cardOwned.getFkMemberId());
 		String memberName = member.getMemberName();
 		
+		// 建立 CardReleasedDto 物件
 		CardReleasedDto cardDto = new CardReleasedDto();
 
-		cardDto.setReleasedId(cardReleased.getReleasedId());
-		cardDto.setOwnedId(cardOwned.getOwnedId());
-		cardDto.setDirectPrice(cardReleased.getDirectPrice());
-		cardDto.setStartPrice(cardReleased.getStartPrice());
-		cardDto.setType(cardReleased.getType());
-		cardDto.setStartTime(cardReleased.getStartTime());
-		cardDto.setEndTime(cardReleased.getEndTime());
-		cardDto.setReleasedStatus(cardReleased.getReleasedStatus());
-		cardDto.setCardId(card.getCardId());
-		cardDto.setMemberId(cardOwned.getFkMemberId());
-		cardDto.setCardStatus(cardOwned.getCardStatus());
-		cardDto.setCardName(card.getCardName());
-		cardDto.setMemberName(memberName);
-		if (cardAuction != null) {
-			cardDto.setPurchasePrice(cardAuction.getPurchasePrice());
-			cardDto.setPurchaserName(purchaserName);
-		}
-		
-		cDList.add(cardDto);
+	    cardDto.setReleasedId(cardReleased.getReleasedId());
+	    cardDto.setOwnedId(cardOwned.getOwnedId());
+	    cardDto.setDirectPrice(cardReleased.getDirectPrice());
+	    cardDto.setStartPrice(cardReleased.getStartPrice());
+	    cardDto.setType(cardReleased.getType());
+	    cardDto.setStartTime(cardReleased.getStartTime());
+	    cardDto.setEndTime(cardReleased.getEndTime());
+	    cardDto.setReleasedStatus(cardReleased.getReleasedStatus());
+	    cardDto.setCardId(card.getCardId());
+	    cardDto.setMemberId(cardOwned.getFkMemberId());
+	    cardDto.setCardStatus(cardOwned.getCardStatus());
+	    cardDto.setCardName(card.getCardName());
+	    cardDto.setCardStar(card.getCardStar());
+	    cardDto.setMemberName(memberName);
+	    if (cardAuction != null) {
+	        cardDto.setPurchasePrice(cardAuction.getPurchasePrice());
+	        cardDto.setPurchaserName(purchaserName);
+	    }
 
-		return cDList;
+		return cardDto;
 
 	}
 

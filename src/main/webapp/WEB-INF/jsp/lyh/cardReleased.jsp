@@ -227,31 +227,31 @@
 
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
-
-                                let getStartTime = `\${res.data[0].startTime}`;
+                                console.log(res)
+                                let getStartTime = `\${res.data.startTime}`;
                                 let formattedStartTime = getStartTime.substr(0, 10);
                                 // console.log("formattedStartTime:"+formattedStartTime)
 
-                                let getEndTime = `\${res.data[0].endTime}`;
+                                let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
-                                let releasedId = `\${res.data[0].releasedId}`;
+                                let releasedId = `\${res.data.releasedId}`;
                                 $("#param").val(releasedId);
 
                                 let cardHtml = "";
 
                                 cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
-                                            <img src="${root}/card/downloadCard/\${res.data[0].cardId}" class="newCardImg"></div><div class="col-6">
-                                            <div class="newCardTitle">\${res.data[0].cardName}</div>
+                                            <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
+                                            <div class="newCardTitle">\${res.data.cardName}</div>
                                             <div class="cardDetail row">
                                             <div class="col-2">
                                                 價格<br>上架時間<br>結束時間
                                             </div>
                                             <div class="col-4">
-                                                \${res.data[0].directPrice} <i class="fa-solid fa-coins"></i><br>
+                                                \${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>
                                                 \${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
                                                 \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
                                                 </div>
@@ -312,11 +312,11 @@
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
 
-                                let getStartTime = `\${res.data[0].startTime}`;
+                                let getStartTime = `\${res.data.startTime}`;
                                 let formattedStartTime = getStartTime.substr(0, 10);
                                 // console.log("formattedStartTime:"+formattedStartTime)
 
-                                let getEndTime = `\${res.data[0].endTime}`;
+                                let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
@@ -325,15 +325,15 @@
                                 let cardHtml = "";
                                 cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
-                                            <img src="${root}/card/downloadCard/\${res.data[0].cardId}" class="newCardImg"></div><div class="col-6">
-                                            <div class="newCardTitle">\${res.data[0].cardName}</div>
+                                            <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
+                                            <div class="newCardTitle">\${res.data.cardName}</div>
                                             <div class="cardDetail row">
                                             <div class="col-2">
                                                 賣家<br>價格<br>上架時間<br>結束時間<br>我的金幣
                                             </div>
                                             <div class="col-4">
-                                                \${res.data[0].memberName} <i class="fa-solid fa-user"></i><br>
-                                                \${res.data[0].directPrice} <i class="fa-solid fa-coins"></i><br>
+                                                \${res.data.memberName} <i class="fa-solid fa-user"></i><br>
+                                                \${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>
                                                 \${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
                                                 \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
                                                 \${memberCoin} <i class="fa-solid fa-coins"></i>
@@ -353,7 +353,7 @@
                                     if (result.isConfirmed) {
                                         if (memberId == "") {
                                             window.location.href = "${root}/login";
-                                        } else if (memberCoin < res.data[0].directPrice) {
+                                        } else if (memberCoin < res.data.directPrice) {
                                             Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
                                         } else {
                                             Swal.fire({
@@ -418,13 +418,11 @@
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
 
-
-
-                                let getStartTime = `\${res.data[0].startTime}`;
+                                let getStartTime = `\${res.data.startTime}`;
                                 let formattedStartTime = getStartTime.substr(0, 10);
                                 // console.log("formattedStartTime:"+formattedStartTime)
 
-                                let getEndTime = `\${res.data[0].endTime}`;
+                                let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
@@ -433,32 +431,45 @@
                                 let cardHtml = "";
                                 cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
-                                            <img src="${root}/card/downloadCard/\${res.data[0].cardId}" class="newCardImg"></div><div class="col-6">
-                                            <div class="newCardTitle" style="margin: 10px">\${res.data[0].cardName}</div>
-                                            <div id="countdown" style="font-size: 14px;"></div>
-                                            <div class="cardDetail row" style="line-height: 45px;"><div class="col-3 detailLeft">`
-                                if (res.data[0].directPrice != null) {
-                                    cardHtml += `賣家<br>目前出價<br>最高出價者<br>直購價<br>上架時間<br>結束時間<br>我的金幣`;
+                                            <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
+                                            <div class="newCardTitle" style="margin: 10px">\${res.data.cardName}</div>
+                                            <div id="countdown" style="font-size: 14px; height: 19px;"></div>
+                                            <div class="cardDetail row" style="line-height: 38px;"><div class="col-3 detailLeft">`
+                                if (res.data.directPrice != null) {
+                                    cardHtml += `賣家<br>目前出價<br>最高出價者<br>直購價<br>上架時間<br>結束時間<br>我的金幣<br>出價`;
                                 } else {
-                                    cardHtml += `賣家<br>目前出價<br>最高出價者<br>上架時間<br>結束時間<br>我的金幣`
+                                    cardHtml += `賣家<br>目前出價<br>最高出價者<br>上架時間<br>結束時間<br>我的金幣<br>出價`
                                 }
-                                
+
                                 cardHtml += `</div><div class="col-4">`
-                                cardHtml += `\${res.data[0].memberName} <i class="fa-solid fa-user"></i><br>`;
-                                
-                                if (res.data[0].purchasePrice != null) {
-                                    cardHtml += `\${res.data[0].purchasePrice} <i class="fa-solid fa-coins"></i><br>
-                                    \${res.data[0].purchaserName} <i class="fa-solid fa-user"></i><br>`
+                                cardHtml += `\${res.data.memberName} <i class="fa-solid fa-user"></i><br>`;
+
+                                if (res.data.purchasePrice != null) {
+                                    cardHtml += `\${res.data.purchasePrice} <i class="fa-solid fa-coins"></i><br>
+                                    \${res.data.purchaserName} <i class="fa-solid fa-user"></i><br>`
                                 } else {
-                                    cardHtml += `\${res.data[0].startPrice} <i class="fa-solid fa-coins"></i><br>
+                                    cardHtml += `\${res.data.startPrice} <i class="fa-solid fa-coins"></i><br>
                                     尚未有人出價<br>`
                                 }
-                                if (res.data[0].directPrice != null) {
-                                    cardHtml += `\${res.data[0].directPrice} <i class="fa-solid fa-coins"></i><br>`
-                                }                
+                                if (res.data.directPrice != null) {
+                                    cardHtml += `\${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>`
+                                }
                                 cardHtml += `\${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
                                             \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
-                                            \${memberCoin} <i class="fa-solid fa-coins"></i>
+                                            \${memberCoin} <i class="fa-solid fa-coins"></i><br>
+                                            <form action="${root}/" method="post" id="forPurchase">
+                                            <input type="number" name="purchasePrice" id="purchasePrice" class="purchasePrice" onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" `
+                                if (res.data.directPrice != null) {
+                                    cardHtml += `oninput="if(value>\${res.data.directPrice})value=\${res.data.directPrice};`
+                                }
+                                if (res.data.purchasePrice != null) {
+                                    cardHtml += `if(value<\${res.data.purchasePrice})value=(\${res.data.purchasePrice}+1);`
+                                } else {
+                                    cardHtml += `if(value<\${res.data.startPrice})value=(\${res.data.startPrice}+1)" required>`
+                                }
+
+                                cardHtml += `<input type="submit" value="Submit" hidden>
+                                            </form>
                                             </div></div></div></div></div>`
 
                                 let intervalId = setInterval(() => {
@@ -476,72 +487,97 @@
                                     countdownEl.innerHTML = `\${days}天\${hours}小時\${minutes}分\${seconds}秒 結束`;
                                 }, 1000);
 
-                                Swal.fire({
-                                    title: '',
-                                    html: cardHtml,
-                                    color: '#FFF',
-                                    showCloseButton: true,
-                                    focusConfirm: false,
-                                    background: '#dfa661',
-                                    confirmButtonText: '<i class="fa-solid fa-coins"></i> 購買',
-                                    confirmButtonColor: '#CA7159',
-                                    customClass: 'swal-newCard',
-                                    willClose: () => {
-                                        clearInterval(intervalId);
-                                    }
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        if (memberId == "") {
-                                            window.location.href = "${root}/login";
-                                        } else if (memberCoin < res.data[0].directPrice) {
-                                            Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
-                                        } else {
-                                            Swal.fire({
-                                                title: '確定要購買嗎？',
-                                                showCancelButton: true,
-                                                confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
-                                                cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
-                                                confirmButtonColor: '#CA7159',
-                                                cancelButtonColor: '#CBC0AA',
-                                                customClass: 'confirmAlert',
-                                                reverseButtons: true
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    axios.post("${root}/released/buy?releasedId=" + res.data[0].releasedId + "&ownedId=" + res.data[0].ownedId + "&price=" + res.data[0].directPrice)
-                                                        .then(res => {
-                                                            Swal.fire({
-                                                                title: '購買成功！',
-                                                                showDenyButton: true,
-                                                                showCancelButton: false,
-                                                                confirmButtonText: '回卡片市集',
-                                                                denyButtonText: `回我的卡片`,
-                                                                icon: 'success',
-                                                                confirmButtonColor: '#dc7e6a',
-                                                                denyButtonColor: '#da9255',
-                                                                customClass: 'endAlert'
-                                                            }).then((result) => {
-                                                                /* Read more about isConfirmed, isDenied below */
-                                                                if (result.isConfirmed) {
-                                                                    window.location.href = "${root}/card/releasedList"
-                                                                } else if (result.isDenied) {
-                                                                    window.location.href = `${root}/card/mycard/\${memberId}`
-                                                                }
-                                                            })
-
-                                                            console.log(res)
-                                                        })
-                                                        .catch(err => {
-                                                            console.error(err);
-                                                        })
-                                                }
-
-                                            })
-
-
+                                if (res.data.directPrice == null) {
+                                    Swal.fire({
+                                        title: '',
+                                        html: cardHtml,
+                                        color: '#FFF',
+                                        showCloseButton: true,
+                                        focusConfirm: false,
+                                        background: '#dfa661',
+                                        confirmButtonText: '<i class="fa-solid fa-gavel"></i> 出價',
+                                        confirmButtonColor: '#CA7159',
+                                        customClass: 'swal-newCard',
+                                        willClose: () => {
+                                            clearInterval(intervalId);
                                         }
-                                    }
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            if (memberId == "") {
+                                                window.location.href = "${root}/login";
+                                            } else if (memberCoin < res.data.directPrice) {
+                                                Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
+                                            } else {
+                                                Swal.fire({
+                                                    title: '確定要出價嗎？',
+                                                    showCancelButton: true,
+                                                    confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
+                                                    cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
+                                                    confirmButtonColor: '#CA7159',
+                                                    cancelButtonColor: '#CBC0AA',
+                                                    customClass: 'confirmAlert',
+                                                    reverseButtons: true
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        ///////////
+                                                    }
 
-                                });
+                                                })
+
+
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: '',
+                                        html: cardHtml,
+                                        color: '#FFF',
+                                        showCloseButton: true,
+                                        background: '#dfa661',
+                                        confirmButtonText: '<i class="fa-solid fa-coins"></i> 直購',
+                                        denyButtonText: '<i class="fa-solid fa-gavel"></i> 出價',
+                                        confirmButtonColor: '#CA7159',
+                                        denyButtonColor: '#da9255',
+                                        customClass: 'swal-newCard',
+                                        willClose: () => {
+                                            clearInterval(intervalId);
+                                        }
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            axios.post("${root}/released/buy?releasedId=" + res.data[0].releasedId + "&ownedId=" + res.data[0].ownedId + "&price=" + res.data[0].directPrice)
+                                                .then(res => {
+                                                    Swal.fire({
+                                                        title: '購買成功！',
+                                                        showDenyButton: true,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '回卡片市集',
+                                                        denyButtonText: `回我的卡片`,
+                                                        icon: 'success',
+                                                        confirmButtonColor: '#dc7e6a',
+                                                        denyButtonColor: '#da9255',
+                                                        customClass: 'endAlert'
+                                                    }).then((result) => {
+                                                        /* Read more about isConfirmed, isDenied below */
+                                                        if (result.isConfirmed) {
+                                                            window.location.href = "${root}/card/releasedList"
+                                                        } else if (result.isDenied) {
+                                                            window.location.href = `${root}/card/mycard/\${memberId}`
+                                                        }
+                                                    })
+
+                                                    console.log(res)
+                                                })
+                                                .catch(err => {
+                                                    console.error(err);
+                                                })
+                                        } else if (result.isDenied) {
+                                            /////////////
+                                        }
+                                    });
+                                }
+
+
 
                                 console.log(res)
                             })
@@ -601,30 +637,30 @@
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
 
-                                let getStartTime = `\${res.data[0].startTime}`;
+                                let getStartTime = `\${res.data.startTime}`;
                                 let formattedStartTime = getStartTime.substr(0, 10);
                                 // console.log("formattedStartTime:"+formattedStartTime)
 
-                                let getEndTime = `\${res.data[0].endTime}`;
+                                let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
-                                let releasedId = `\${res.data[0].releasedId}`;
+                                let releasedId = `\${res.data.releasedId}`;
                                 $("#param").val(releasedId);
 
                                 let cardHtml = "";
 
                                 cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
-                                            <img src="${root}/card/downloadCard/\${res.data[0].cardId}" class="newCardImg"></div><div class="col-6">
-                                            <div class="newCardTitle">\${res.data[0].cardName}</div>
+                                            <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
+                                            <div class="newCardTitle">\${res.data.cardName}</div>
                                             <div class="cardDetail row">
                                             <div class="col-2">
                                                 價格<br>上架時間<br>結束時間
                                             </div>
                                             <div class="col-4">
-                                                \${res.data[0].directPrice} <i class="fa-solid fa-coins"></i><br>
+                                                \${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>
                                                 \${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
                                                 \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
                                                 </div>

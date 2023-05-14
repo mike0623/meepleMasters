@@ -167,3 +167,16 @@
 .detailLeft {
     max-width: 20%;
 }
+
+.purchasePrice {
+    border: 3px;
+    border-color: #FFF;
+    border-bottom-style: solid;
+    border-top-style: none;
+    border-left-style:none;
+    border-right-style:none;
+    background: transparent;
+    color: #FFF;
+    font-weight: 600;
+    width: 100px;
+}

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartException;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
@@ -76,15 +77,17 @@ public class CardReleasedService {
 		return card.get();
 	}
 	
+	@Transactional
 	public CardAuction findAuctionById(Integer releasedId) {
-		List<CardAuction> cardAuction = cADao.findByFkReleasedId(releasedId);
-		
-		if (cardAuction == null) {
-			return null;
-		}
-		
-		return cardAuction.get(0);
+	    CardAuction cardAuction = cADao.findByReleasedId(releasedId);
+	    
+	    if (cardAuction != null) {
+	    	return cardAuction;
+	    }
+
+	    return null;
 	}
+
 	
 	
 	@Transactional
