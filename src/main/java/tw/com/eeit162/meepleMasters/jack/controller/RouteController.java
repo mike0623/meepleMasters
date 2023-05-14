@@ -3,6 +3,7 @@ package tw.com.eeit162.meepleMasters.jack.controller;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -11,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.service.CollectLibraryService;
+import tw.com.eeit162.meepleMasters.jack.service.MemberService;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 
 @Controller
@@ -22,6 +25,8 @@ public class RouteController {
 	
 	@Autowired
 	private CollectLibraryService collectLibraryService;
+	@Autowired
+	private MemberService memberService;
 	
 	@GetMapping({"/index"})
 	public String index() {
@@ -86,11 +91,39 @@ public class RouteController {
 		return "jack/memberProduct";
 	}
 	
+	@GetMapping("/member/myProfile")
+	public String myProfile() {
+		
+		
+		return "jack/myProfile";
+	}
+	
 	@GetMapping("/member/profile")
 	public String profile() {
 		
 		
 		return "jack/profile";
+	}
+	
+//	@GetMapping("/member/myProfile")
+//	public String myProfile(HttpSession session, Model model) {
+//		Member sessionMember = (Member) session.getAttribute("member");
+//		
+//		model.addAttribute("findMember",sessionMember);
+//		return "jack/otherMember";
+//	}
+	
+	@GetMapping("/otherMember/{id}")
+	public String otherMember(@PathVariable("id") Integer memberId, Model model) {
+		
+		Optional<Member> member = Optional.ofNullable(memberService.findMemberById(memberId));
+		
+		if(member != null) {
+			
+			model.addAttribute("findMember", member.get());
+		}
+		
+		return "jack/otherMember";
 	}
 
 }	

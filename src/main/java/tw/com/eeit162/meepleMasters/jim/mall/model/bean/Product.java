@@ -67,7 +67,7 @@ public class Product implements Serializable {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	private List<Order> orders;
+	private List<OrderDetail> orderDetails;
 
 	@PrePersist
 	public void onCreate() {
@@ -179,12 +179,12 @@ public class Product implements Serializable {
 		this.favoriteGames = favoriteGames;
 	}
 
-	public List<Order> getOrders() {
-		return orders;
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
 	}
 
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
 	}
 
 	@Override

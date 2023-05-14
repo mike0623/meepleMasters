@@ -97,9 +97,10 @@
                           <img src="${root}/member/findMemberImg/${member.memberId}" alt="" width="32" height="32" class="rounded-circle">
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="${root}/member/game">Game</a></li>
+                          <li><a class="dropdown-item" href="${root}/member/game">我的遊戲</a></li>
                           <li><a class="dropdown-item" href="#">Friend</a></li>
-                          <li><a class="dropdown-item" href="${root}/member/profile">Profile</a></li>
+                          <li><a class="dropdown-item" href="${root}/member/myProfile">我的檔案</a></li>
+                          <li><a class="dropdown-item" href="${root}/member/profile">修改資料</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li><a class="dropdown-item" href="${root}/member/logout">Logout</a></li>
                         </ul>
