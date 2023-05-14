@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.service.MemberService;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
+import tw.com.eeit162.meepleMasters.lyh.model.bean.CardAuction;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardReleased;
 import tw.com.eeit162.meepleMasters.lyh.model.dto.CardReleasedDto;
@@ -127,7 +128,7 @@ public class CardReleasedController {
 
 	@PostMapping("/insertCardAuction")
 	public String insertCardAuction(@RequestParam("ownedId") Integer ownedId,
-			@RequestParam("startPrice") Integer startPrice, @RequestParam("directPrice") Integer directPrice,
+			@RequestParam("startPrice") Integer startPrice, @RequestParam(value = "directPrice", required = false) Integer directPrice,
 			@RequestParam("endTime") String endTime) throws ParseException {
 
 		Date date = null;
@@ -140,7 +141,12 @@ public class CardReleasedController {
 
 		Date newDate = cal.getTime();
 
-		cRService.insertCardReleasedAuction(ownedId, startPrice, directPrice, newDate);
+		if (directPrice == null) {
+			cRService.insertCardReleasedAuction(ownedId, startPrice, null, newDate);
+	    } else {
+	    	cRService.insertCardReleasedAuction(ownedId, startPrice, directPrice, newDate);
+	    }
+		
 
 		return "redirect:/card/releasedList";
 	}
@@ -161,9 +167,10 @@ public class CardReleasedController {
 
 			CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
 			Card card = cRService.findCardById(cardOwned.getFkCardId());
-
+			
 			Member member = mService.findMemberById(cardOwned.getFkMemberId());
 			String memberName = member.getMemberName();
+			
 
 			CardReleasedDto cardDto = new CardReleasedDto();
 
@@ -230,10 +237,21 @@ public class CardReleasedController {
 
 		CardOwned cardOwned = cRService.showOnwedDetail(cardReleased.getFkOwnedId());
 		Card card = cRService.findCardById(cardOwned.getFkCardId());
+		
+		CardAuction cardAuction = null;
+		String purchaserName = "";
+		
+		if (cardReleased.getType() == 2) {
+			cardAuction = cRService.findAuctionById(releasedId);
+			if (cardAuction != null) {
+				Member purchaser = mService.findMemberById(cardAuction.getFkPurchaserId());
+				purchaserName = purchaser.getMemberName();
+			}
+		}
 
 		Member member = mService.findMemberById(cardOwned.getFkMemberId());
 		String memberName = member.getMemberName();
-
+		
 		CardReleasedDto cardDto = new CardReleasedDto();
 
 		cardDto.setReleasedId(cardReleased.getReleasedId());
@@ -248,9 +266,12 @@ public class CardReleasedController {
 		cardDto.setMemberId(cardOwned.getFkMemberId());
 		cardDto.setCardStatus(cardOwned.getCardStatus());
 		cardDto.setCardName(card.getCardName());
-		cardDto.setCardStar(card.getCardStar());
 		cardDto.setMemberName(memberName);
-
+		if (cardAuction != null) {
+			cardDto.setPurchasePrice(cardAuction.getPurchasePrice());
+			cardDto.setPurchaserName(purchaserName);
+		}
+		
 		cDList.add(cardDto);
 
 		return cDList;

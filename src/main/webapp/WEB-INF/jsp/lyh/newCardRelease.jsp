@@ -50,7 +50,7 @@
                 <input type="radio" name="select" id="option-1" checked>
                 <label for="option-1" class="option option-1 form-label">
                     <div class="dot"></div>
-                    <span>直接出價</span>
+                    <span>直接購買</span>
                 </label>
             </div>
             <input class="inputSubmit" value="上架" type="submit">

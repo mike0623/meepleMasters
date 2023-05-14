@@ -22,6 +22,25 @@ public class CardReleasedDto {
 	private String cardName;
 	private Integer cardStar;
 	private String memberName;
+	private Integer purchasePrice;
+	private String purchaserName;
+	
+	
+	public String getPurchaserName() {
+		return purchaserName;
+	}
+
+	public void setPurchaserName(String purchaserName) {
+		this.purchaserName = purchaserName;
+	}
+
+	public Integer getPurchasePrice() {
+		return purchasePrice;
+	}
+
+	public void setPurchasePrice(Integer purchasePrice) {
+		this.purchasePrice = purchasePrice;
+	}
 
 	public Date getStartTime() {
 		return startTime;

@@ -160,3 +160,10 @@
     bottom: 70px;
 }
 
+.hammer {
+    color: #FFF;
+}
+
+.detailLeft {
+    max-width: 20%;
+}

@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.Card;
+import tw.com.eeit162.meepleMasters.lyh.model.bean.CardAuction;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardDirect;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 import tw.com.eeit162.meepleMasters.lyh.model.bean.CardReleased;
+import tw.com.eeit162.meepleMasters.lyh.model.dao.CardAuctionDao;
 import tw.com.eeit162.meepleMasters.lyh.model.dao.CardDao;
 import tw.com.eeit162.meepleMasters.lyh.model.dao.CardDirectDao;
 import tw.com.eeit162.meepleMasters.lyh.model.dao.CardOwnedDao;
@@ -38,6 +40,9 @@ public class CardReleasedService {
 	
 	@Autowired
 	private CardDirectDao cDDao;
+	
+	@Autowired
+	private CardAuctionDao cADao;
 	
 	
 	public List<CardOwned> showMyCard(Integer memberId) {
@@ -71,6 +76,16 @@ public class CardReleasedService {
 		return card.get();
 	}
 	
+	public CardAuction findAuctionById(Integer releasedId) {
+		List<CardAuction> cardAuction = cADao.findByFkReleasedId(releasedId);
+		
+		if (cardAuction == null) {
+			return null;
+		}
+		
+		return cardAuction.get(0);
+	}
+	
 	
 	@Transactional
 	public CardReleased insertCardReleasedDirect(Integer ownedId, Integer price, Date endTime) {
@@ -92,15 +107,17 @@ public class CardReleasedService {
 	}
 	
 	@Transactional
-	public CardReleased insertCardReleasedAuction(Integer ownedId, Integer startPrice, Integer directPrice, Date endTime) {
+	public String insertCardReleasedAuction(Integer ownedId, Integer startPrice, Integer directPrice, Date endTime) {
 		
 		CardReleased cr = new CardReleased();
 		
 		cODao.updateCardStatusToSell(ownedId);
-		
+		System.out.println("service");
 		cr.setFkOwnedId(ownedId);
 		cr.setStartPrice(startPrice);
-		cr.setDirectPrice(directPrice);
+		if (directPrice != null) {
+			cr.setDirectPrice(directPrice);
+		} 
 		cr.setType(2);
 		cr.setStartTime(new Date());
 		cr.setEndTime(endTime);
@@ -108,7 +125,17 @@ public class CardReleasedService {
 		
 		CardReleased newRelease = cRDao.save(cr);
 		
-		return newRelease;
+		Integer releasedId = newRelease.getReleasedId();
+		
+		CardAuction cA = new CardAuction();
+		cA.setFkReleasedId(releasedId);
+		CardAuction newAuction = cADao.save(cA);
+		
+		if (newRelease != null && newAuction != null) {
+			return "success";
+		}
+		
+		return null;
 	}
 	
 	public List<CardReleased> showMyReleased(Integer memberId) {
@@ -132,6 +159,7 @@ public class CardReleasedService {
 		return releaseList;
 	}
 	
+	@Transactional
 	public CardReleased showCardReleased(Integer releasedId) {
 		
 		Optional<CardReleased> card = cRDao.findById(releasedId);
