@@ -131,7 +131,7 @@ prefix="c"%>
         <div class="col-50">
           <h2>確認訂單</h2>
           <div class="container2">
-            <form action="${root}/order/ecPay">
+            <form action="${root}/order/ecPay" id="orderForm">
               <div class="row">
                 <div class="col-50">
                   <h3>帳單地址</h3>
@@ -209,5 +209,17 @@ prefix="c"%>
       </div>
     </div>
     <jsp:include page="../include/footer.jsp" />
+    <script>
+      // 選擇付款方式時改變form表單的導向
+      $("#paymentMethod").on("change", function () {
+        console.log(this.value);
+        if (this.value == "綠界") {
+          document.getElementById("orderForm").action = "${root}/order/ecPay";
+        }
+        if (this.value == "LinePay") {
+          document.getElementById("orderForm").action = "${root}/order/linePay";
+        }
+      });
+    </script>
   </body>
 </html>

@@ -8,6 +8,29 @@ prefix="c"%>
     <title>${webName}</title>
     <jsp:include page="../include/common_link.jsp" />
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
+    <style>
+      .bodyContainer {
+        height: 1600px;
+      }
+
+      li {
+        list-style-type: none;
+      }
+
+      .faviroteButton {
+        border: none;
+        background: none;
+        padding: 0;
+        float: right;
+        color: #ff0000;
+      }
+
+      .cartButton {
+        border: none;
+        background: none;
+        padding: 0;
+      }
+    </style>
   </head>
   <body>
     <jsp:include page="../include/header.jsp" />
@@ -18,6 +41,9 @@ prefix="c"%>
         </div>
         <div>
           <a href="${root}/order/">訂單</a>
+        </div>
+        <div>
+          <a href="${root}/order/orderList/?memberId=${member.memberId}">訂單列表</a>
         </div>
         <!-- <div>
           <select name="productDifficulty" id="productDifficultySelect">

@@ -27,9 +27,13 @@ function renderProduct(pList) {
     outputString += '<div class="pic">';
     outputString += `<img class="productImg" src="${root}/mall/getPhoto?pId=${p.productId}">`;
     outputString += "</div>";
-    outputString += `<div class="card-header">${p.productName}</div>`;
+    outputString += `<div class="card-header">${p.productPrice}元`;
+    outputString += `<button class="faviroteButton" value="${p.productId}">`;
+    outputString += '<i class="fa-regular fa-heart fa-2xl"></i>';
+    outputString += "</button>";
+    outputString += "</div>";
     outputString += '<div class="card-body">';
-    outputString += `<h3 class="title">${p.productPrice}元</h3>`;
+    outputString += `<h3 class="title">${p.productName}</h3>`;
     outputString += "<ul>";
     outputString += `<li>${p.addedTime}</li>`;
     outputString += `<li>${p.productDescription}</li>`;
@@ -42,12 +46,9 @@ function renderProduct(pList) {
     outputString += '<div class="text">';
     outputString += "<ul>";
     outputString += "<li>";
-    outputString += `<button class="cartButton" value="${p.productId}">加入購物車</button>`;
+    outputString += `<button class="cartButton" value="${p.productId}">`;
+    outputString += '<i class="fa-solid fa-cart-plus fa-2xl"></i></button>';
     outputString += "</li>";
-    outputString += "<li>";
-    outputString += `<button class="faviroteButton" value="${p.productId}">加入最愛</button>`;
-    outputString += "</li>";
-
     outputString += "</ul></div></div></div></div>";
   }
   $("#dataHome").html(outputString);
@@ -60,29 +61,38 @@ function renderProduct(pList) {
 function addCartButton() {
   let cartButton = document.getElementsByClassName("cartButton");
   for (i = 0; i < cartButton.length; i++) {
-    cartButton[i].addEventListener("click", function () {
+    cartButton[i].addEventListener("click", function (event) {
       let pId = this.value;
+      let heart = event.target;
       if (mId == "") {
-        alert("請先登入");
-        window.location.replace(`${root}/login`);
-        return;
+        Swal.fire({
+          title: "請先登入",
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.replace(`${root}/login`);
+        });
+      } else {
+        axios
+          .get(`${root}/shoppingCart/addShoppingCart`, {
+            params: {
+              productId: pId,
+              memberId: mId,
+            },
+          })
+          .then((response) => {
+            if (response.data == "join") {
+              heart.classList.remove("fa-cart-plus");
+              heart.classList.add("fa-xmark");
+              Swal.fire("加入購物車");
+            }
+            if (response.data == "remove") {
+              heart.classList.remove("fa-xmark");
+              heart.classList.add("fa-cart-plus");
+              Swal.fire("移除購物車");
+            }
+          })
+          .catch((error) => console.log(error));
       }
-      axios
-        .get(`${root}/shoppingCart/addShoppingCart`, {
-          params: {
-            productId: pId,
-            memberId: mId,
-          },
-        })
-        .then((response) => {
-          if (response.data == "join") {
-            alert("加入購物車");
-          }
-          if (response.data == "remove") {
-            alert("刪除購物車");
-          }
-        })
-        .catch((error) => console.log(error));
     });
   }
 }
@@ -91,29 +101,38 @@ function addCartButton() {
 function addFaviroteButton() {
   let faviroteButton = document.getElementsByClassName("faviroteButton");
   for (i = 0; i < faviroteButton.length; i++) {
-    faviroteButton[i].addEventListener("click", function () {
+    faviroteButton[i].addEventListener("click", function (event) {
       let pId = this.value;
+      let heart = event.target;
       if (mId == "") {
-        alert("請先登入");
-        window.location.replace(`${root}/login`);
-        return;
+        Swal.fire({
+          title: "請先登入",
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.replace(`${root}/login`);
+        });
+      } else {
+        axios
+          .get(`${root}/favoriteGame/addFavoriteGame`, {
+            params: {
+              productId: pId,
+              memberId: mId,
+            },
+          })
+          .then((response) => {
+            if (response.data == "like") {
+              heart.classList.remove("fa-regular");
+              heart.classList.add("fa-solid");
+              Swal.fire("加入最愛");
+            }
+            if (response.data == "dislike") {
+              heart.classList.remove("fa-solid");
+              heart.classList.add("fa-regular");
+              Swal.fire("取消最愛");
+            }
+          })
+          .catch((error) => console.log(error));
       }
-      axios
-        .get(`${root}/favoriteGame/addFavoriteGame`, {
-          params: {
-            productId: pId,
-            memberId: mId,
-          },
-        })
-        .then((response) => {
-          if (response.data == "like") {
-            alert("新增最愛");
-          }
-          if (response.data == "dislike") {
-            alert("刪除最愛");
-          }
-        })
-        .catch((error) => console.log(error));
     });
   }
 }

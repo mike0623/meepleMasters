@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Order;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.OrderDetail;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
+import tw.com.eeit162.meepleMasters.jim.mall.service.OrderService;
 import tw.com.eeit162.meepleMasters.jim.mall.service.ShoppingCartService;
 
 @Controller
@@ -22,6 +24,9 @@ public class ShoppingCartController {
 
 	@Autowired
 	private ShoppingCartService scService;
+
+	@Autowired
+	private OrderService oService;
 
 	// 進入購物車頁面
 	@GetMapping("/shoppingCart")
@@ -51,14 +56,20 @@ public class ShoppingCartController {
 
 	// 透過會員ID將購物車轉換成訂單
 	@GetMapping("/shoppingCart/cartToOreder/{memberId}")
-	public String cartToOrder(@PathVariable Integer memberId, HttpSession session) {
+	public String cartToOrder(@PathVariable Integer memberId, HttpSession session, Model model) {
+		Order oldOrder = oService.findByMemberAndOrderStatus(memberId);
+
+		if (oldOrder != null) {
+			return "jim/shoppingCart";
+		}
+
 		Order order = scService.cartToOrder(memberId);
 
-		session.setAttribute("order", order);
+		model.addAttribute("order", order);
 
 		List<OrderDetail> orderDetails = order.getOrderDetails();
 
-		session.setAttribute("orderDetails", orderDetails);
+		model.addAttribute("orderDetails", orderDetails);
 
 		return "jim/order";
 	}
