@@ -96,8 +96,8 @@
 					//對方發出邀請了，我沒接受
 					$(".friendButtonDiv").empty();
 					$(".friendButtonDiv").append(`
-							<button onclick="acceptFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">接受邀請</button>
-							<button onclick="rejectFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">拒絕邀請</button>
+							<button class="btn btn-info" onclick="acceptFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">接受邀請</button>
+							<button class="btn btn-info" onclick="rejectFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">拒絕邀請</button>
 							`);
 					return;
 				}

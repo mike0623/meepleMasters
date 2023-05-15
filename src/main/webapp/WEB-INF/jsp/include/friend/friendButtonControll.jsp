@@ -34,7 +34,7 @@
 						let idTypeTag = theOtherEmail+"tag";
 						$(".friendButtonDiv").empty();
 						$(".friendButtonDiv").append(`
-								<button onclick="sendFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">加好友</button>
+								<button class="btn btn-info" onclick="sendFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">加好友</button>
 								`);
 						if($(".chatActive").length != 0){
 							//如果他剛好是chatActive，就重新給chatActive並更新右邊畫面
@@ -88,7 +88,7 @@
 				$(".friendButtonDiv").empty();
 				$(".friendButtonDiv").empty();
 				$(".friendButtonDiv").append(`
-						<button onclick="sendFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">加好友</button>
+						<button class="btn btn-info" onclick="sendFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">加好友</button>
 						`);
 			}
 			//websocket呼叫後端告訴後端將對方的接受按鈕變回不是好友
@@ -118,8 +118,8 @@
 			if(isSelectedPage == true){
 				$(".friendButtonDiv").empty();
 				$(".friendButtonDiv").append(`
-						<button onclick="pressChatButton('`+buttonTypeName+`','`+idTypeEmail+`')">傳送訊息</button>
-						<button onclick="deleteFriend('${member.memberEmail}','`+selectedFriendEmail+`')">刪除好友</button>
+						<button class="btn btn-info" onclick="pressChatButton('`+buttonTypeName+`','`+idTypeEmail+`')">傳送訊息</button>
+						<button class="btn btn-info" onclick="deleteFriend('${member.memberEmail}','`+selectedFriendEmail+`')">刪除好友</button>
 						`)
 			}
 			//更新好友邀請欄
@@ -151,7 +151,7 @@
 				$(".friendButtonDiv").empty();
 				$(".friendButtonDiv").empty();
 				$(".friendButtonDiv").append(`
-						<button onclick="sendFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">加好友</button>
+						<button class="btn btn-info" onclick="sendFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">加好友</button>
 						`);
 			}
 			//更新好友邀請欄
@@ -180,7 +180,7 @@
 		axios.post("http://localhost:8080/meeple-masters/friendInvite/insert",json).then(function(response) {
 			$(".friendButtonDiv").empty();
 			$(".friendButtonDiv").append(`
-					<button onclick="deleteFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">取消邀請</button>
+					<button class="btn btn-info" onclick="deleteFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">取消邀請</button>
 					`);
 			//websocket呼叫後端
 			let wsJson = {
