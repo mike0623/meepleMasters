@@ -66,26 +66,28 @@ public class RouteController {
 		
 		List<Object[]> collect = collectLibraryService.findMemberCollect(id);
 		ArrayList<Product> productList = new ArrayList<>();
-
-		for (int i = 0; i < collect.size(); i++) {
-//			System.out.println(collect.get(i));
-//			System.out.println("-------------------------");
-//			System.out.println(collect.get(i)[0]);
-//			System.out.println("-------------------------");
-//			System.out.println(collect.get(i)[2]);
-			JSONObject jsonObject = new JSONObject(collect.get(i)[2]);
-			
-//			productList.add(jsonObject.getString("productName"));
+		
+		
+		for(Object[] object:collect) {
 			Product product = new Product();
-			product.setProductName(jsonObject.getString("productName"));
-			product.setProductId(jsonObject.getInt("productId"));
+			product = (Product)object[2];
 			productList.add(product);
-			
-			System.out.println(jsonObject.getString("productName"));
-			System.out.println("-------------------------");
-			System.out.println(productList);
-
 		}
+		
+
+//		for (int i = 0; i < collect.size(); i++) {
+//			JSONObject jsonObject = new JSONObject(collect.get(i)[2]);
+//			
+//			Product product = new Product();
+//			product.setProductName(jsonObject.getString("productName"));
+//			product.setProductId(jsonObject.getInt("productId"));
+//			productList.add(product);
+//			
+//			System.out.println(jsonObject.getString("productName"));
+//			System.out.println("-------------------------");
+//			System.out.println(productList);
+//
+//		}
 		model.addAttribute("memberProduct", productList);
 		
 		return "jack/memberProduct";
