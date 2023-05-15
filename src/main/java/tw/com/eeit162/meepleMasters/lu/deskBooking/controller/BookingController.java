@@ -3,8 +3,12 @@ package tw.com.eeit162.meepleMasters.lu.deskBooking.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,10 +23,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jack.service.MemberService;
 import tw.com.eeit162.meepleMasters.lu.deskBooking.model.BookingBean;
 import tw.com.eeit162.meepleMasters.lu.deskBooking.model.BookingDto;
 import tw.com.eeit162.meepleMasters.lu.deskBooking.model.DeskBean;
@@ -37,6 +44,9 @@ public class BookingController {
 
 	@Autowired
 	private DeskService deskService;
+	
+	@Autowired
+	private MemberService memberService;
 		
 	
 	// 顯示訂位表單頁面
@@ -87,14 +97,13 @@ public class BookingController {
 	                          HttpSession session, HttpServletRequest request,Model model) throws ParseException {
 		
 	    // 從 HttpSession 中獲取 memberId
-
 		Member Member = (Member) session.getAttribute("member");
 		Integer memberId = Member.getMemberId();
 	 
 		// 創建SimpleDateFormat物件，並設定日期格式
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
-     // 使用SimpleDateFormat的parse()方法將日期字串轉成Date物件
+        // 使用SimpleDateFormat的parse()方法將日期字串轉成Date物件
         Date bookDate = sdf.parse(date);
    
 	    BookingBean bookingbean = new BookingBean();
@@ -104,7 +113,6 @@ public class BookingController {
 	    bookingbean.setBookTime(time);
 	    
 	    bookingService.insertBooking(bookingbean);
-//	    model.addAttribute("bookingrecord", bookingbean);
 	    DeskBean tableType = deskService.getDeskById(deskId);
 		
 		model.addAttribute("selectedDate", date);
@@ -158,21 +166,35 @@ public class BookingController {
 	@GetMapping("/booking/record")
 	public String showBookingRecord(HttpSession session, HttpServletRequest request,Model model) {
 		
+		// 從session中取得會員資料
 		Member Member = (Member) session.getAttribute("member");
 		Integer memberId = Member.getMemberId();
-		
+		Member memberName = memberService.findMemberById(memberId);
+	
+		// 根據memberId取得會員預約紀錄
 		List<BookingBean> bookingRecord = bookingService.findAllBookingsByMemberId(memberId);
-//		BookingBean bookingBean = new BookingBean();
+
+		// 取出所有預約紀錄中的桌子類型
+		List<DeskBean> desks = new ArrayList<>();
+
+		for (BookingBean booking : bookingRecord) {
+		    DeskBean desk = deskService.getDeskById(booking.getBookDeskId());
+		    if (desk != null) {
+		        desks.add(desk);
+		    }
+		}
 		
 		model.addAttribute("bookingrecord", bookingRecord);
+		model.addAttribute("desks", desks);
+		model.addAttribute("memberName", memberName.getMemberName());
 		return "lu/bookingrecord";
 	}
 	
-	@DeleteMapping("")
-	public String deleteBooking(@RequestParam("id") Integer id) {
-		
-		
-		return "";
+	@ResponseBody
+	@DeleteMapping("/booking/delete/{bookId}")
+	public String deleteBooking(@PathVariable("bookId") Integer bookId) {
+	    bookingService.deleteBookingById(bookId);
+	    return "";
 	}
 	
 	
