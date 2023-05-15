@@ -61,6 +61,7 @@
                                                                 <th>Coin</th>
                                                                 <th>帳號驗證</th>
                                                                 <th>註冊日期</th>
+                                                                <th></th>
                                                             </tr>
                                                         </thead>
                                                         <tfoot>
@@ -75,6 +76,8 @@
                                                                 <th>Coin</th>
                                                                 <th>帳號驗證</th>
                                                                 <th>註冊日期</th>
+                                                                <th></th>
+
                                                             </tr>
                                                         </tfoot>
                                                         <tbody id="memberList">
@@ -97,6 +100,7 @@
                                                                     <td>${all.memberCoin}</td>
                                                                     <td>${all.memberActive}</td>
                                                                     <td>${all.createTime}</td>
+                                                                    <td><a href="${root}/admin/banMember?id=${all.memberId}" class="btn btn-danger" id="banButton">停權</a></td>
                                                                 </tr>
 
                                                             </c:forEach>

@@ -130,6 +130,7 @@ public class MemberService {
 			member.setMemberImg(imageData);
 			member.setMemberLevel("一般會員");
 			member.setMemberActive(1);
+			member.setMemberCoin(500);
 			member.setCreateTime(new Date());
 
 			return memberDao.save(member);
@@ -357,6 +358,22 @@ public class MemberService {
 		
 		return null;
 		
+	}
+	
+	public Member banMemberById(Integer memberId){
+		Optional<Member> option = memberDao.findById(memberId);
+		Member member = option.get();
+		if(member != null && member.getMemberActive()==1) {
+			member.setMemberActive(0);
+			memberDao.save(member);
+			return member;
+		}
+		if(member != null && member.getMemberActive()==0) {
+			member.setMemberActive(1);
+			memberDao.save(member);
+			return member;
+		}
+		return null;
 	}
 
 	@Transactional
