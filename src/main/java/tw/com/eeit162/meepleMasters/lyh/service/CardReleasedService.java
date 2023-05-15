@@ -293,6 +293,7 @@ public class CardReleasedService {
 
 	}
 
+//	出價
 	@Transactional
 	public String purchaseAuction(Integer releasedId, Integer price, HttpSession session) {
 
@@ -305,6 +306,14 @@ public class CardReleasedService {
 		if (memberCoin < price) {
 			return null;
 		}
+		
+		Integer lastPurchaserId = cADao.findByReleasedId(releasedId).getFkReleasedId(); 
+		
+		if (lastPurchaserId != null) {
+			mDao.updateMemberCoin(lastPurchaserId, price);
+		}
+		
+		Integer purchaseCoin = mDao.updateMemberCoin(memberId, -price);
 
 		Integer updateCardAuction = cADao.updateCardAuction(releasedId, memberId, price, new Date());
 
@@ -325,7 +334,7 @@ public class CardReleasedService {
 
 		CardAuctionHistory cardAuctionHistory = cAHDao.save(cAH);
 
-		if (updateCardAuction != 0 && cardAuctionHistory != null) {
+		if (purchaseCoin != 0 && updateCardAuction != 0 && cardAuctionHistory != null) {
 			return "success";
 		}
 

@@ -68,12 +68,12 @@
             </div>
 
         </div>
-        <form action="${root}/editRelease" method="get" id="forEdit">
-            <input type="hidden" name="releasedId" id="param" hidden>
+        <form action="${root}/editRelease" method="get" class="forEdit">
+            <input type="hidden" name="releasedId" id="paramDirect" hidden>
             <input type="submit" value="Submit" hidden>
         </form>
-        <form action="${root}/editAuction" method="get" id="forAuctionEdit">
-            <input type="hidden" name="releasedId" id="param" hidden>
+        <form action="${root}/editAuction" method="get" class="forAuctionEdit">
+            <input type="hidden" name="releasedId" id="paramAuction" hidden>
             <input type="submit" value="Submit" hidden>
         </form>
     </div>
@@ -239,12 +239,13 @@
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
-                                let releasedId = `\${res.data.releasedId}`;
-                                $("#param").val(releasedId);
 
                                 let cardHtml = "";
 
                                 if (res.data.type == 2) {
+                                    let releasedId = `\${res.data.releasedId}`;
+                                    $("#paramAuction").val(releasedId);
+
                                     cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
                                             <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
@@ -328,7 +329,7 @@
                                                         console.error(err);
                                                     })
                                             } else if (result.isDenied) {
-                                                $('#forAuctionEdit').submit();
+                                                $('.forAuctionEdit').submit();
                                             }
                                         })
                                     } else {
@@ -349,9 +350,10 @@
                                             }
                                         })
                                     }
-
-
                                 } else {
+                                    let releasedId = `\${res.data.releasedId}`;
+                                    $("#paramDirect").val(releasedId);
+
                                     cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
                                             <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
@@ -412,7 +414,7 @@
                                                     console.error(err);
                                                 })
                                         } else if (result.isDenied) {
-                                            $('#forEdit').submit();
+                                            $('.forEdit').submit();
                                         }
                                     })
                                 }
@@ -570,10 +572,10 @@
                                 cardHtml += `\${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
                                             \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
                                             \${memberCoin} <i class="fa-solid fa-coins"></i><br>
-                                            <form action="${root}/" method="post" id="forPurchase">
-                                            <input type="number" name="purchasePrice" id="purchasePrice" class="purchasePrice" onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" `
+                                            <form action="${root}/released/purchaseAuction" method="post" id="forPurchase">
+                                            <input type="number" name="purchasePrice" id="purchasePrice" class="purchasePrice" onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" oninput="`
                                 if (res.data.directPrice != null) {
-                                    cardHtml += `oninput="if(value>\${res.data.directPrice})value=\${res.data.directPrice};`
+                                    cardHtml += `if(value>\${res.data.directPrice})value=\${res.data.directPrice};`
                                 }
                                 if (res.data.purchasePrice != null) {
                                     cardHtml += `if(value<\${res.data.purchasePrice})value=(\${res.data.purchasePrice}+1);`
@@ -616,10 +618,11 @@
                                                 clearInterval(intervalId);
                                             }
                                         }).then((result) => {
+                                            console.log($("#purchasePrice").val())
                                             if (result.isConfirmed) {
                                                 if (memberId == "") {
                                                     window.location.href = "${root}/login";
-                                                } else if (memberCoin < res.data.directPrice) {
+                                                } else if (memberCoin < $("#purchasePrice").val()) {
                                                     Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
                                                 } else {
                                                     Swal.fire({
@@ -754,9 +757,8 @@
                             axios.post("${root}/released/discontinued?releasedId=" + res.data[i].releasedId + "&ownedId=" + res.data[i].ownedId)
                         }
 
-                        htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
-
                         if (res.data[i].memberId == memberId) {
+                            htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
                             htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
                             htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
 
@@ -801,9 +803,15 @@
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
+                                let releasedId = `\${res.data.releasedId}`;
+                                $("#param").val(releasedId);
+
                                 let cardHtml = "";
 
                                 if (res.data.type == 2) {
+                                    let releasedId = `\${res.data.releasedId}`;
+                                    $("#paramAuction").val(releasedId);
+
                                     cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
                                             <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
@@ -887,7 +895,7 @@
                                                         console.error(err);
                                                     })
                                             } else if (result.isDenied) {
-                                                $('#forAuctionEdit').submit();
+                                                $('.forAuctionEdit').submit();
                                             }
                                         })
                                     } else {
@@ -895,16 +903,23 @@
                                             title: '',
                                             html: cardHtml,
                                             showCancelButton: false,
-                                            confirmButtonText: '關閉',
+                                            confirmButtonText: '提前結標',
                                             confirmButtonColor: '#dc7e6a',
                                             background: '#dfa661',
                                             customClass: 'editAlert',
                                             willClose: () => {
                                                 clearInterval(intervalId);
                                             }
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                axios.post("${root}/released/stopAuction?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.purchasePrice)
+                                            }
                                         })
                                     }
                                 } else {
+                                    let releasedId = `\${res.data.releasedId}`;
+                                    $("#paramDirect").val(releasedId);
+
                                     cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
                                             <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
@@ -962,7 +977,7 @@
                                                     console.error(err);
                                                 })
                                         } else if (result.isDenied) {
-                                            $('#forEdit').submit();
+                                            $('.forEdit').submit();
                                         }
                                     })
                                 }

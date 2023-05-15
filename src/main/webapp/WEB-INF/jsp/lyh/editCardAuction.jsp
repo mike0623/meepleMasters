@@ -30,7 +30,7 @@
                 <h2 class="text-headline">卡片上架修改</h2>
             </span>
             <span class="form-group mb-3" style="position: relative; top: -20;">
-                <label for="releasedId" class="text-small-uppercase form-label" style="width: 100%;">我的卡片
+                <label for="ownedId" class="text-small-uppercase form-label" style="width: 100%;">我的卡片
                     <select class="text-body form-control form-select" id="releasedId" name="releasedId" type="text"
                         style="margin-top: 5px;" path="releasedId" required>
                         <option id="notSelect" value="">請選擇卡片</option>
@@ -38,10 +38,16 @@
                 </label>
             </span>
             <span class="form-group mb-3">
-                <label for="directPrice" class="text-small-uppercase form-label">售出價</label>
+                <label for="startPrice" class="text-small-uppercase form-label">拍賣起價</label>
+                <input class="text-body" id="startPrice" name="startPrice" type="text"
+                    onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')"
+                    path="startPrice" required />
+            </span>
+            <span class="form-group mb-3">
+                <label for="directPrice" class="text-small-uppercase form-label">直購價（選填）</label>
                 <input class="text-body" id="directPrice" name="directPrice" type="text"
                     onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')"
-                    path="directPrice" required />
+                    path="directPrice" />
             </span>
             <span class="form-group mb-3">
                 <label for="endTime" class="text-small-uppercase form-label">結束時間（至選擇日期的23:59截止）</label>
@@ -49,17 +55,13 @@
             </span>
             <div class="wrapper form-group mb-3">
                 <input type="radio" name="select" id="option-1" checked>
-                <input type="radio" name="select" id="option-2">
-                <label for="option-1" class="option option-1 form-label">
+                <label for="option-1" class="option option-1 form-label"
+                    style="width: 120px; position: absolute; bottom: 130px;">
                     <div class="dot"></div>
-                    <span>直接出價</span>
+                    <span>拍賣</span>
                 </label>
-                <!-- <label for="option-2" class="option option-2">
-                    <div class="dot"></div>
-                    <span>Teacher</span>
-                </label> -->
             </div>
-            <input class="inputSubmit" value="修改" type="submit">
+            <input class="inputSubmit" value="上架" type="submit">
         </form>
     </main>
     <jsp:include page="../include/footer.jsp"></jsp:include>
@@ -72,26 +74,33 @@
         const releasedId = '<%= request.getParameter("releasedId") %>';
         console.log("releasedId: " + releasedId);
 
-        let price = "";
+        let startPrice = "";
+        let directPrice = "";
         let getTime = "";
         let cardName = "";
         let cardId = "";
         let endTime = "";
         let formattedEndTime = "";
 
+
         $.get(`${root}/released/card/\${releasedId}`, function (data) {
 
             // console.log(data)
-            price = `\${data.directPrice}`;
+            startPrice = `\${data.startPrice}`
+            if (data.directPrice != null) {
+                directPrice = `\${data.directPrice}`;
+            }
             getTime = `\${data.endTime}`;
             cardName = `\${data.cardName}`;
             cardId = `\${data.cardId}`;
             endTime = new Date(getTime);
             formattedEndTime = endTime.toISOString().substr(0, 10);
 
-            if (price != "") {
-                $("#directPrice").val(`\${price}`);
+            if (directPrice != "") {
+                $("#directPrice").val(`\${directPrice}`);
                 $("#directPrice").parent().addClass("inputs--filled");
+            } else {
+                $("#directPrice").empty();
             }
 
             if (formattedEndTime != "") {
@@ -110,6 +119,10 @@
                 $("#releaseCardImg").attr("src", imageUrl);
             }
 
+            if (startPrice != "") {
+                $("#startPrice").val(`\${startPrice}`);
+                $("#startPrice").parent().addClass("inputs--filled");
+            }
 
         })
 
