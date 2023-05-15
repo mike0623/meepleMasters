@@ -346,6 +346,18 @@ public class MemberService {
 
 		return null;
 	}
+	
+	public Optional<List<Member>> findAllMember(){
+		
+		Optional<List<Member>> allMember = Optional.ofNullable(memberDao.findAll());
+		
+		if(allMember!= null) {
+			return allMember;
+		}
+		
+		return null;
+		
+	}
 
 	@Transactional
 	public Integer updateMemberCoin(Integer memberId, Integer coin) {

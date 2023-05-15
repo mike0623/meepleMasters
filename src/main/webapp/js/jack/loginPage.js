@@ -18,6 +18,12 @@ document.querySelector("#member2").addEventListener("click", function () {
     email.value = "CCC@gmail.com",
     password.value = "1234"
   });
+
+// member3按鈕
+document.querySelector("#member3").addEventListener("click", function () {
+  email.value = "DDD@gmail.com",
+  password.value = "1234"
+});
   
   // reset按鈕
   document.querySelector("#reset").addEventListener("click", function () {

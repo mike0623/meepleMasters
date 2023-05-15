@@ -91,12 +91,12 @@ public class RouteController {
 		return "jack/memberProduct";
 	}
 	
-	@GetMapping("/member/myProfile")
-	public String myProfile() {
-		
-		
-		return "jack/myProfile";
-	}
+//	@GetMapping("/member/myProfile")
+//	public String myProfile() {
+//		
+//		
+//		return "jack/myProfile";
+//	}
 	
 	@GetMapping("/member/profile")
 	public String profile() {
@@ -113,7 +113,7 @@ public class RouteController {
 //		return "jack/otherMember";
 //	}
 	
-	@GetMapping("/otherMember/{id}")
+	@GetMapping("/member/myProfile/{id}")
 	public String otherMember(@PathVariable("id") Integer memberId, Model model) {
 		
 		Optional<Member> member = Optional.ofNullable(memberService.findMemberById(memberId));
@@ -123,7 +123,26 @@ public class RouteController {
 			model.addAttribute("findMember", member.get());
 		}
 		
-		return "jack/otherMember";
+		return "jack/myProfile";
 	}
+	
+	@GetMapping("/admin/memberManage")
+	public String adminMember() {
+		
+		Optional<List<Member>> option = memberService.findAllMember();
+		List<Member> allMember = option.get();
+		ArrayList<Member> memberList = new ArrayList<>();
+		for(int i = 0; i< allMember.size(); i++) {
+			System.out.println(allMember);
+			Member member = new Member();
+			
+			
+		}
+		
+		
+		return "jack/memberManage";
+	}
+	
+	
 
 }	

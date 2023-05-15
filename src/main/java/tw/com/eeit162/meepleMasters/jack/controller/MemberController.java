@@ -292,4 +292,15 @@ public class MemberController {
 		System.out.println("null");
 		return null;
 	}
+	
+//	@ResponseBody
+//	@GetMapping("/admin/findAllMember")
+//	public  List<Member> findAllMember(){
+//		Optional<List<Member>> allMember = mService.findAllMember();
+//		if(allMember!=null) {
+//			return allMember.get();
+//		}
+//		
+//		return null;
+//	}
 }

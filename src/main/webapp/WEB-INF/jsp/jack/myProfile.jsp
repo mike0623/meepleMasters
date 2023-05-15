@@ -18,10 +18,15 @@
 
                             /* div.list-group{
 								position: absolute;
-								z-index: 1;
+								z-index: 10;
 							} */
 
-                            
+                            ul .friendButtonDiv {
+                                margin-left: auto;
+                                height: 40;
+                                width: 100;
+                                margin-top: auto;
+                            }
                         </style>
                     </head>
 
@@ -30,6 +35,7 @@
 
 
                         <div class="container">
+
                             <!-- Topbar Search -->
                             <div
                                 class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 p-3 py-5">
@@ -45,17 +51,20 @@
                                 </div>
                                 <div class="list-group" id="result"
                                     style="width: 400px; border-radius: 5px; margin-left:auto;">
-                                    
+
                                 </div>
                             </div>
                             <!-- Topbar Search -->
 
                             <div class="profile">
                                 <div class="profile-header">
-                                    <div class="profile-header-cover"></div>
+                                    <div class="profile-header-cover">
+                                    </div>
                                     <div class="profile-header-content">
                                         <div class="profile-header-img">
-                                            <img src="${root}/member/findMemberImg/${member.memberId}" alt="" />
+                                            
+                                                    <img src="${root}/member/findMemberImg/${findMember.memberId}" alt="" />
+                                                
                                         </div>
                                         <ul class="profile-header-tab nav nav-tabs nav-tabs-v2">
                                             <li class="nav-item">
@@ -88,19 +97,32 @@
                                                     <div class="nav-value">2,592</div>
                                                 </a>
                                             </li>
+                                            <c:choose>
+                                                <c:when test="${member.memberEmail == findMember.memberEmail }">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="friendButtonDiv btn btn-info">
+                                                        <i class="fa-regular fa-user"></i> 加朋友
+                                                    </div>
+
+                                                </c:otherwise>
+                                            </c:choose>
                                         </ul>
+
                                     </div>
                                 </div>
 
                                 <div class="profile-container">
                                     <div class="profile-sidebar">
                                         <div class="desktop-sticky-top">
-                                            <h4>${member.memberName}</h4>
-                                            <div class="font-weight-600 mb-3 text-muted mt-n2">${member.memberEmail}</div>
+                                            <h4>${findMember.memberName}</h4>
+                                            <div class="font-weight-600 mb-3 text-muted mt-n2">${findMember.memberEmail}
+                                            </div>
                                             <p>
-                                                
+
                                             </p>
-                                            <div class="mb-1"><i class="fa fa-map-marker-alt fa-fw text-muted"></i> ${member.memberAddress}</div>
+                                            <div class="mb-1"><i class="fa fa-map-marker-alt fa-fw text-muted"></i>
+                                                ${findMember.memberAddress}</div>
                                             <div class="mb-3"><i class="fa fa-link fa-fw text-muted"></i>
                                                 seantheme.com/studio</div>
                                             <hr class="mt-4 mb-4" />
@@ -244,7 +266,6 @@
 
 
                         <jsp:include page="../include/footer.jsp"></jsp:include>
-
                         <script type="text/javascript" src="${root}/js/jack/myProfile.js"></script>
                     </body>
 
