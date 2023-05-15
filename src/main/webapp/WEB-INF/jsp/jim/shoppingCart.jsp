@@ -8,10 +8,6 @@ pageEncoding="UTF-8"%>
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
     <jsp:include page="/WEB-INF/jsp/include/common_link.jsp" />
     <style>
-      body {
-        margin-top: 20px;
-        background: #eee;
-      }
       .ui-w-40 {
         width: 40px !important;
         height: auto;
@@ -42,7 +38,7 @@ pageEncoding="UTF-8"%>
   <body>
     <jsp:include page="/WEB-INF/jsp/include/header.jsp" />
     <div class="bodyContainer">
-      <div class="container px-3 my-5 clearfix">
+      <div class="container my-5 clearfix">
         <!-- Shopping cart table -->
         <div class="card">
           <div class="card-header">

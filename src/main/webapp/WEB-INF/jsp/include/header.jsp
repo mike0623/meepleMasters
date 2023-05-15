@@ -101,11 +101,13 @@
                         </c:if>
                           <li><a class="dropdown-item" href="${root}/member/game">我的遊戲</a></li>
                           <li><a class="dropdown-item" href="${root}/member/myProfile/${member.memberId}">我的檔案</a></li>
+                          <li><a class="dropdown-item" href="${root}/order/orderList/?memberId=${member.memberId}">我的訂單</a></li>
                           <li><a class="dropdown-item" href="${root}/member/profile">修改資料</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li><a class="dropdown-item" href="${root}/member/logout">Logout</a></li>
                         </ul>
                       </li>
+                      <div><a href="${root}/shoppingCart"><i class="fa-solid fa-cart-shopping fa-2xl shoppingCartButton"></i></a></div>
                     </c:if>
                 </ul>
             </nav>

@@ -10,13 +10,11 @@ prefix="c"%>
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
     <style>
       .bodyContainer {
-        height: 1700px;
+        height: 1550px;
       }
-
       li {
         list-style-type: none;
       }
-
       .faviroteButton {
         border: none;
         background: none;
@@ -24,11 +22,11 @@ prefix="c"%>
         float: right;
         color: #ff0000;
       }
-
       .cartButton {
         border: none;
         background: none;
         padding: 0;
+        color: #8a513f;
       }
     </style>
   </head>
@@ -51,18 +49,6 @@ prefix="c"%>
           </select>
           <button type="button" id="queryButton">查詢</button>
         </div>
-        <div>
-          <a href="${root}/shoppingCart">購物車</a>
-        </div>
-        <div>
-          <a href="${root}/order/">訂單</a>
-        </div>
-        <div>
-          <a href="${root}/order/orderList/?memberId=${member.memberId}"
-            >訂單列表</a
-          >
-        </div>
-
         <div class="gameListTitle">
           遊戲列表
           <div class="link-top"></div>

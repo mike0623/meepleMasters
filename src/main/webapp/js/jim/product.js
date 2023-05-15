@@ -43,13 +43,9 @@ function renderProduct(pList) {
     outputString += "</ul>";
     outputString += "</div>";
     outputString += '<div class="card-footer">';
-    outputString += '<div class="text">';
-    outputString += "<ul>";
-    outputString += "<li>";
     outputString += `<button class="cartButton" value="${p.productId}">`;
     outputString += '<i class="fa-solid fa-cart-plus fa-2xl"></i></button>';
-    outputString += "</li>";
-    outputString += "</ul></div></div></div></div>";
+    outputString += "</div></div></div>";
   }
   $("#dataHome").html(outputString);
 
