@@ -78,6 +78,28 @@
                                                             </tr>
                                                         </tfoot>
                                                         <tbody id="memberList">
+                                                            <c:forEach items="${allMember}" var="all">
+                                                                <tr>
+                                                                    <td>${all.memberId}</td>
+                                                                    <td><img src="${root}/member/findMemberImg/${all.memberId}"
+                                                                            alt="" width="32" height="32"
+                                                                            class="rounded-circle"> ${all.memberName}
+                                                                    </td>
+                                                                    <td>${all.memberEmail}</td>
+                                                                    <c:set var="BirthDate"
+                                                                        value="${all.memberBirth}" />
+                                                                    <fmt:formatDate value="${BirthDate}"
+                                                                        pattern="yyyy-MM-dd" var="formattedDate" />
+                                                                    <td>${formattedDate}</td>
+                                                                    <td>${all.memberGender}</td>
+                                                                    <td>${all.memberTel}</td>
+                                                                    <td>${all.memberAddress}</td>
+                                                                    <td>${all.memberCoin}</td>
+                                                                    <td>${all.memberActive}</td>
+                                                                    <td>${all.createTime}</td>
+                                                                </tr>
+
+                                                            </c:forEach>
                                                             <!-- <tr>
                                                                 <td>id</td>
                                                                 <td><img src="${root}/member/findMemberImg/${member.memberId}"
@@ -92,7 +114,7 @@
                                                                 <td>帳號驗證</td>
                                                                 <td>註冊日期</td>
                                                             </tr> -->
-                                                            
+
                                                         </tbody>
                                                     </table>
                                                 </div>

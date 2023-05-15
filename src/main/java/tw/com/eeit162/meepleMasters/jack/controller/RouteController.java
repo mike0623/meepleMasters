@@ -127,18 +127,30 @@ public class RouteController {
 	}
 	
 	@GetMapping("/admin/memberManage")
-	public String adminMember() {
+	public String adminMember(Model model) {
 		
 		Optional<List<Member>> option = memberService.findAllMember();
 		List<Member> allMember = option.get();
 		ArrayList<Member> memberList = new ArrayList<>();
 		for(int i = 0; i< allMember.size(); i++) {
-			System.out.println(allMember);
+			System.out.println(allMember.get(i));
+			System.out.println("Name : "+allMember.get(i).getMemberName());
 			Member member = new Member();
+			member.setMemberId(allMember.get(i).getMemberId());
+			member.setMemberName(allMember.get(i).getMemberName());
+			member.setMemberEmail(allMember.get(i).getMemberEmail());
+			member.setMemberBirth(allMember.get(i).getMemberBirth());
+			member.setMemberGender(allMember.get(i).getMemberGender());
+			member.setMemberTel(allMember.get(i).getMemberTel());
+			member.setMemberAddress(allMember.get(i).getMemberAddress());
+			member.setMemberCoin(allMember.get(i).getMemberCoin());
+			member.setMemberLevel(allMember.get(i).getMemberLevel());
+			member.setCreateTime(allMember.get(i).getCreateTime());
 			
+			memberList.add(member);
 			
 		}
-		
+		model.addAttribute("allMember", memberList);
 		
 		return "jack/memberManage";
 	}
