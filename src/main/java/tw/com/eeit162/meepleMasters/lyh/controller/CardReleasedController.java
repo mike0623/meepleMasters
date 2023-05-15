@@ -241,13 +241,15 @@ public class CardReleasedController {
 		CardAuction cardAuction = null;
 		String purchaserName = "";
 		
-//		if (cardReleased.getType() == 2) {
-//			cardAuction = cRService.findAuctionById(releasedId);
-//			if (cardAuction != null) {
-//				Member purchaser = mService.findMemberById(cardAuction.getFkPurchaserId());
-//				purchaserName = purchaser.getMemberName();
-//			}
-//		}
+		if (cardReleased.getType() == 2) {
+//			System.out.println("-----------------------releasedId"+releasedId);
+			cardAuction = cRService.findAuctionById(releasedId);
+//			System.out.println("cardAuction"+cardAuction);
+			if (cardAuction.getPurchasePrice() != null) {
+				Member purchaser = mService.findMemberById(cardAuction.getFkPurchaserId());
+				purchaserName = purchaser.getMemberName();
+			}
+		}
 
 		Member member = mService.findMemberById(cardOwned.getFkMemberId());
 		String memberName = member.getMemberName();
@@ -269,7 +271,8 @@ public class CardReleasedController {
 	    cardDto.setCardName(card.getCardName());
 	    cardDto.setCardStar(card.getCardStar());
 	    cardDto.setMemberName(memberName);
-	    if (cardAuction != null) {
+	    if (cardReleased.getType() == 2 &&cardAuction.getPurchasePrice() != null) {
+	    	cardDto.setPurchaserId(cardAuction.getFkPurchaserId());
 	        cardDto.setPurchasePrice(cardAuction.getPurchasePrice());
 	        cardDto.setPurchaserName(purchaserName);
 	    }
@@ -302,7 +305,7 @@ public class CardReleasedController {
 			@RequestParam("ownedId") Integer ownedId, @RequestParam("price") Integer price, HttpSession session) {
 //		JSONObject jsonObject = new JSONObject(body);
 //		String price = jsonObject.getString("price");
-		String buyCard = cRService.buyCard(releasedId, ownedId, price, session);
+		String buyCard = cRService.buyCardDirect(releasedId, ownedId, price, session);
 
 		if (buyCard != null) {
 			Member member = (Member) session.getAttribute("member");
@@ -313,6 +316,52 @@ public class CardReleasedController {
 		}
 
 		return "購買失敗";
+	}
+	
+	@PostMapping("/buyAuctionDirect")
+	@ResponseBody
+	public String buyCardAuctionDirect(/* @RequestBody String body, */ @RequestParam("releasedId") Integer releasedId,
+			@RequestParam("ownedId") Integer ownedId, @RequestParam("price") Integer price, HttpSession session) {
+//		JSONObject jsonObject = new JSONObject(body);
+//		String price = jsonObject.getString("price");
+		String buyCard = cRService.buyCardDirect(releasedId, ownedId, price, session);
+
+		if (buyCard != null) {
+			Member member = (Member) session.getAttribute("member");
+			Integer memberId = member.getMemberId();
+			member = cListService.findMember(memberId);
+			session.setAttribute("member", member);
+			return "購買成功";
+		}
+
+		return "購買失敗";
+	}
+	
+	@PostMapping("/purchaseAuction")
+	@ResponseBody
+	public String purchaseAuction(@RequestParam("releasedId") Integer releasedId, @RequestParam("price") Integer price, HttpSession session) {
+
+		String purchaseAuction = cRService.purchaseAuction(releasedId, price, session);
+		
+		if (purchaseAuction != null) {
+			return "出價成功";
+		}
+
+		return "出價失敗";
+	}
+	
+	@PostMapping("/stopAuction")
+	@ResponseBody
+	public String stopAuction(@RequestParam("releasedId") Integer releasedId,
+			@RequestParam("ownedId") Integer ownedId, @RequestParam("price") Integer price, HttpSession session) {
+
+		String purchaseAuction = cRService.stopAuction(releasedId, ownedId, price, session);
+		
+		if (purchaseAuction != null) {
+			return "結標成功";
+		}
+
+		return "結標失敗";
 	}
 
 	@PostMapping("/discontinued")

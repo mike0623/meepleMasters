@@ -30,10 +30,15 @@ public class CardPageController {
 	public String editCardReleased() {
 		return "lyh/editCardRelease";
 	}
-	
+	  
 	@GetMapping("/newAuction")
 	public String newCardAuction() {
 		return "lyh/newCardAuction";
+	}
+	
+	@GetMapping("/editAuction")
+	public String editCardAuction() {
+		return "lyh/editCardAuction";
 	}
 	
 }

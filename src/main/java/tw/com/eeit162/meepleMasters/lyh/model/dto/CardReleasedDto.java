@@ -24,8 +24,17 @@ public class CardReleasedDto {
 	private String memberName;
 	private Integer purchasePrice;
 	private String purchaserName;
+	private Integer purchaserId;
 	
 	
+	public Integer getPurchaserId() {
+		return purchaserId;
+	}
+
+	public void setPurchaserId(Integer purchaserId) {
+		this.purchaserId = purchaserId;
+	}
+
 	public String getPurchaserName() {
 		return purchaserName;
 	}

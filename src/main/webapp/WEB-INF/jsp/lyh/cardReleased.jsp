@@ -72,7 +72,7 @@
             <input type="hidden" name="releasedId" id="param" hidden>
             <input type="submit" value="Submit" hidden>
         </form>
-        <form action="${root}/editRelease" method="get" id="forAuctionEdit">
+        <form action="${root}/editAuction" method="get" id="forAuctionEdit">
             <input type="hidden" name="releasedId" id="param" hidden>
             <input type="submit" value="Submit" hidden>
         </form>
@@ -152,7 +152,6 @@
         let diffInDays;
 
         function getAllList() {
-            console.log("製作畫面");
             return axios.get("${root}/released/all/" + status)
                 .then(res => {
                     let htmlstr = "";
@@ -171,7 +170,11 @@
                         diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
                         if (diffInDays < 0) {
-                            axios.post("${root}/released/discontinued?releasedId=" + res.data[i].releasedId + "&ownedId=" + res.data[i].ownedId)
+                            if (res.data[i].purchasePrice != null) {
+                                axios.post("${root}/released/stopAuction?releasedId=" + res.data[i].releasedId + "&ownedId=" + res.data[i].ownedId + "&price=" + res.data[i].purchasePrice)
+                            } else {
+                                axios.post("${root}/released/discontinued?releasedId=" + res.data[i].releasedId + "&ownedId=" + res.data[i].ownedId)
+                            }
                         }
 
                         htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
@@ -215,7 +218,6 @@
                     }
 
                     if ($('.nav-all').hasClass('active')) {
-                        console.log(1)
                         $(".dropdown-toggle").removeClass("d-none");
                     }
 
@@ -227,7 +229,7 @@
 
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
-                                console.log(res)
+
                                 let getStartTime = `\${res.data.startTime}`;
                                 let formattedStartTime = getStartTime.substr(0, 10);
                                 // console.log("formattedStartTime:"+formattedStartTime)
@@ -242,63 +244,178 @@
 
                                 let cardHtml = "";
 
-                                cardHtml += `<div class="newCardContainer container text-center"><div class="row">
+                                if (res.data.type == 2) {
+                                    cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
                                             <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
-                                            <div class="newCardTitle">\${res.data.cardName}</div>
-                                            <div class="cardDetail row">
-                                            <div class="col-2">
-                                                價格<br>上架時間<br>結束時間
-                                            </div>
-                                            <div class="col-4">
-                                                \${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>
-                                                \${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
-                                                \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
-                                                </div>
-                                            </div></div></div></div>`
-
-                                Swal.fire({
-                                    title: '',
-                                    html: cardHtml,
-                                    showDenyButton: true,
-                                    showCancelButton: false,
-                                    confirmButtonText: '下架卡片',
-                                    denyButtonText: `編輯上架資訊`,
-                                    confirmButtonColor: '#dc7e6a',
-                                    denyButtonColor: '#647168',
-                                    background: '#dfa661',
-                                    customClass: 'editAlert'
-                                }).then((result) => {
-                                    /* Read more about isConfirmed, isDenied below */
-                                    if (result.isConfirmed) {
-                                        axios.post("${root}/released/discontinued?releasedId=" + res.data[0].releasedId + "&ownedId=" + res.data[0].ownedId)
-                                            .then(res => {
-                                                Swal.fire({
-                                                    title: '下架成功',
-                                                    showDenyButton: true,
-                                                    showCancelButton: false,
-                                                    confirmButtonText: '回卡片市集',
-                                                    denyButtonText: `回我的卡片`,
-                                                    confirmButtonColor: '#dc7e6a',
-                                                    denyButtonColor: '#da9255',
-                                                    customClass: 'endAlert'
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        window.location.href = "${root}/card/releasedList"
-                                                    } else if (result.isDenied) {
-                                                        window.location.href = `${root}/card/mycard/\${memberId}`
-                                                    }
-                                                })
-                                                console.log(res)
-                                            })
-                                            .catch(err => {
-                                                console.error(err);
-                                            })
-                                    } else if (result.isDenied) {
-                                        $('#forEdit').submit();
+                                            <div class="newCardTitle" style="margin: 10px">\${res.data.cardName}</div>
+                                            <div id="countdownAll" style="font-size: 14px; height: 19px;"></div>
+                                            <div class="cardDetail row"><div class="col-3 detailLeft">`
+                                    if (res.data.directPrice != null) {
+                                        cardHtml += `目前出價<br>最高出價者<br>直購價<br>上架時間<br>結束時間`;
+                                    } else {
+                                        cardHtml += `目前出價<br>最高出價者<br>上架時間<br>結束時間`
                                     }
-                                })
 
+                                    cardHtml += `</div><div class="col-4">`
+
+                                    if (res.data.purchasePrice != null) {
+                                        cardHtml += `\${res.data.purchasePrice} <i class="fa-solid fa-coins"></i><br>
+                                    \${res.data.purchaserName} <i class="fa-solid fa-user"></i><br>`
+                                    } else {
+                                        cardHtml += `\${res.data.startPrice} <i class="fa-solid fa-coins"></i><br>
+                                    尚未有人出價<br>`
+                                    }
+                                    if (res.data.directPrice != null) {
+                                        cardHtml += `\${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>`
+                                    }
+                                    cardHtml += `\${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
+                                            \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
+                                            </div></div></div></div></div>`
+
+                                    let intervalId = setInterval(() => {
+                                        let now = new Date().getTime();
+                                        let distance = endTime - now;
+
+                                        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                        let hours = Math.floor(
+                                            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                                        );
+                                        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                        $("#countdownAll").html(`\${days}天\${hours}小時\${minutes}分\${seconds}秒 結束`);
+                                    }, 1000);
+
+                                    if (res.data.purchasePrice == null) {
+                                        Swal.fire({
+                                            title: '',
+                                            html: cardHtml,
+                                            showDenyButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '下架卡片',
+                                            denyButtonText: `編輯上架資訊`,
+                                            confirmButtonColor: '#dc7e6a',
+                                            denyButtonColor: '#647168',
+                                            background: '#dfa661',
+                                            customClass: 'editAlert',
+                                            willClose: () => {
+                                                clearInterval(intervalId);
+                                            }
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                axios.post("${root}/released/discontinued?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId)
+                                                    .then(res => {
+                                                        Swal.fire({
+                                                            title: '下架成功',
+                                                            showDenyButton: true,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '回卡片市集',
+                                                            denyButtonText: `回我的卡片`,
+                                                            confirmButtonColor: '#dc7e6a',
+                                                            denyButtonColor: '#da9255',
+                                                            customClass: 'endAlert'
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                window.location.href = "${root}/card/releasedList"
+                                                            } else if (result.isDenied) {
+                                                                window.location.href = `${root}/card/mycard/\${memberId}`
+                                                            }
+                                                        })
+                                                        console.log(res)
+                                                    })
+                                                    .catch(err => {
+                                                        console.error(err);
+                                                    })
+                                            } else if (result.isDenied) {
+                                                $('#forAuctionEdit').submit();
+                                            }
+                                        })
+                                    } else {
+                                        Swal.fire({
+                                            title: '',
+                                            html: cardHtml,
+                                            showCancelButton: false,
+                                            confirmButtonText: '提前結標',
+                                            confirmButtonColor: '#dc7e6a',
+                                            background: '#dfa661',
+                                            customClass: 'editAlert',
+                                            willClose: () => {
+                                                clearInterval(intervalId);
+                                            }
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                axios.post("${root}/released/stopAuction?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.purchasePrice)
+                                            }
+                                        })
+                                    }
+
+
+                                } else {
+                                    cardHtml += `<div class="newCardContainer container text-center"><div class="row">
+                                            <div class="newCardImgDiv col-6">
+                                            <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
+                                            <div class="newCardTitle" style="margin: 10px">\${res.data.cardName}</div>
+                                            <div id="countdownEditMy" style="font-size: 14px; height: 19px;"></div>
+                                            <div class="cardDetail row"><div class="col-3 detailLeft">`
+                                    if (res.data.directPrice != null) {
+                                        cardHtml += `直購價<br>上架時間<br>結束時間`;
+                                    }
+
+                                    cardHtml += `</div><div class="col-4">`
+
+
+                                    if (res.data.directPrice != null) {
+                                        cardHtml += `\${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>`
+                                    }
+                                    cardHtml += `\${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
+                                            \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
+                                            </div></div></div></div></div>`
+
+                                    Swal.fire({
+                                        title: '',
+                                        html: cardHtml,
+                                        showDenyButton: true,
+                                        showCancelButton: false,
+                                        confirmButtonText: '下架卡片',
+                                        denyButtonText: `編輯上架資訊`,
+                                        confirmButtonColor: '#dc7e6a',
+                                        denyButtonColor: '#647168',
+                                        background: '#dfa661',
+                                        customClass: 'editAlert',
+                                        willClose: () => {
+                                            clearInterval(intervalId);
+                                        }
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            axios.post("${root}/released/discontinued?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId)
+                                                .then(res => {
+                                                    Swal.fire({
+                                                        title: '下架成功',
+                                                        showDenyButton: true,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '回卡片市集',
+                                                        denyButtonText: `回我的卡片`,
+                                                        confirmButtonColor: '#dc7e6a',
+                                                        denyButtonColor: '#da9255',
+                                                        customClass: 'endAlert'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            window.location.href = "${root}/card/releasedList"
+                                                        } else if (result.isDenied) {
+                                                            window.location.href = `${root}/card/mycard/\${memberId}`
+                                                        }
+                                                    })
+                                                    console.log(res)
+                                                })
+                                                .catch(err => {
+                                                    console.error(err);
+                                                })
+                                        } else if (result.isDenied) {
+                                            $('#forEdit').submit();
+                                        }
+                                    })
+                                }
                             })
                             .catch(err => {
                                 console.error(err);
@@ -308,7 +425,6 @@
 
                     $(".direct").click(function () {
                         let id = $(this).parent().attr('id')
-
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
 
@@ -367,7 +483,7 @@
                                                 reverseButtons: true
                                             }).then((result) => {
                                                 if (result.isConfirmed) {
-                                                    axios.post("${root}/released/buy?releasedId=" + res.data[0].releasedId + "&ownedId=" + res.data[0].ownedId + "&price=" + res.data[0].directPrice)
+                                                    axios.post("${root}/released/buy?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.directPrice)
                                                         .then(res => {
                                                             Swal.fire({
                                                                 title: '購買成功！',
@@ -378,7 +494,7 @@
                                                                 icon: 'success',
                                                                 confirmButtonColor: '#dc7e6a',
                                                                 denyButtonColor: '#da9255',
-                                                                customClass: 'endAlert'
+                                                                customClass: 'successAlert'
                                                             }).then((result) => {
                                                                 /* Read more about isConfirmed, isDenied below */
                                                                 if (result.isConfirmed) {
@@ -396,8 +512,6 @@
                                                 }
 
                                             })
-
-
                                         }
                                     }
 
@@ -414,7 +528,6 @@
 
                     $(".auction").click(function () {
                         let id = $(this).parent().attr('id')
-                        console.log("auction")
                         axios.get(`${root}/released/card/\${id}`)
                             .then(res => {
 
@@ -487,98 +600,129 @@
                                     countdownEl.innerHTML = `\${days}天\${hours}小時\${minutes}分\${seconds}秒 結束`;
                                 }, 1000);
 
-                                if (res.data.directPrice == null) {
-                                    Swal.fire({
-                                        title: '',
-                                        html: cardHtml,
-                                        color: '#FFF',
-                                        showCloseButton: true,
-                                        focusConfirm: false,
-                                        background: '#dfa661',
-                                        confirmButtonText: '<i class="fa-solid fa-gavel"></i> 出價',
-                                        confirmButtonColor: '#CA7159',
-                                        customClass: 'swal-newCard',
-                                        willClose: () => {
-                                            clearInterval(intervalId);
-                                        }
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            if (memberId == "") {
-                                                window.location.href = "${root}/login";
-                                            } else if (memberCoin < res.data.directPrice) {
-                                                Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
-                                            } else {
-                                                Swal.fire({
-                                                    title: '確定要出價嗎？',
-                                                    showCancelButton: true,
-                                                    confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
-                                                    cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
-                                                    confirmButtonColor: '#CA7159',
-                                                    cancelButtonColor: '#CBC0AA',
-                                                    customClass: 'confirmAlert',
-                                                    reverseButtons: true
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        ///////////
-                                                    }
-
-                                                })
-
-
+                                if (res.data.purchaserId != memberId) {
+                                    if (res.data.directPrice == null) {
+                                        Swal.fire({
+                                            title: '',
+                                            html: cardHtml,
+                                            color: '#FFF',
+                                            showCloseButton: true,
+                                            focusConfirm: false,
+                                            background: '#dfa661',
+                                            confirmButtonText: '<i class="fa-solid fa-gavel"></i> 出價',
+                                            confirmButtonColor: '#CA7159',
+                                            customClass: 'swal-newCard',
+                                            willClose: () => {
+                                                clearInterval(intervalId);
                                             }
-                                        }
-                                    });
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                if (memberId == "") {
+                                                    window.location.href = "${root}/login";
+                                                } else if (memberCoin < res.data.directPrice) {
+                                                    Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
+                                                } else {
+                                                    Swal.fire({
+                                                        title: '確定要出價嗎？',
+                                                        showCancelButton: true,
+                                                        confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
+                                                        cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
+                                                        confirmButtonColor: '#CA7159',
+                                                        cancelButtonColor: '#CBC0AA',
+                                                        customClass: 'confirmAlert',
+                                                        reverseButtons: true
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&price=" + res.data.purchasePrice)
+                                                        }
+
+                                                    })
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: '',
+                                            html: cardHtml,
+                                            color: '#FFF',
+                                            showDenyButton: true,
+                                            showCloseButton: true,
+                                            background: '#dfa661',
+                                            confirmButtonText: '<i class="fa-solid fa-coins"></i> 直購',
+                                            denyButtonText: '<i class="fa-solid fa-gavel"></i> 出價',
+                                            confirmButtonColor: '#CA7159',
+                                            denyButtonColor: '#da9255',
+                                            customClass: 'swal-newCard',
+                                            willClose: () => {
+                                                clearInterval(intervalId);
+                                            }
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                if (memberId == "") {
+                                                    window.location.href = "${root}/login";
+                                                } else if (memberCoin < res.data.directPrice) {
+                                                    Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
+                                                } else {
+                                                    Swal.fire({
+                                                        title: '確定要購買嗎？',
+                                                        showCancelButton: true,
+                                                        confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
+                                                        cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
+                                                        confirmButtonColor: '#CA7159',
+                                                        cancelButtonColor: '#CBC0AA',
+                                                        customClass: 'confirmAlert',
+                                                        reverseButtons: true
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            axios.post("${root}/released/buy?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.directPrice)
+                                                                .then(res => {
+                                                                    Swal.fire({
+                                                                        title: '購買成功！',
+                                                                        showDenyButton: true,
+                                                                        showCancelButton: false,
+                                                                        confirmButtonText: '回卡片市集',
+                                                                        denyButtonText: `回我的卡片`,
+                                                                        icon: 'success',
+                                                                        confirmButtonColor: '#dc7e6a',
+                                                                        denyButtonColor: '#da9255',
+                                                                        customClass: 'successAlert'
+                                                                    }).then((result) => {
+                                                                        /* Read more about isConfirmed, isDenied below */
+                                                                        if (result.isConfirmed) {
+                                                                            window.location.href = "${root}/card/releasedList"
+                                                                        } else if (result.isDenied) {
+                                                                            window.location.href = `${root}/card/mycard/\${memberId}`
+                                                                        }
+                                                                    })
+
+                                                                    console.log(res)
+                                                                })
+                                                                .catch(err => {
+                                                                    console.error(err);
+                                                                })
+                                                        }
+
+                                                    })
+                                                }
+                                            } else if (result.isDenied) {
+                                                axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&price=" + res.data.purchasePrice)
+                                            }
+                                        });
+                                    }
                                 } else {
                                     Swal.fire({
                                         title: '',
                                         html: cardHtml,
-                                        color: '#FFF',
-                                        showCloseButton: true,
+                                        showCancelButton: false,
+                                        confirmButtonText: '關閉',
+                                        confirmButtonColor: '#dc7e6a',
                                         background: '#dfa661',
-                                        confirmButtonText: '<i class="fa-solid fa-coins"></i> 直購',
-                                        denyButtonText: '<i class="fa-solid fa-gavel"></i> 出價',
-                                        confirmButtonColor: '#CA7159',
-                                        denyButtonColor: '#da9255',
-                                        customClass: 'swal-newCard',
+                                        customClass: 'editAlert',
                                         willClose: () => {
                                             clearInterval(intervalId);
                                         }
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            axios.post("${root}/released/buy?releasedId=" + res.data[0].releasedId + "&ownedId=" + res.data[0].ownedId + "&price=" + res.data[0].directPrice)
-                                                .then(res => {
-                                                    Swal.fire({
-                                                        title: '購買成功！',
-                                                        showDenyButton: true,
-                                                        showCancelButton: false,
-                                                        confirmButtonText: '回卡片市集',
-                                                        denyButtonText: `回我的卡片`,
-                                                        icon: 'success',
-                                                        confirmButtonColor: '#dc7e6a',
-                                                        denyButtonColor: '#da9255',
-                                                        customClass: 'endAlert'
-                                                    }).then((result) => {
-                                                        /* Read more about isConfirmed, isDenied below */
-                                                        if (result.isConfirmed) {
-                                                            window.location.href = "${root}/card/releasedList"
-                                                        } else if (result.isDenied) {
-                                                            window.location.href = `${root}/card/mycard/\${memberId}`
-                                                        }
-                                                    })
-
-                                                    console.log(res)
-                                                })
-                                                .catch(err => {
-                                                    console.error(err);
-                                                })
-                                        } else if (result.isDenied) {
-                                            /////////////
-                                        }
-                                    });
+                                    })
                                 }
-
-
-
                                 console.log(res)
                             })
                             .catch(err => {
@@ -609,19 +753,30 @@
                         if (diffInDays < 0) {
                             axios.post("${root}/released/discontinued?releasedId=" + res.data[i].releasedId + "&ownedId=" + res.data[i].ownedId)
                         }
+
+                        htmlstr += `<div class="col-3 d-flex cardEach"><div class="card">`;
+
                         if (res.data[i].memberId == memberId) {
-                            htmlstr += `<div class="col-3 d-flex"><div class="card">`;
                             htmlstr += `<figure><img alt="" src="${root}/card/downloadCard/\${res.data[i].cardId}" class="hanafuda">`;
                             htmlstr += `<div class="releaseDetail" id="\${res.data[i].releasedId}">\${res.data[i].cardName}<br>`;
-                            htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i><br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
-                            if (diffInDays <= 1) {
-                                htmlstr += `<img src="${root}/img/lyh/hourglass.png" class="expire">`
+
+
+                            if (res.data[i].type == 2) {
+                                htmlstr += `\${res.data[i].startPrice} <i class="fa-solid fa-gavel"></i><br>`;
                             }
 
+                            if (res.data[i].directPrice != null) {
+                                htmlstr += `\${res.data[i].directPrice} <i class="fa-solid fa-coins"></i>`;
+                            }
+
+                            htmlstr += `<br><i class="fa-regular fa-pen-to-square edit"></i></div>`;
+
+                            if (diffInDays <= 1) {
+                                htmlstr += `<img src="${root}/img/lyh/hourglass.png" class="expire">`;
+                            }
                             htmlstr += `</figure></div></div>`;
                             count += 1;
                         }
-
                     }
 
                     if (count == 0) {
@@ -646,69 +801,171 @@
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
-                                let releasedId = `\${res.data.releasedId}`;
-                                $("#param").val(releasedId);
-
                                 let cardHtml = "";
 
-                                cardHtml += `<div class="newCardContainer container text-center"><div class="row">
+                                if (res.data.type == 2) {
+                                    cardHtml += `<div class="newCardContainer container text-center"><div class="row">
                                             <div class="newCardImgDiv col-6">
                                             <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
-                                            <div class="newCardTitle">\${res.data.cardName}</div>
-                                            <div class="cardDetail row">
-                                            <div class="col-2">
-                                                價格<br>上架時間<br>結束時間
-                                            </div>
-                                            <div class="col-4">
-                                                \${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>
-                                                \${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
-                                                \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
-                                                </div>
-                                            </div></div></div></div>`
-
-                                Swal.fire({
-                                    title: '',
-                                    html: cardHtml,
-                                    showDenyButton: true,
-                                    showCancelButton: false,
-                                    confirmButtonText: '下架卡片',
-                                    denyButtonText: `編輯上架資訊`,
-                                    confirmButtonColor: '#dc7e6a',
-                                    denyButtonColor: '#647168',
-                                    background: '#dfa661',
-                                    customClass: 'editAlert'
-                                }).then((result) => {
-                                    /* Read more about isConfirmed, isDenied below */
-                                    if (result.isConfirmed) {
-                                        axios.post("${root}/released/discontinued?releasedId=" + res.data[0].releasedId + "&ownedId=" + res.data[0].ownedId)
-                                            .then(res => {
-                                                Swal.fire({
-                                                    title: '下架成功',
-                                                    showDenyButton: true,
-                                                    showCancelButton: false,
-                                                    confirmButtonText: '回卡片市集',
-                                                    denyButtonText: `回我的卡片`,
-                                                    confirmButtonColor: '#dc7e6a',
-                                                    denyButtonColor: '#da9255',
-                                                    customClass: 'endAlert'
-                                                }).then((result) => {
-                                                    /* Read more about isConfirmed, isDenied below */
-                                                    if (result.isConfirmed) {
-                                                        window.location.href = "${root}/card/releasedList"
-                                                    } else if (result.isDenied) {
-                                                        window.location.href = `${root}/card/mycard/\${memberId}`
-                                                    }
-                                                })
-                                                console.log(res)
-                                            })
-                                            .catch(err => {
-                                                console.error(err);
-                                            })
-                                    } else if (result.isDenied) {
-                                        $('#forEdit').submit();
+                                            <div class="newCardTitle" style="margin: 10px">\${res.data.cardName}</div>
+                                            <div id="countdownEditMy" style="font-size: 14px; height: 19px;"></div>
+                                            <div class="cardDetail row"><div class="col-3 detailLeft">`
+                                    if (res.data.directPrice != null) {
+                                        cardHtml += `目前出價<br>最高出價者<br>直購價<br>上架時間<br>結束時間`;
+                                    } else {
+                                        cardHtml += `目前出價<br>最高出價者<br>上架時間<br>結束時間`
                                     }
-                                })
 
+                                    cardHtml += `</div><div class="col-4">`
+
+                                    if (res.data.purchasePrice != null) {
+                                        cardHtml += `\${res.data.purchasePrice} <i class="fa-solid fa-coins"></i><br>
+                                    \${res.data.purchaserName} <i class="fa-solid fa-user"></i><br>`
+                                    } else {
+                                        cardHtml += `\${res.data.startPrice} <i class="fa-solid fa-coins"></i><br>
+                                    尚未有人出價<br>`
+                                    }
+                                    if (res.data.directPrice != null) {
+                                        cardHtml += `\${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>`
+                                    }
+                                    cardHtml += `\${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
+                                            \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
+                                            </div></div></div></div></div>`
+
+                                    let intervalId = setInterval(() => {
+                                        let now = new Date().getTime();
+                                        let distance = endTime - now;
+
+                                        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                        let hours = Math.floor(
+                                            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                                        );
+                                        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                        let countdownEl = document.getElementById("countdownEditMy");
+                                        countdownEl.innerHTML = `\${days}天\${hours}小時\${minutes}分\${seconds}秒 結束`;
+                                    }, 1000);
+                                    if (res.data.purchasePrice == null) {
+                                        Swal.fire({
+                                            title: '',
+                                            html: cardHtml,
+                                            showDenyButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '下架卡片',
+                                            denyButtonText: `編輯上架資訊`,
+                                            confirmButtonColor: '#dc7e6a',
+                                            denyButtonColor: '#647168',
+                                            background: '#dfa661',
+                                            customClass: 'editAlert',
+                                            willClose: () => {
+                                                clearInterval(intervalId);
+                                            }
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                axios.post("${root}/released/discontinued?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId)
+                                                    .then(res => {
+                                                        Swal.fire({
+                                                            title: '下架成功',
+                                                            showDenyButton: true,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '回卡片市集',
+                                                            denyButtonText: `回我的卡片`,
+                                                            confirmButtonColor: '#dc7e6a',
+                                                            denyButtonColor: '#da9255',
+                                                            customClass: 'endAlert'
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                window.location.href = "${root}/card/releasedList"
+                                                            } else if (result.isDenied) {
+                                                                window.location.href = `${root}/card/mycard/\${memberId}`
+                                                            }
+                                                        })
+                                                        console.log(res)
+                                                    })
+                                                    .catch(err => {
+                                                        console.error(err);
+                                                    })
+                                            } else if (result.isDenied) {
+                                                $('#forAuctionEdit').submit();
+                                            }
+                                        })
+                                    } else {
+                                        Swal.fire({
+                                            title: '',
+                                            html: cardHtml,
+                                            showCancelButton: false,
+                                            confirmButtonText: '關閉',
+                                            confirmButtonColor: '#dc7e6a',
+                                            background: '#dfa661',
+                                            customClass: 'editAlert',
+                                            willClose: () => {
+                                                clearInterval(intervalId);
+                                            }
+                                        })
+                                    }
+                                } else {
+                                    cardHtml += `<div class="newCardContainer container text-center"><div class="row">
+                                            <div class="newCardImgDiv col-6">
+                                            <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
+                                            <div class="newCardTitle" style="margin: 10px">\${res.data.cardName}</div>
+                                            <div id="countdownEditMy" style="font-size: 14px; height: 19px;"></div>
+                                            <div class="cardDetail row"><div class="col-3 detailLeft">`
+                                    if (res.data.directPrice != null) {
+                                        cardHtml += `直購價<br>上架時間<br>結束時間`;
+                                    }
+
+                                    cardHtml += `</div><div class="col-4">`
+
+
+                                    if (res.data.directPrice != null) {
+                                        cardHtml += `\${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>`
+                                    }
+                                    cardHtml += `\${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
+                                            \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
+                                            </div></div></div></div></div>`
+
+                                    Swal.fire({
+                                        title: '',
+                                        html: cardHtml,
+                                        showDenyButton: true,
+                                        showCancelButton: false,
+                                        confirmButtonText: '下架卡片',
+                                        denyButtonText: `編輯上架資訊`,
+                                        confirmButtonColor: '#dc7e6a',
+                                        denyButtonColor: '#647168',
+                                        background: '#dfa661',
+                                        customClass: 'editAlert'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            axios.post("${root}/released/discontinued?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId)
+                                                .then(res => {
+                                                    Swal.fire({
+                                                        title: '下架成功',
+                                                        showDenyButton: true,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '回卡片市集',
+                                                        denyButtonText: `回我的卡片`,
+                                                        confirmButtonColor: '#dc7e6a',
+                                                        denyButtonColor: '#da9255',
+                                                        customClass: 'endAlert'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            window.location.href = "${root}/card/releasedList"
+                                                        } else if (result.isDenied) {
+                                                            window.location.href = `${root}/card/mycard/\${memberId}`
+                                                        }
+                                                    })
+                                                    console.log(res)
+                                                })
+                                                .catch(err => {
+                                                    console.error(err);
+                                                })
+                                        } else if (result.isDenied) {
+                                            $('#forEdit').submit();
+                                        }
+                                    })
+                                }
                             })
                             .catch(err => {
                                 console.error(err);
@@ -721,9 +978,6 @@
                     console.error(err);
                 })
         }
-
-
-
     </script>
 
 </body>

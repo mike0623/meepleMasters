@@ -145,6 +145,11 @@
     height: 150px !important;
 }
 
+.successAlert {
+    width: 400px !important;
+    height: 300px !important;
+}
+
 .btn-group {
     width: 130px;
     position: absolute;
