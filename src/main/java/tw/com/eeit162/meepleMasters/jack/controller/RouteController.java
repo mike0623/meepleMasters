@@ -66,37 +66,39 @@ public class RouteController {
 		
 		List<Object[]> collect = collectLibraryService.findMemberCollect(id);
 		ArrayList<Product> productList = new ArrayList<>();
-
-		for (int i = 0; i < collect.size(); i++) {
-//			System.out.println(collect.get(i));
-//			System.out.println("-------------------------");
-//			System.out.println(collect.get(i)[0]);
-//			System.out.println("-------------------------");
-//			System.out.println(collect.get(i)[2]);
-			JSONObject jsonObject = new JSONObject(collect.get(i)[2]);
-			
-//			productList.add(jsonObject.getString("productName"));
+		
+		
+		for(Object[] object:collect) {
 			Product product = new Product();
-			product.setProductName(jsonObject.getString("productName"));
-			product.setProductId(jsonObject.getInt("productId"));
+			product = (Product)object[2];
 			productList.add(product);
-			
-			System.out.println(jsonObject.getString("productName"));
-			System.out.println("-------------------------");
-			System.out.println(productList);
-
 		}
+		
+
+//		for (int i = 0; i < collect.size(); i++) {
+//			JSONObject jsonObject = new JSONObject(collect.get(i)[2]);
+//			
+//			Product product = new Product();
+//			product.setProductName(jsonObject.getString("productName"));
+//			product.setProductId(jsonObject.getInt("productId"));
+//			productList.add(product);
+//			
+//			System.out.println(jsonObject.getString("productName"));
+//			System.out.println("-------------------------");
+//			System.out.println(productList);
+//
+//		}
 		model.addAttribute("memberProduct", productList);
 		
 		return "jack/memberProduct";
 	}
 	
-	@GetMapping("/member/myProfile")
-	public String myProfile() {
-		
-		
-		return "jack/myProfile";
-	}
+//	@GetMapping("/member/myProfile")
+//	public String myProfile() {
+//		
+//		
+//		return "jack/myProfile";
+//	}
 	
 	@GetMapping("/member/profile")
 	public String profile() {
@@ -113,7 +115,7 @@ public class RouteController {
 //		return "jack/otherMember";
 //	}
 	
-	@GetMapping("/otherMember/{id}")
+	@GetMapping("/member/myProfile/{id}")
 	public String otherMember(@PathVariable("id") Integer memberId, Model model) {
 		
 		Optional<Member> member = Optional.ofNullable(memberService.findMemberById(memberId));
@@ -123,7 +125,38 @@ public class RouteController {
 			model.addAttribute("findMember", member.get());
 		}
 		
-		return "jack/otherMember";
+		return "jack/myProfile";
 	}
+	
+	@GetMapping("/admin/memberManage")
+	public String adminMember(Model model) {
+		
+		Optional<List<Member>> option = memberService.findAllMember();
+		List<Member> allMember = option.get();
+		ArrayList<Member> memberList = new ArrayList<>();
+		for(int i = 0; i< allMember.size(); i++) {
+			System.out.println(allMember.get(i));
+			System.out.println("Name : "+allMember.get(i).getMemberName());
+			Member member = new Member();
+			member.setMemberId(allMember.get(i).getMemberId());
+			member.setMemberName(allMember.get(i).getMemberName());
+			member.setMemberEmail(allMember.get(i).getMemberEmail());
+			member.setMemberBirth(allMember.get(i).getMemberBirth());
+			member.setMemberGender(allMember.get(i).getMemberGender());
+			member.setMemberTel(allMember.get(i).getMemberTel());
+			member.setMemberAddress(allMember.get(i).getMemberAddress());
+			member.setMemberCoin(allMember.get(i).getMemberCoin());
+			member.setMemberLevel(allMember.get(i).getMemberLevel());
+			member.setCreateTime(allMember.get(i).getCreateTime());
+			
+			memberList.add(member);
+			
+		}
+		model.addAttribute("allMember", memberList);
+		
+		return "jack/memberManage";
+	}
+	
+	
 
 }	

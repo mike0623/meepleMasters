@@ -25,48 +25,48 @@
 
 <script>
 	isSelectedPage = true;
-	var selectedFriendEmail = "";
-	var selectedFriendName = "";
-	var idTypeEmail = "";
-	var buttonTypeName = "";
+	var selectedFriendEmail = "${findMember.memberEmail}";
+	var selectedFriendName = "${findMember.memberName}";
+	var idTypeEmail = changeToIdType(selectedFriendEmail);
+	var buttonTypeName = selectedFriendName+"button";
 	function searchFriend(){
-		//----------------------------------------------------------假資料
-		if("A" == $("#selectedFriend").val()){
-			selectedFriendEmail = "AAA@gmail.com";
-			selectedFriendName = "Andy";
-			idTypeEmail = changeToIdType(selectedFriendEmail);
-			buttonTypeName = selectedFriendName+"button";
-		}
-		if("B" == $("#selectedFriend").val()){
-			selectedFriendEmail = "BBB@gmail.com";
-			selectedFriendName = "Betty";
-			idTypeEmail = changeToIdType(selectedFriendEmail);
-			buttonTypeName = selectedFriendName+"button";
-		}
-		if("C" == $("#selectedFriend").val()){
-			selectedFriendEmail = "CCC@gmail.com";
-			selectedFriendName = "Cart";
-			idTypeEmail = changeToIdType(selectedFriendEmail);
-			buttonTypeName = selectedFriendName+"button";
-		}
-		if("D" == $("#selectedFriend").val()){
-			selectedFriendEmail = "DDD@gmail.com";
-			selectedFriendName = "David";
-			idTypeEmail = changeToIdType(selectedFriendEmail);
-			buttonTypeName = selectedFriendName+"button";
-		}
-		if("E" == $("#selectedFriend").val()){
-			selectedFriendEmail = "EEE@gmail.com";
-			selectedFriendName = "Emily";
-			idTypeEmail = changeToIdType(selectedFriendEmail);
-			buttonTypeName = selectedFriendName+"button";
-		}
-		if("F" == $("#selectedFriend").val()){
-			selectedFriendEmail = "FFF@gmail.com";
-			selectedFriendName = "Frimon";
-			idTypeEmail = changeToIdType(selectedFriendEmail);
-			buttonTypeName = selectedFriendName+"button";
-		}
+// 		//----------------------------------------------------------假資料
+// 		if("A" == $("#selectedFriend").val()){
+// 			selectedFriendEmail = "AAA@gmail.com";
+// 			selectedFriendName = "Andy";
+// 			idTypeEmail = changeToIdType(selectedFriendEmail);
+// 			buttonTypeName = selectedFriendName+"button";
+// 		}
+// 		if("B" == $("#selectedFriend").val()){
+// 			selectedFriendEmail = "BBB@gmail.com";
+// 			selectedFriendName = "Betty";
+// 			idTypeEmail = changeToIdType(selectedFriendEmail);
+// 			buttonTypeName = selectedFriendName+"button";
+// 		}
+// 		if("C" == $("#selectedFriend").val()){
+// 			selectedFriendEmail = "CCC@gmail.com";
+// 			selectedFriendName = "Cart";
+// 			idTypeEmail = changeToIdType(selectedFriendEmail);
+// 			buttonTypeName = selectedFriendName+"button";
+// 		}
+// 		if("D" == $("#selectedFriend").val()){
+// 			selectedFriendEmail = "DDD@gmail.com";
+// 			selectedFriendName = "David";
+// 			idTypeEmail = changeToIdType(selectedFriendEmail);
+// 			buttonTypeName = selectedFriendName+"button";
+// 		}
+// 		if("E" == $("#selectedFriend").val()){
+// 			selectedFriendEmail = "EEE@gmail.com";
+// 			selectedFriendName = "Emily";
+// 			idTypeEmail = changeToIdType(selectedFriendEmail);
+// 			buttonTypeName = selectedFriendName+"button";
+// 		}
+// 		if("F" == $("#selectedFriend").val()){
+// 			selectedFriendEmail = "FFF@gmail.com";
+// 			selectedFriendName = "Frimon";
+// 			idTypeEmail = changeToIdType(selectedFriendEmail);
+// 			buttonTypeName = selectedFriendName+"button";
+// 		}
 		//-------------------------------------------------------------
 		//先清空
 		$(".friendButtonDiv").empty();
@@ -96,8 +96,8 @@
 					//對方發出邀請了，我沒接受
 					$(".friendButtonDiv").empty();
 					$(".friendButtonDiv").append(`
-							<button onclick="acceptFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">接受邀請</button>
-							<button onclick="rejectFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">拒絕邀請</button>
+							<button class="btn btn-info" onclick="acceptFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">接受邀請</button>
+							<button class="btn btn-info" onclick="rejectFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">拒絕邀請</button>
 							`);
 					return;
 				}

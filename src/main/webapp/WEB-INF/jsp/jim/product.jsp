@@ -8,24 +8,47 @@ prefix="c"%>
     <title>${webName}</title>
     <jsp:include page="../include/common_link.jsp" />
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
+    <style>
+      .bodyContainer {
+        height: 1550px;
+      }
+      li {
+        list-style-type: none;
+      }
+      .faviroteButton {
+        border: none;
+        background: none;
+        padding: 0;
+        float: right;
+        color: #ff0000;
+      }
+      .cartButton {
+        border: none;
+        background: none;
+        padding: 0;
+        color: #8a513f;
+      }
+    </style>
   </head>
   <body>
     <jsp:include page="../include/header.jsp" />
     <div class="bodyContainer">
       <div class="container gameCardDiv">
         <div>
-          <a href="${root}/shoppingCart">購物車</a>
-        </div>
-        <div>
-          <a href="${root}/order/">訂單</a>
-        </div>
-        <!-- <div>
-          <select name="productDifficulty" id="productDifficultySelect">
-            <option value="簡單">簡單</option>
-            <option value="普通">普通</option>
-            <option value="困難">困難</option>
+          <select id="productpPlayTime">
+            <option value="">請選擇</option>
+            <option value="簡短">簡短</option>
+            <option value="長度適中">長度適中</option>
+            <option value="耗時">耗時</option>
           </select>
-        </div> -->
+          <select id="productPrice">
+            <option value="10000">請選擇</option>
+            <option value="100">小於100元</option>
+            <option value="300">小於300元</option>
+            <option value="500">小於500元</option>
+          </select>
+          <button type="button" id="queryButton">查詢</button>
+        </div>
         <div class="gameListTitle">
           遊戲列表
           <div class="link-top"></div>
@@ -36,10 +59,7 @@ prefix="c"%>
     </div>
     <jsp:include page="../include/footer.jsp" />
     <script>
-      let mId = "${member.memberId}";
-      $("#productDifficultySelect").change(function () {
-        console.log(this.value);
-      });
+      let mId = `${member.memberId}`;
     </script>
     <script src="${root}/js/jim/product.js"></script>
   </body>

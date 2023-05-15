@@ -1,24 +1,18 @@
 package tw.com.eeit162.meepleMasters.michael;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
-import tw.com.eeit162.meepleMasters.michael.game.Game;
-import tw.com.eeit162.meepleMasters.michael.game.bridge.Bridge;
-import tw.com.eeit162.meepleMasters.michael.game.room.GameRoomUtil;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FaveriteGameList;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
+import tw.com.eeit162.meepleMasters.michael.util.DataInterface;
 
 @Controller
 public class PagesController {
@@ -54,8 +48,12 @@ public class PagesController {
 	
 	//跳轉到遊戲大廳
 	@GetMapping("/game/playGameLobby")
-	public String playGameLobby() {
+	public String playGameLobby(HttpSession session,Model model) {
+		Member member = (Member)session.getAttribute("member");
 		//增加我的最愛的modelAttr
+		FaveriteGameList faveriteGameList = DataInterface.getFaveriteGameByEmail(member.getMemberEmail());
+		List<Product> faveritelist = faveriteGameList.getFaveriteGameList();
+		model.addAttribute("faveritelist", faveritelist);
 		
 		return "/michael/playGameLobby";
 	}

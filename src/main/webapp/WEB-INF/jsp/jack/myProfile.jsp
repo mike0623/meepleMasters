@@ -12,24 +12,27 @@
 
                         <link rel="stylesheet" type="text/css" href="${root}/css/member/otherMember.css">
                         <style>
-                            .container {
-                                padding-top: 80px;
-                            }
 
                             /* div.list-group{
 								position: absolute;
-								z-index: 1;
+								z-index: 10;
 							} */
 
-                            
+                            ul .friendButtonDiv {
+                                margin-left: auto;
+                                height: 40;
+                                width: 200;
+                                margin-top: auto;
+                            }
                         </style>
                     </head>
 
                     <body>
                         <jsp:include page="../include/header.jsp"></jsp:include>
 
-
+						<div style="margin-top:75px;">
                         <div class="container">
+
                             <!-- Topbar Search -->
                             <div
                                 class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 p-3 py-5">
@@ -45,17 +48,20 @@
                                 </div>
                                 <div class="list-group" id="result"
                                     style="width: 400px; border-radius: 5px; margin-left:auto;">
-                                    
+
                                 </div>
                             </div>
                             <!-- Topbar Search -->
 
                             <div class="profile">
                                 <div class="profile-header">
-                                    <div class="profile-header-cover"></div>
+                                    <div class="profile-header-cover">
+                                    </div>
                                     <div class="profile-header-content">
                                         <div class="profile-header-img">
-                                            <img src="${root}/member/findMemberImg/${member.memberId}" alt="" />
+                                            
+                                                    <img src="${root}/member/findMemberImg/${findMember.memberId}" alt="" />
+                                                
                                         </div>
                                         <ul class="profile-header-tab nav nav-tabs nav-tabs-v2">
                                             <li class="nav-item">
@@ -88,19 +94,32 @@
                                                     <div class="nav-value">2,592</div>
                                                 </a>
                                             </li>
+                                            <c:choose>
+                                                <c:when test="${member.memberEmail == findMember.memberEmail }">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="friendButtonDiv">
+                                                    
+                                                    </div>
+
+                                                </c:otherwise>
+                                            </c:choose>
                                         </ul>
+
                                     </div>
                                 </div>
 
                                 <div class="profile-container">
                                     <div class="profile-sidebar">
                                         <div class="desktop-sticky-top">
-                                            <h4>${member.memberName}</h4>
-                                            <div class="font-weight-600 mb-3 text-muted mt-n2">${member.memberEmail}</div>
+                                            <h4>${findMember.memberName}</h4>
+                                            <div class="font-weight-600 mb-3 text-muted mt-n2">${findMember.memberEmail}
+                                            </div>
                                             <p>
-                                                
+
                                             </p>
-                                            <div class="mb-1"><i class="fa fa-map-marker-alt fa-fw text-muted"></i> ${member.memberAddress}</div>
+                                            <div class="mb-1"><i class="fa fa-map-marker-alt fa-fw text-muted"></i>
+                                                ${findMember.memberAddress}</div>
                                             <div class="mb-3"><i class="fa fa-link fa-fw text-muted"></i>
                                                 seantheme.com/studio</div>
                                             <hr class="mt-4 mb-4" />
@@ -240,12 +259,81 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
 
 
 
                         <jsp:include page="../include/footer.jsp"></jsp:include>
-
                         <script type="text/javascript" src="${root}/js/jack/myProfile.js"></script>
+                        
+                        <script type="text/javascript">
+                      //-------------------------------------------------------------
+                    	//一登入就執行一次
+                    	isSelectedPage = true;
+                    	
+                    	var selectedFriendEmail = "${findMember.memberEmail}";
+                    	var selectedFriendName = "${findMember.memberName}";
+                    	var idTypeEmail = changeToIdType(selectedFriendEmail);
+                    	var buttonTypeName = selectedFriendName+"button";
+                    	searchFriend();
+                    	function searchFriend(){
+                    		//-------------------------------------------------------------
+                    		//先清空
+                    		$(".friendButtonDiv").empty();
+                    		//判斷是不是好友
+                    		console.log("先看看網址對不對","http://localhost:8080/meeple-masters/friend/isFriend/${member.memberEmail}/"+selectedFriendEmail);
+                    		axios.get("http://localhost:8080/meeple-masters/friend/isFriend/${member.memberEmail}/"+selectedFriendEmail).then(function(response){
+                    			if("isFriend"==response.data){
+                    				console.log("是好友了");
+                    				$(".friendButtonDiv").append(`
+                    						<button class="btn btn-info" onclick="pressChatButton('`+buttonTypeName+`','`+idTypeEmail+`')">傳送訊息</button>
+                    						<button class="btn btn-info" onclick="deleteFriend('${member.memberEmail}','`+selectedFriendEmail+`')">刪除好友</button>
+                    						`)
+                    				return;
+                    			}
+                    			//若不是好友，判斷有沒有誰發出過邀請
+                    			axios.get("http://localhost:8080/meeple-masters/friendInvite/isExist/${member.memberEmail}/"+selectedFriendEmail).then(function(response){
+                    				if("${member.memberEmail}"==response.data.inviter){
+                    					console.log("我發出邀請了");
+                    					//我發出邀請了，對方沒接受
+                    					$(".friendButtonDiv").empty();
+                    					$(".friendButtonDiv").append(`
+                    							<button class="btn btn-info" onclick="deleteFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">取消邀請</button>
+                    							`);
+                    					return;
+                    				}
+                    				if(selectedFriendEmail==response.data.inviter){
+                    					console.log("對方發出邀請了");
+                    					//對方發出邀請了，我沒接受
+                    					$(".friendButtonDiv").empty();
+                    					$(".friendButtonDiv").append(`
+                    							<button class="btn btn-info" onclick="acceptFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">接受邀請</button>
+                    							<button class="btn btn-info" onclick="rejectFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">拒絕邀請</button>
+                    							`);
+                    					return;
+                    				}
+                    				console.log("不是朋友，且誰都沒發出邀請");
+                    				//不是好友也不存在邀請
+                    				$(".friendButtonDiv").empty();
+                    				$(".friendButtonDiv").append(`
+                    						<button class="btn btn-info" onclick="sendFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">加好友</button>
+                    						`);
+                    				
+                    			}).catch(function(error){
+                    				console.log("判斷誰發過請出錯啦!",error);
+                    			}).finally(function(){
+                    				
+                    			});
+                    			
+                    			
+                    			
+                    		}).catch(function(error){
+                    			console.log("判斷是不是好友出錯啦!",error);
+                    		}).finally(function(){
+                    			
+                    		});
+                    	}
+                        </script>
                     </body>
 
                     </html>

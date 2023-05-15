@@ -100,6 +100,13 @@ include file="../include/common_link.jsp" %>
             Member2
           </button>
           <button
+            class="btn btn-outline-primary btn-sm"
+            type="button"
+            id="member3"
+          >
+            Member3
+          </button>
+          <button
             class="btn btn-outline-secondary btn-sm"
             type="button"
             id="reset"

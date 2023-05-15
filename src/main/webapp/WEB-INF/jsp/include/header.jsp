@@ -72,7 +72,6 @@
                     	<div>
                                 <ul>
     								
-                                    <li><a href="${root}/game/createGameTable/Bridge/${member.memberEmail}">創建橋牌遊戲房間</a></li>
                                     <li><a href="${root}/game/playGameLobby">進入遊戲大廳</a></li>
                                     <c:if test="${tableCode != null}">
                                     	<li><a href="${root}/game/joinGame/${tableCode}/${member.memberEmail}">回到遊玩中的遊戲</a></li>
@@ -97,14 +96,18 @@
                           <img src="${root}/member/findMemberImg/${member.memberId}" alt="" width="32" height="32" class="rounded-circle">
                         </a>
                         <ul class="dropdown-menu">
+                        <c:if test='${member.memberLevel.equals("管理員") }'>
+                          <li><a class="dropdown-item" href="${root}/admin">後台管理</a></li>
+                        </c:if>
                           <li><a class="dropdown-item" href="${root}/member/game">我的遊戲</a></li>
-                          <li><a class="dropdown-item" href="#">Friend</a></li>
-                          <li><a class="dropdown-item" href="${root}/member/myProfile">我的檔案</a></li>
+                          <li><a class="dropdown-item" href="${root}/member/myProfile/${member.memberId}">我的檔案</a></li>
+                          <li><a class="dropdown-item" href="${root}/order/orderList/?memberId=${member.memberId}">我的訂單</a></li>
                           <li><a class="dropdown-item" href="${root}/member/profile">修改資料</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li><a class="dropdown-item" href="${root}/member/logout">Logout</a></li>
                         </ul>
                       </li>
+                      <div><a href="${root}/shoppingCart"><i class="fa-solid fa-cart-shopping fa-2xl shoppingCartButton"></i></a></div>
                     </c:if>
                 </ul>
             </nav>

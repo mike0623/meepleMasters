@@ -39,7 +39,6 @@ public interface MemberDao extends JpaRepository<Member, Integer> {
 	@Query(value="from Member where memberName like %:memberName%")
 	List<Member> findMemberByName(@Param(value = "memberName") String memberName);
 	
-	
 	//Card
 	@Modifying(clearAutomatically = true)
 	@Query(value="update Member set memberCoin = memberCoin+ :coin where memberId = :memberId")

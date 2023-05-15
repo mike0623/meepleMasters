@@ -1,6 +1,8 @@
 package tw.com.eeit162.meepleMasters.michael.util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FaveriteGameList;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.michael.game.degree.model.GameDegree;
 
@@ -147,12 +150,29 @@ public class DataInterface {
 	public static Product getProductByProductName(String productName) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("isServer", "yes");
+		String parse = "";
+		try {
+			parse = URLEncoder.encode(productName, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
-		URI uri = URI.create("http://localhost:8080/meeple-masters/mall/findProductByProductName/"+productName);
-		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).accept(MediaType.APPLICATION_JSON).build();
+		URI uri = URI.create("http://localhost:8080/meeple-masters/mall/findProductByProductName/"+parse);
+		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).header("Content-Type", "application/json;charset=UTF-8").accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<Product> response = template.exchange(requset, Product.class);
 		return response.getBody();
 	}
+	
+	public static FaveriteGameList getFaveriteGameByEmail(String memberEmail) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("isServer", "yes");
+		
+		URI uri = URI.create("http://localhost:8080/meeple-masters/favoriteGame/favoriteGameList/"+memberEmail);
+		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).header("Content-Type", "application/json;charset=UTF-8").accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<FaveriteGameList> response = template.exchange(requset, FaveriteGameList.class);
+		return response.getBody();
+	}
+	
 	
 	
 	public static GameDegree getGameDegree(Integer memberId,Integer productId) {

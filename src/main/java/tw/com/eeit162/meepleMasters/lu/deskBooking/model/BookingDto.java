@@ -1,17 +1,44 @@
 package tw.com.eeit162.meepleMasters.lu.deskBooking.model;
 
-import java.time.LocalDate;
+
+import java.util.Date;
 import java.util.List;
 
 public class BookingDto {
-    private LocalDate createdAt;
+	
+	private String memberName;
+    private String deskType;
+    private Integer bookDeskId;
+    private Date bookDate;
     private String bookTime;
-    private List<Integer> tableIds;
-	public LocalDate getCreatedAt() {
-		return createdAt;
+    
+   
+    
+    
+    public Integer getBookDeskId() {
+		return bookDeskId;
 	}
-	public void setCreatedAt(LocalDate createdAt) {
-		this.createdAt = createdAt;
+	public void setBookDeskId(Integer bookDeskId) {
+		this.bookDeskId = bookDeskId;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+	public String getDeskType() {
+		return deskType;
+	}
+	public void setDeskType(String deskType) {
+		this.deskType = deskType;
+	}
+	public Date getBookDate() {
+		return bookDate;
+	}
+	public void setBookDate(Date bookDate) {
+		this.bookDate = bookDate;
 	}
 	public String getBookTime() {
 		return bookTime;
@@ -19,12 +46,9 @@ public class BookingDto {
 	public void setBookTime(String bookTime) {
 		this.bookTime = bookTime;
 	}
-	public List<Integer> getTableIds() {
-		return tableIds;
-	}
-	public void setTableIds(List<Integer> tableIds) {
-		this.tableIds = tableIds;
-	}
+
+
+
     
     
 

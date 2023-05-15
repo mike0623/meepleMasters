@@ -37,8 +37,6 @@ public class GameDegreeService {
 		double result = (double)averageScore;
 		if(isWin) {
 			Integer plusScore = (int)(Math.ceil(50*(2-(oldScore/result))));
-			System.out.println("math.ceil前"+50*(2-(oldScore/result)));
-			System.out.println("加分"+plusScore);
 			if(plusScore <= 0) {
 				plusScore = 1;
 			}
@@ -49,8 +47,6 @@ public class GameDegreeService {
 		}
 		if(!isWin) {
 			Integer minusScore = (int)(Math.ceil(50*((oldScore/result))));
-			System.out.println("math.ceil前"+50*((oldScore/result)));
-			System.out.println("扣分"+minusScore);
 			if(minusScore >= 100) {
 				minusScore = 100;
 			}

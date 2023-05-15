@@ -43,7 +43,7 @@
 				data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<h6 class="collapse-header">會員管理系統</h6>
-					<a class="collapse-item" href="/">會員管理</a> <a class="collapse-item"
+					<a class="collapse-item" href="${root}/admin/memberManage">會員管理</a> <a class="collapse-item"
 						href="/">會員活動</a>
 				</div>
 			</div></li>

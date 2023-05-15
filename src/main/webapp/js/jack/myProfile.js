@@ -12,7 +12,7 @@ search.addEventListener("keyup", function () {
       if (search.value !== "") {
         $.each(res.data, function (index, member) {
           $("#result").append(
-            '<a href="' + root + '/otherMember/' + member.memberId + '"' + 'class="list-group-item list-group-item-action">' +
+            '<a href="' + root + '/member/myProfile/' + member.memberId + '"' + 'class="list-group-item list-group-item-action">' +
             '<img src="' + root + '/member/findMemberImg/' + member.memberId + '"' + 'class="rounded-circle" width="50px" height="50px">' +
             '&nbsp; &nbsp;' + member.memberName + '</a>'
 
@@ -34,3 +34,5 @@ result.addEventListener("click", function () {
 result.addEventListener("blur", function () {
   $("#result").empty()
 })
+
+

@@ -81,6 +81,7 @@ body {
 
 .myLoveGameArea {
 	display: flex;
+	
 }
 
 .lovedGameImg {
@@ -90,21 +91,36 @@ body {
 
 .lovedGame {
 	text-align: center;
+	margin-right:5px;
 }
 </style>
 </head>
 <body>
-	<div style="width: 100%; position: relative; top: 75px;">
+	<div style="width: 100%; position: relative; top: 75px; margin-bottom:120px">
 		<div class="box">
 			<div class="showExistGameArea"></div>
 			<div class="myLove">
 				<h3>我的最愛</h3>
-				<div class="myLoveGameArea">
-					<div class="lovedGame">
-						<img class="lovedGameImg" src="${root}/mall/getPhoto?pId=3"><br />
-						<span style="font-size: 20px;">Bridge</span><br />
-						<button onclick="showExistGameArea(this.id)" id="Bridge">尋找可加入的房間</button>
-					</div>
+				<div class="myLoveGameArea flex-wrap justify-content-around">
+					<c:if test="${faveritelist.size() > 0}">
+					<c:forEach begin="0" end="${faveritelist.size()-1}" step="1" var="i">
+						<div class="lovedGame">
+							<img class="lovedGameImg" src="${root}/mall/getPhoto?pId=${faveritelist[i].productId}"><br />
+							<span style="font-size: 20px;">${faveritelist[i].productName}</span><br />
+							<button onclick="showExistGameArea(this.id)" id="${faveritelist[i].productName}">尋找可加入的房間</button>
+						</div>
+					</c:forEach>
+					</c:if>
+					<c:if test="${faveritelist.size() == 0}">
+						<h3>還沒有最愛遊戲喔，快去 <a href="${root}/mall/product">遊戲列表</a> 增加吧</h3>
+					</c:if>
+				
+<!-- 					<div class="lovedGame"> -->
+<%-- 						<img class="lovedGameImg" src="${root}/mall/getPhoto?pId=3"><br /> --%>
+<!-- 						<span style="font-size: 20px;">Bridge</span><br /> -->
+<!-- 						<button onclick="showExistGameArea(this.id)" id="Bridge">尋找可加入的房間</button> -->
+<!-- 					</div> -->
+
 				</div>
 			</div>
 			<div class="searchGame"></div>
@@ -130,6 +146,7 @@ body {
 			axios.get("${root}/game/showExistGameByGameName/"+gameName).then(function(response){
 				console.log("按下立即加入按鈕的回應",response);
 				let json = response.data.table;
+				let id = response.data.productId;
 				console.log(json);
 				
 				let keyArray = Object.keys(json);
@@ -141,7 +158,7 @@ body {
 							<div class="row">
 								<div class="col-4">
 									<h4>`+gameName+`</h4>
-									<img style="height:225px;" src="${root}/img/michael/chatRoom/friends/LittleBoss.jpg" alt="">
+									<img style="width:225px;height:225px;" src="${root}/mall/getPhoto?pId=`+id+`" alt="">
 								</div>
 								<div class="col-8 existCertainGameArea">
 									
@@ -181,7 +198,10 @@ body {
 										</form>
 									</div>`;
 					}else{
-						eachTableStr += `<button id="`+keyArray[i]+`" class="leaveRoom">離開房間</button></div>`;
+						eachTableStr += `<form action="${root}/game/playerLeaveGame/`+keyArray[i]+`/${member.memberEmail}">
+									<button id="`+keyArray[i]+`" class="leaveRoom">離開房間</button>
+								</form>
+							</div>`;
 					}
 					$("."+gameName).find(".existCertainGameArea").append(eachTableStr);
 				}
@@ -193,8 +213,9 @@ body {
 			});
 		}
 		
-//		//
-// 		function 
+		
+
+		
 	</script>
 	<jsp:include page="/WEB-INF/jsp/include/footer.jsp"></jsp:include>
 </body>

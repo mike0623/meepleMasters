@@ -330,6 +330,7 @@ public class GameRoomController {
 	@GetMapping("/game/showExistGameByGameName/{gameName}")
 	@ResponseBody
 	public String showExistGameByGameName(@PathVariable("gameName") String gameName) {
+		Product product = DataInterface.getProductByProductName(gameName);
 		System.out.println(GameRoomUtil.getOpenedGameRoom().size());
 		JSONObject jsonObject = new JSONObject();
 		Map<String,Game> map = new HashMap<>();
@@ -346,6 +347,7 @@ public class GameRoomController {
 		}
 //		System.out.println(map.size());
 		jsonObject.put("table", map);
+		jsonObject.put("productId", product.getProductId());
 		return jsonObject.toString();
 	}
 	
@@ -377,6 +379,7 @@ public class GameRoomController {
 		}
 		return null;
 	}
+	
 	
 	
 }
