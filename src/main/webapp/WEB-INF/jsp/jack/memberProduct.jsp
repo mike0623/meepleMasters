@@ -132,7 +132,7 @@
 														<td><img src="${root}/mall/getPhoto?pId=${product.productId}"
 																width="100px" height="100px"></td>
 														<td><a href="#">${product.productName}</a></td>
-														<td><button class="button-19">開始遊玩</button></td>
+														<td><form action="${root}/game/createGameTable/${product.productName}/${member.memberEmail}"><button class="button-19">開始遊玩</button></form></td>
 													</tr>
 												</c:forEach>
 

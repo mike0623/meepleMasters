@@ -12,9 +12,6 @@
 
                         <link rel="stylesheet" type="text/css" href="${root}/css/member/otherMember.css">
                         <style>
-                            .container {
-                                padding-top: 80px;
-                            }
 
                             /* div.list-group{
 								position: absolute;
@@ -24,7 +21,7 @@
                             ul .friendButtonDiv {
                                 margin-left: auto;
                                 height: 40;
-                                width: 100;
+                                width: 200;
                                 margin-top: auto;
                             }
                         </style>
@@ -33,7 +30,7 @@
                     <body>
                         <jsp:include page="../include/header.jsp"></jsp:include>
 
-
+						<div style="margin-top:75px;">
                         <div class="container">
 
                             <!-- Topbar Search -->
@@ -101,8 +98,8 @@
                                                 <c:when test="${member.memberEmail == findMember.memberEmail }">
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <div class="friendButtonDiv btn btn-info">
-                                                        <i class="fa-regular fa-user"></i> 加朋友
+                                                    <div class="friendButtonDiv">
+                                                    
                                                     </div>
 
                                                 </c:otherwise>
@@ -262,11 +259,81 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
 
 
 
                         <jsp:include page="../include/footer.jsp"></jsp:include>
                         <script type="text/javascript" src="${root}/js/jack/myProfile.js"></script>
+                        
+                        <script type="text/javascript">
+                      //-------------------------------------------------------------
+                    	//一登入就執行一次
+                    	isSelectedPage = true;
+                    	
+                    	var selectedFriendEmail = "${findMember.memberEmail}";
+                    	var selectedFriendName = "${findMember.memberName}";
+                    	var idTypeEmail = changeToIdType(selectedFriendEmail);
+                    	var buttonTypeName = selectedFriendName+"button";
+                    	searchFriend();
+                    	function searchFriend(){
+                    		//-------------------------------------------------------------
+                    		//先清空
+                    		$(".friendButtonDiv").empty();
+                    		//判斷是不是好友
+                    		console.log("先看看網址對不對","http://localhost:8080/meeple-masters/friend/isFriend/${member.memberEmail}/"+selectedFriendEmail);
+                    		axios.get("http://localhost:8080/meeple-masters/friend/isFriend/${member.memberEmail}/"+selectedFriendEmail).then(function(response){
+                    			if("isFriend"==response.data){
+                    				console.log("是好友了");
+                    				$(".friendButtonDiv").append(`
+                    						<button class="btn btn-info" onclick="pressChatButton('`+buttonTypeName+`','`+idTypeEmail+`')">傳送訊息</button>
+                    						<button class="btn btn-info" onclick="deleteFriend('${member.memberEmail}','`+selectedFriendEmail+`')">刪除好友</button>
+                    						`)
+                    				return;
+                    			}
+                    			//若不是好友，判斷有沒有誰發出過邀請
+                    			axios.get("http://localhost:8080/meeple-masters/friendInvite/isExist/${member.memberEmail}/"+selectedFriendEmail).then(function(response){
+                    				if("${member.memberEmail}"==response.data.inviter){
+                    					console.log("我發出邀請了");
+                    					//我發出邀請了，對方沒接受
+                    					$(".friendButtonDiv").empty();
+                    					$(".friendButtonDiv").append(`
+                    							<button class="btn btn-info" onclick="deleteFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">取消邀請</button>
+                    							`);
+                    					return;
+                    				}
+                    				if(selectedFriendEmail==response.data.inviter){
+                    					console.log("對方發出邀請了");
+                    					//對方發出邀請了，我沒接受
+                    					$(".friendButtonDiv").empty();
+                    					$(".friendButtonDiv").append(`
+                    							<button class="btn btn-info" onclick="acceptFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">接受邀請</button>
+                    							<button class="btn btn-info" onclick="rejectFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">拒絕邀請</button>
+                    							`);
+                    					return;
+                    				}
+                    				console.log("不是朋友，且誰都沒發出邀請");
+                    				//不是好友也不存在邀請
+                    				$(".friendButtonDiv").empty();
+                    				$(".friendButtonDiv").append(`
+                    						<button class="btn btn-info" onclick="sendFriendInvite('${member.memberEmail}','`+selectedFriendEmail+`')">加好友</button>
+                    						`);
+                    				
+                    			}).catch(function(error){
+                    				console.log("判斷誰發過請出錯啦!",error);
+                    			}).finally(function(){
+                    				
+                    			});
+                    			
+                    			
+                    			
+                    		}).catch(function(error){
+                    			console.log("判斷是不是好友出錯啦!",error);
+                    		}).finally(function(){
+                    			
+                    		});
+                    	}
+                        </script>
                     </body>
 
                     </html>

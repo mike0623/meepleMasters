@@ -34,3 +34,5 @@ result.addEventListener("click", function () {
 result.addEventListener("blur", function () {
   $("#result").empty()
 })
+
+

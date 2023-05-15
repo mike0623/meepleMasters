@@ -72,7 +72,6 @@
                     	<div>
                                 <ul>
     								
-                                    <li><a href="${root}/game/createGameTable/Bridge/${member.memberEmail}">創建橋牌遊戲房間</a></li>
                                     <li><a href="${root}/game/playGameLobby">進入遊戲大廳</a></li>
                                     <c:if test="${tableCode != null}">
                                     	<li><a href="${root}/game/joinGame/${tableCode}/${member.memberEmail}">回到遊玩中的遊戲</a></li>
