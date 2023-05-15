@@ -120,92 +120,88 @@ prefix="c"%>
   <body>
     <jsp:include page="../include/header.jsp" />
     <div class="bodyContainer">
-      <!-- <p>
-        Resize the browser window to see the effect. When the screen is less
-        than 800px wide, make the two columns stack on top of each other instead
-        of next to each other.
-      </p> -->
-      <div class="row">
-        <div class="col-25"></div>
+      <div class="container px-3 my-5 clearfix">
+        <div class="row">
+          <div class="col-50">
+            <h2>確認訂單</h2>
+            <div class="container2">
+              <form action="${root}/order/ecPay" id="orderForm">
+                <div class="row">
+                  <div class="col-50">
+                    <h3>使用者資訊</h3>
+                    <label for="fname"><i class="fa fa-user"></i> 使用者</label>
+                    <input
+                      type="text"
+                      id="fname"
+                      value="${member.memberName}"
+                      disabled
+                    />
+                    <label for="email"
+                      ><i class="fa fa-envelope"></i> 信箱</label
+                    >
+                    <input
+                      type="text"
+                      id="email"
+                      placeholder="john@example.com"
+                      value="${member.memberEmail}"
+                      disabled
+                    />
+                    <label for="city"
+                      ><i class="fa fa-institution"></i> 居住城市</label
+                    >
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                      placeholder="New York"
+                      value="${member.memberAddress}"
+                      disabled
+                    />
+                    <label for="adr"
+                      ><i class="fa fa-address-card-o"></i> 聯絡電話</label
+                    >
+                    <input
+                      type="text"
+                      id="adr"
+                      value="${member.memberTel}"
+                      disabled
+                    />
+                  </div>
 
-        <div class="col-50">
-          <h2>確認訂單</h2>
-          <div class="container2">
-            <form action="${root}/order/ecPay" id="orderForm">
-              <div class="row">
-                <div class="col-50">
-                  <h3>帳單地址</h3>
-                  <label for="fname"><i class="fa fa-user"></i> 購買人</label>
-                  <input
-                    type="text"
-                    id="fname"
-                    value="${member.memberName}"
-                    disabled
-                  />
-                  <label for="email"><i class="fa fa-envelope"></i> 信箱</label>
-                  <input
-                    type="text"
-                    id="email"
-                    placeholder="john@example.com"
-                    value="${member.memberEmail}"
-                    disabled
-                  />
-                  <label for="city"
-                    ><i class="fa fa-institution"></i> 居住城市</label
-                  >
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    placeholder="New York"
-                    value="${member.memberAddress}"
-                    disabled
-                  />
-                  <label for="adr"
-                    ><i class="fa fa-address-card-o"></i> 聯絡電話</label
-                  >
-                  <input
-                    type="text"
-                    id="adr"
-                    value="${member.memberTel}"
-                    disabled
-                  />
-                </div>
-
-                <div class="col-50">
-                  <div class="container">
-                    <h4>
-                      購物車<span class="price" style="color: black">
-                        <i class="fa fa-shopping-cart"></i>
-                        <b>${orderDetails.size()}</b></span
-                      >
-                    </h4>
-                    <c:forEach items="${orderDetails}" var="od">
+                  <div class="col-50">
+                    <div class="container">
+                      <h4>
+                        購物車<span class="price" style="color: black">
+                          <i class="fa fa-shopping-cart"></i>
+                          <b>${orderDetails.size()}</b></span
+                        >
+                      </h4>
+                      <c:forEach items="${orderDetails}" var="od">
+                        <p>
+                          <span>${od.product.productName}</span>
+                          <span class="price">${od.product.productPrice}</span>
+                        </p>
+                      </c:forEach>
+                      <hr />
                       <p>
-                        <span>${od.product.productName}</span>
-                        <span class="price">${od.product.productPrice}</span>
+                        總價
+                        <span class="price" style="color: black"
+                          ><b>${order.totalPrice}</b></span
+                        >
                       </p>
-                    </c:forEach>
-                    <hr />
-                    <p>
-                      總價
-                      <span class="price" style="color: black"
-                        ><b>${order.totalPrice}</b></span
-                      >
-                    </p>
-                    <label for="paymentMethod">付款方式</label>
-                    <select name="paymentMethod" id="paymentMethod">
-                      <option value="綠界">綠界</option>
-                      <option value="LinePay">LinePay</option>
-                    </select>
-                    <input type="submit" value="確定送出" class="btn2" />
+                      <label for="paymentMethod">付款方式</label>
+                      <select name="paymentMethod" id="paymentMethod">
+                        <option value="綠界">綠界</option>
+                        <option value="LinePay">LinePay</option>
+                      </select>
+                      <input type="submit" value="確定送出" class="btn2" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
-        <div class="col-25"></div>
       </div>
     </div>
     <jsp:include page="../include/footer.jsp" />

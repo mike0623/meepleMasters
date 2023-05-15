@@ -13,7 +13,7 @@
 <body>
 	<jsp:include page="../include/header.jsp" />
 	<div class="bodyContainer">
-		<div class="container">
+		<div class="container px-3 my-5 clearfix">
 			<div class="card shadow mb-4">
 				<div class="card-header py-3">
 					<h1 class="m-0 font-weight-bold">訂單列表</h1>

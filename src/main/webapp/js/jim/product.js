@@ -177,3 +177,21 @@ pageButton.addEventListener("click", function (e) {
       : page;
   getProductList(page, 6);
 });
+
+document.querySelector("#queryButton").addEventListener("click", function () {
+  let productpPlayTime = $("#productpPlayTime").val();
+  let productPrice = $("#productPrice").val();
+  axios
+    .get(`${root}/mall/multiConditionQuery`, {
+      params: {
+        playTime: productpPlayTime,
+        price: productPrice,
+      },
+    })
+    .then((response) => {
+      console.log(response);
+      renderProduct(response.data);
+      pageButton.innerHTML = "";
+    })
+    .catch((error) => console.log(error));
+});

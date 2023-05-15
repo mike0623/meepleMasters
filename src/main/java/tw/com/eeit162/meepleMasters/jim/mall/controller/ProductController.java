@@ -3,6 +3,8 @@ package tw.com.eeit162.meepleMasters.jim.mall.controller;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -104,5 +106,18 @@ public class ProductController {
 		}
 
 		return pImg;
+	}
+
+	@GetMapping("/mall/multiConditionQuery")
+	@ResponseBody
+	public List<Product> multiConditionQuery(@RequestParam(required = false) String playTime,
+			@RequestParam(required = false) Integer price) {
+
+		List<Product> productList = pService.findAllProduct(1, 6).getContent();
+
+		List<Product> collect = productList.stream().filter(p -> p.getProductPlayTime().contains(playTime))
+				.filter(p -> p.getProductPrice() < price).collect(Collectors.toList());
+
+		return collect;
 	}
 }

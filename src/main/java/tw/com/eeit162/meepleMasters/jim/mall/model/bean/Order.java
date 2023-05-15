@@ -71,6 +71,9 @@ public class Order implements Serializable {
 		if (orderStatus == null) {
 			orderStatus = "未付款";
 		}
+		if (paymentMethod == null) {
+			paymentMethod = "尚未選擇";
+		}
 	}
 
 	public Order() {
