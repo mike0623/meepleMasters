@@ -18,6 +18,21 @@
 								z-index: 10;
 							} */
 
+                            .container{
+                                margin-top:150px;
+                            }
+
+                            #divContainer{
+                                position: relative;
+                            }
+
+                            #searchBar{
+                                position: absolute;
+                                z-index: 10;
+                                left: 350;
+                                top: 50;
+                            }
+                            
                             ul .friendButtonDiv {
                                 margin-left: auto;
                                 height: 40;
@@ -29,29 +44,32 @@
 
                     <body>
                         <jsp:include page="../include/header.jsp"></jsp:include>
+                        
+                        <div id="divContainer">
 
-						<div style="margin-top:75px;">
+						 <!-- Topbar Search -->
+                         <div
+                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 p-3 py-5" id="searchBar">
+                         <div class="input-group">
+                             <div class="input-group-append">
+                                 <button class="btn btn-warning" type="button" style="border-radius: 5px">
+                                     <i class="fas fa-search fa-sm"></i>
+                                 </button>
+                             </div>
+                             <input type="text" class="form-control bg-light border-0 small" placeholder="搜尋會員"
+                                 aria-label="Search" aria-describedby="basic-addon2" id="searchMember"
+                                 style="width: 400px; border-radius: 5px">
+                         </div>
+                         <div class="list-group" id="result"
+                             style="width: 400px; border-radius: 5px; margin-left:auto;">
+
+                         </div>
+                     </div>
+                     <!-- Topbar Search -->
+                        
                         <div class="container">
 
-                            <!-- Topbar Search -->
-                            <div
-                                class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 p-3 py-5">
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-warning" type="button" style="border-radius: 5px">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
-                                    <input type="text" class="form-control bg-light border-0 small" placeholder="搜尋會員"
-                                        aria-label="Search" aria-describedby="basic-addon2" id="searchMember"
-                                        style="width: 400px; border-radius: 5px">
-                                </div>
-                                <div class="list-group" id="result"
-                                    style="width: 400px; border-radius: 5px; margin-left:auto;">
-
-                                </div>
-                            </div>
-                            <!-- Topbar Search -->
+                           
 
                             <div class="profile">
                                 <div class="profile-header">
