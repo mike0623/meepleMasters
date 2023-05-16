@@ -65,7 +65,7 @@ ol, ul {
 </head>
 
 <body>
-<div style="width:100%; position:relative; top:75px;">
+<div style="width:100%; position:relative; top:75px; margin-bottom:120px">
 	<div class="box">
 		<div class="gameType">
 			<div class="container text-center">

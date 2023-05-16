@@ -157,6 +157,7 @@
 		
 		//遊戲結束時，製作結束畫面
 		function makeEndingView(json){
+			console.log("有進入製作結束畫面方法");
 			$(".giveUpButtonDiv").remove();
 			$(".showGameProgress").text("遊戲結束，"+json.winTeam+"勝利");
 			$(".team1WonTricks").text(json.team1WonTricks);

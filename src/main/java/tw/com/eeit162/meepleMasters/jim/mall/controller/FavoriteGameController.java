@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.service.MemberService;
-import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FaveriteGameList;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FavoriteGameList;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FavoriteGame;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.jim.mall.service.FavoriteGameService;
@@ -38,7 +38,7 @@ public class FavoriteGameController {
 
 	@GetMapping("/favoriteGame/favoriteGameList/{memberEmail}")
 	@ResponseBody
-	public FaveriteGameList favoriteGameList(@PathVariable String memberEmail) {
+	public FavoriteGameList favoriteGameList(@PathVariable String memberEmail) {
 
 		Member member = mService.findMemberByEmail(memberEmail);
 
@@ -51,7 +51,7 @@ public class FavoriteGameController {
 			productList.add(product);
 		}
 		
-		FaveriteGameList faveriteGameList = new FaveriteGameList(productList);
+		FavoriteGameList faveriteGameList = new FavoriteGameList(productList);
 		return faveriteGameList;
 	}
 

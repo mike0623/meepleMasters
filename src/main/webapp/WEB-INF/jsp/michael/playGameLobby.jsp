@@ -102,16 +102,16 @@ body {
 			<div class="myLove">
 				<h3>我的最愛</h3>
 				<div class="myLoveGameArea flex-wrap justify-content-around">
-					<c:if test="${faveritelist.size() > 0}">
-					<c:forEach begin="0" end="${faveritelist.size()-1}" step="1" var="i">
+					<c:if test="${favoritelist.size() > 0}">
+					<c:forEach begin="0" end="${favoritelist.size()-1}" step="1" var="i">
 						<div class="lovedGame">
-							<img class="lovedGameImg" src="${root}/mall/getPhoto?pId=${faveritelist[i].productId}"><br />
-							<span style="font-size: 20px;">${faveritelist[i].productName}</span><br />
-							<button onclick="showExistGameArea(this.id)" id="${faveritelist[i].productName}">尋找可加入的房間</button>
+							<img class="lovedGameImg" src="${root}/mall/getPhoto?pId=${favoritelist[i].productId}"><br />
+							<span style="font-size: 20px;">${favoritelist[i].productName}</span><br />
+							<button onclick="showExistGameArea(this.id)" id="${favoritelist[i].productName}">尋找可加入的房間</button>
 						</div>
 					</c:forEach>
 					</c:if>
-					<c:if test="${faveritelist.size() == 0}">
+					<c:if test="${favoritelist.size() == 0}">
 						<h3>還沒有最愛遊戲喔，快去 <a href="${root}/mall/product">遊戲列表</a> 增加吧</h3>
 					</c:if>
 				
