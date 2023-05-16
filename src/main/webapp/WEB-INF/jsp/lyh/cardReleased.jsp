@@ -32,9 +32,9 @@
                     </li>
                 </ul>
 
-
                 <!-- Tab panes -->
                 <div class="tab-content">
+                    <span class="myCoinDiv">我的米寶幣 <span class="myCoin"></span> <i class="fa-solid fa-coins"></i></span>
                     <div class="btn-group row justify-content-end">
                         <button type="button" class="btn btn-outline-warning dropdown-toggle d-none"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -151,17 +151,20 @@
         let diffInMs;
         let diffInDays;
 
+        let memberId = "${member.memberId}"
+        let memberCoin = "${member.memberCoin}"
+
+        $(".myCoin").empty();
+        $(".myCoin").append(memberCoin);
+
         function getAllList() {
             return axios.get("${root}/released/all/" + status)
                 .then(res => {
                     let htmlstr = "";
-
-                    let memberId = "${member.memberId}"
-                    let memberCoin = "${member.memberCoin}"
+                    
                     let count = 0;
 
                     console.log(res)
-
 
                     for (i = 0; i < res.data.length; i++) {
                         getEndTime = `\${res.data[i].endTime}`;
@@ -188,7 +191,11 @@
                         }
 
                         if (res.data[i].type == 2) {
-                            htmlstr += `\${res.data[i].startPrice} <i class="fa-solid fa-gavel"></i><br>`;
+                            if (res.data[i].purchasePrice == null) {
+                                htmlstr += `\${res.data[i].startPrice} <i class="fa-solid fa-gavel"></i><br>`;
+                            } else {
+                                htmlstr += `\${res.data[i].purchasePrice} <i class="fa-solid fa-gavel"></i><br>`;
+                            }
                         }
 
                         if (res.data[i].directPrice != null) {
@@ -446,8 +453,8 @@
                                             <img src="${root}/card/downloadCard/\${res.data.cardId}" class="newCardImg"></div><div class="col-6">
                                             <div class="newCardTitle">\${res.data.cardName}</div>
                                             <div class="cardDetail row">
-                                            <div class="col-2">
-                                                賣家<br>價格<br>上架時間<br>結束時間<br>我的金幣
+                                            <div class="col-3">
+                                                賣家<br>價格<br>上架時間<br>結束時間<br>我的米寶幣
                                             </div>
                                             <div class="col-4">
                                                 \${res.data.memberName} <i class="fa-solid fa-user"></i><br>
@@ -469,6 +476,7 @@
                                     customClass: 'swal-newCard'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
+                                        let memberCoin = "${member.memberCoin}"
                                         if (memberId == "") {
                                             window.location.href = "${root}/login";
                                         } else if (memberCoin < res.data.directPrice) {
@@ -551,9 +559,13 @@
                                             <div id="countdown" style="font-size: 14px; height: 19px;"></div>
                                             <div class="cardDetail row" style="line-height: 38px;"><div class="col-3 detailLeft">`
                                 if (res.data.directPrice != null) {
-                                    cardHtml += `賣家<br>目前出價<br>最高出價者<br>直購價<br>上架時間<br>結束時間<br>我的金幣<br>出價`;
+                                    cardHtml += `賣家<br>目前出價<br>最高出價者<br>直購價<br>上架時間<br>結束時間`;
                                 } else {
-                                    cardHtml += `賣家<br>目前出價<br>最高出價者<br>上架時間<br>結束時間<br>我的金幣<br>出價`
+                                    cardHtml += `賣家<br>目前出價<br>最高出價者<br>上架時間<br>結束時間`
+                                }
+
+                                if (res.data.purchaserId != memberId) {
+                                    cardHtml += `<br>我的米寶幣<br>出價`;
                                 }
 
                                 cardHtml += `</div><div class="col-4">`
@@ -570,22 +582,24 @@
                                     cardHtml += `\${res.data.directPrice} <i class="fa-solid fa-coins"></i><br>`
                                 }
                                 cardHtml += `\${formattedStartTime} <i class="fa-regular fa-clock"></i><br>
-                                            \${formattedEndTime} <i class="fa-regular fa-clock"></i><br>
-                                            \${memberCoin} <i class="fa-solid fa-coins"></i><br>
-                                            <form action="${root}/released/purchaseAuction" method="post" id="forPurchase">
-                                            <input type="number" name="purchasePrice" id="purchasePrice" class="purchasePrice" onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" oninput="`
-                                if (res.data.directPrice != null) {
-                                    cardHtml += `if(value>\${res.data.directPrice})value=\${res.data.directPrice};`
-                                }
-                                if (res.data.purchasePrice != null) {
-                                    cardHtml += `if(value<\${res.data.purchasePrice})value=(\${res.data.purchasePrice}+1);`
-                                } else {
-                                    cardHtml += `if(value<\${res.data.startPrice})value=(\${res.data.startPrice}+1)" required>`
+                                            \${formattedEndTime} <i class="fa-regular fa-clock"></i>`
+
+                                if (res.data.purchaserId != memberId) {
+                                    cardHtml += `<br>
+                                            \${memberCoin} <i class="fa-solid fa-coins"></i><br><input type="number" name="purchasePrice" id="forPurchase" class="purchasePrice" onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')" oninput="`
+                                    if (res.data.directPrice != null) {
+                                        cardHtml += `if(value>\${res.data.directPrice})value=\${res.data.directPrice};`
+                                    }
+                                    if (res.data.purchasePrice != null) {
+                                        cardHtml += `if(value<\${res.data.purchasePrice})value=(\${res.data.purchasePrice}+1)" required>`;
+                                    } else {
+                                        cardHtml += `if(value<\${res.data.startPrice})value=(\${res.data.startPrice}+1)" required>`;
+                                    }
                                 }
 
-                                cardHtml += `<input type="submit" value="Submit" hidden>
-                                            </form>
-                                            </div></div></div></div></div>`
+
+
+                                cardHtml += `</div></div></div></div></div>`
 
                                 let intervalId = setInterval(() => {
                                     let now = new Date().getTime();
@@ -618,11 +632,14 @@
                                                 clearInterval(intervalId);
                                             }
                                         }).then((result) => {
-                                            console.log($("#purchasePrice").val())
                                             if (result.isConfirmed) {
+                                                let memberCoin = Number("${member.memberCoin}")
+                                                let price = $("#forPurchase").val();
+                                                console.log("memberCoin="+memberCoin)
+                                                console.log("price="+price)
                                                 if (memberId == "") {
                                                     window.location.href = "${root}/login";
-                                                } else if (memberCoin < $("#purchasePrice").val()) {
+                                                } else if (memberCoin < price) {
                                                     Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
                                                 } else {
                                                     Swal.fire({
@@ -636,7 +653,10 @@
                                                         reverseButtons: true
                                                     }).then((result) => {
                                                         if (result.isConfirmed) {
-                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&price=" + res.data.purchasePrice)
+                                                            console.log("price=" + price);
+                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&purchasePrice=" + price)
+                                                            
+                                                            window.location.href = "${root}/card/releasedList"
                                                         }
 
                                                     })
@@ -661,6 +681,7 @@
                                             }
                                         }).then((result) => {
                                             if (result.isConfirmed) {
+                                                let memberCoin = "${member.memberCoin}"
                                                 if (memberId == "") {
                                                     window.location.href = "${root}/login";
                                                 } else if (memberCoin < res.data.directPrice) {
@@ -708,7 +729,33 @@
                                                     })
                                                 }
                                             } else if (result.isDenied) {
-                                                axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&price=" + res.data.purchasePrice)
+                                                let memberCoin = Number("${member.memberCoin}")
+                                                let price = $("#forPurchase").val();
+                                                console.log("memberCoin="+memberCoin)
+                                                console.log("price="+price)
+                                                if (memberId == "") {
+                                                    window.location.href = "${root}/login";
+                                                } else if (memberCoin < price) {
+                                                    Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
+                                                } else {
+                                                    Swal.fire({
+                                                        title: '確定要出價嗎？',
+                                                        showCancelButton: true,
+                                                        confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
+                                                        cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
+                                                        confirmButtonColor: '#CA7159',
+                                                        cancelButtonColor: '#CBC0AA',
+                                                        customClass: 'confirmAlert',
+                                                        reverseButtons: true
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&price=" + res.data.purchasePrice)
+                                                            
+                                                            window.location.href = "${root}/card/releasedList"
+                                                        }
+
+                                                    })
+                                                }
                                             }
                                         });
                                     }
@@ -913,6 +960,7 @@
                                         }).then((result) => {
                                             if (result.isConfirmed) {
                                                 axios.post("${root}/released/stopAuction?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.purchasePrice)
+                                                window.location.href = "${root}/card/releasedList";
                                             }
                                         })
                                     }

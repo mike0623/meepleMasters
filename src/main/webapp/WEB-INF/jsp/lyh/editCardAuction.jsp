@@ -23,7 +23,7 @@
             </picture>
         </figure>
 
-        <form action="${root}/released/edit" method="post" id="formConfirm">
+        <form action="${root}/released/editAuction" method="post" id="formConfirm">
 
             <span class="headline">
                 <i class="fa-solid fa-arrow-left-long" onclick="location.href='${root}/card/releasedList'"></i>
@@ -61,7 +61,7 @@
                     <span>拍賣</span>
                 </label>
             </div>
-            <input class="inputSubmit" value="上架" type="submit">
+            <input class="inputSubmit" value="修改" type="submit">
         </form>
     </main>
     <jsp:include page="../include/footer.jsp"></jsp:include>
@@ -81,7 +81,6 @@
         let cardId = "";
         let endTime = "";
         let formattedEndTime = "";
-
 
         $.get(`${root}/released/card/\${releasedId}`, function (data) {
 

@@ -127,7 +127,7 @@
 		let sellListArray = [];
 
 		function getMyList() {
-			console.log("執行了getMyList");
+			// console.log("執行了getMyList");
 			return axios.get("${root}/card/mycard/${member.memberId}/getOrder")
 				.then(res => {
 					console.log(res)

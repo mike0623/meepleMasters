@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.ObjectUtils.Null;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,9 +122,13 @@ public class CardReleasedController {
 
 		Date newDate = cal.getTime();
 
-		cRService.insertCardReleasedDirect(ownedId, price, newDate);
-
-		return "redirect:/card/releasedList";
+		CardReleased insertCardReleasedDirect = cRService.insertCardReleasedDirect(ownedId, price, newDate);
+		
+		if (insertCardReleasedDirect != null) {
+			return "redirect:/card/releasedList";			
+		}
+		
+		return null;
 	}
 
 	@PostMapping("/insertCardAuction")
@@ -140,15 +145,20 @@ public class CardReleasedController {
 		cal.add(Calendar.DATE, 1);
 
 		Date newDate = cal.getTime();
+		
+		String insertCardReleasedAuction;
 
-		if (directPrice == null) {
-			cRService.insertCardReleasedAuction(ownedId, startPrice, null, newDate);
+		if (directPrice == null || directPrice == 0) {
+			insertCardReleasedAuction = cRService.insertCardReleasedAuction(ownedId, startPrice, null, newDate);
 	    } else {
-	    	cRService.insertCardReleasedAuction(ownedId, startPrice, directPrice, newDate);
+	    	insertCardReleasedAuction = cRService.insertCardReleasedAuction(ownedId, startPrice, directPrice, newDate);
 	    }
 		
-
-		return "redirect:/card/releasedList";
+		if (insertCardReleasedAuction != null) {
+			return "redirect:/card/releasedList";			
+		}
+		
+		return null;
 	}
 
 	@GetMapping("/all/{status}")
@@ -171,6 +181,19 @@ public class CardReleasedController {
 			Member member = mService.findMemberById(cardOwned.getFkMemberId());
 			String memberName = member.getMemberName();
 			
+			CardAuction cardAuction = null;
+			String purchaserName = "";
+			
+			if (cardReleased.getType() == 2) {
+//				System.out.println("-----------------------releasedId"+releasedId);
+				cardAuction = cRService.findAuctionById(cardReleased.getReleasedId());
+//				System.out.println("cardAuction"+cardAuction);
+				if (cardAuction.getPurchasePrice() != null) {
+					Member purchaser = mService.findMemberById(cardAuction.getFkPurchaserId());
+					purchaserName = purchaser.getMemberName();
+				}
+			}
+			
 
 			CardReleasedDto cardDto = new CardReleasedDto();
 
@@ -188,6 +211,11 @@ public class CardReleasedController {
 			cardDto.setCardName(card.getCardName());
 			cardDto.setCardStar(card.getCardStar());
 			cardDto.setMemberName(memberName);
+			if (cardReleased.getType() == 2 &&cardAuction.getPurchasePrice() != null) {
+		    	cardDto.setPurchaserId(cardAuction.getFkPurchaserId());
+		        cardDto.setPurchasePrice(cardAuction.getPurchasePrice());
+		        cardDto.setPurchaserName(purchaserName);
+		    }
 
 			cDList.add(cardDto);
 		});
@@ -307,9 +335,10 @@ public class CardReleasedController {
 //		String price = jsonObject.getString("price");
 		String buyCard = cRService.buyCardDirect(releasedId, ownedId, price, session);
 
+		Member member = (Member) session.getAttribute("member");
+		Integer memberId = member.getMemberId();
+		
 		if (buyCard != null) {
-			Member member = (Member) session.getAttribute("member");
-			Integer memberId = member.getMemberId();
 			member = cListService.findMember(memberId);
 			session.setAttribute("member", member);
 			return "購買成功";
@@ -326,9 +355,11 @@ public class CardReleasedController {
 //		String price = jsonObject.getString("price");
 		String buyCard = cRService.buyCardDirect(releasedId, ownedId, price, session);
 
+		Member member = (Member) session.getAttribute("member");
+		Integer memberId = member.getMemberId();
+		
 		if (buyCard != null) {
-			Member member = (Member) session.getAttribute("member");
-			Integer memberId = member.getMemberId();
+			
 			member = cListService.findMember(memberId);
 			session.setAttribute("member", member);
 			return "購買成功";
@@ -339,11 +370,16 @@ public class CardReleasedController {
 	
 	@PostMapping("/purchaseAuction")
 	@ResponseBody
-	public String purchaseAuction(@RequestParam("releasedId") Integer releasedId, @RequestParam("price") Integer price, HttpSession session) {
+	public String purchaseAuction(@RequestParam("releasedId") Integer releasedId, @RequestParam("purchasePrice") Integer purchasePrice, HttpSession session) {
 
-		String purchaseAuction = cRService.purchaseAuction(releasedId, price, session);
+		String purchaseAuction = cRService.purchaseAuction(releasedId, purchasePrice, session);
+//		Integer memberId = member.getMemberId();	
 		
-		if (purchaseAuction != null) {
+		if (purchaseAuction != null) {			
+			Member member = (Member) session.getAttribute("member");
+			Integer oldCoin = member.getMemberCoin();
+			member.setMemberCoin(oldCoin - purchasePrice);
+			session.setAttribute("member", member);
 			return "出價成功";
 		}
 
@@ -357,7 +393,11 @@ public class CardReleasedController {
 
 		String purchaseAuction = cRService.stopAuction(releasedId, ownedId, price, session);
 		
-		if (purchaseAuction != null) {
+		if (purchaseAuction != null) {			
+			Member member = (Member) session.getAttribute("member");
+			Integer oldCoin = member.getMemberCoin();
+			member.setMemberCoin(oldCoin + price);
+			session.setAttribute("member", member);
 			return "結標成功";
 		}
 
@@ -402,4 +442,30 @@ public class CardReleasedController {
 
 	}
 
+	@PostMapping("/editAuction")
+	public String editMyAuction(@RequestParam("releasedId") Integer releasedId,	@RequestParam("startPrice") Integer startPrice, @RequestParam(value = "directPrice", required = false) Integer directPrice, @RequestParam("endTime") String endTime)
+			throws ParseException {
+
+		Date date = null;
+
+		date = new SimpleDateFormat("yyyy-MM-dd").parse(endTime);
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 1);
+
+		Date newDate = cal.getTime();
+		
+		if (directPrice == null || directPrice == 0) {
+			directPrice = null;
+		}
+		String editMyAuction = cRService.editMyAuction(releasedId, startPrice, directPrice, newDate);
+		
+		
+		if (editMyAuction != null) {
+			return "redirect:/card/releasedList";			
+		}
+		
+		return null;
+	}
 }

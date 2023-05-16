@@ -25,5 +25,9 @@ public interface CardReleasedDao extends JpaRepository<CardReleased, Integer> {
 	@Query("update CardReleased set directPrice = :directPrice, endTime = :endTime where releasedId = :releasedId")
 	Integer editMyReleased(@Param("releasedId") Integer releasedId, @Param("directPrice") Integer directPrice, @Param("endTime") Date endTime);
 	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("update CardReleased set startPrice = :startPrice, directPrice = :directPrice, endTime = :endTime where releasedId = :releasedId")
+	Integer editMyAuction(@Param("releasedId") Integer releasedId, @Param("startPrice") Integer startPrice, @Param("directPrice") Integer directPrice, @Param("endTime") Date endTime);
 	
 }

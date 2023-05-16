@@ -108,7 +108,11 @@ public class CardReleasedService {
 
 		CardReleased newRelease = cRDao.save(cr);
 
-		return newRelease;
+		if (newRelease != null) {
+			return newRelease;			
+		}
+		
+		return null;
 	}
 
 	@Transactional
@@ -307,10 +311,11 @@ public class CardReleasedService {
 			return null;
 		}
 		
-		Integer lastPurchaserId = cADao.findByReleasedId(releasedId).getFkReleasedId(); 
+		Integer lastPurchaserId = cADao.findByReleasedId(releasedId).getFkPurchaserId(); 
 		
 		if (lastPurchaserId != null) {
-			mDao.updateMemberCoin(lastPurchaserId, price);
+			Integer lastPurchasePrice = cADao.findByReleasedId(releasedId).getPurchasePrice();
+			mDao.updateMemberCoin(lastPurchaserId, lastPurchasePrice);
 		}
 		
 		Integer purchaseCoin = mDao.updateMemberCoin(memberId, -price);
@@ -413,4 +418,20 @@ public class CardReleasedService {
 		return null;
 	}
 
+	public String editMyAuction(Integer releasedId, Integer startPrice, Integer directPrice, Date endTime) {
+
+		Integer editMyReleased;
+		
+		if (directPrice == null || directPrice == 0) {
+			editMyReleased = cRDao.editMyAuction(releasedId, startPrice, null, endTime);
+		} else {
+			editMyReleased = cRDao.editMyAuction(releasedId, startPrice, directPrice, endTime);			
+		}
+		
+		if (editMyReleased != 0) {
+			return "success";
+		}
+
+		return null;
+	}
 }
