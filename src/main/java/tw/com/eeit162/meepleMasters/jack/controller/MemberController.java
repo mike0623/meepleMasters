@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
 import tw.com.eeit162.meepleMasters.jack.service.MemberService;
 
 @Controller
@@ -62,8 +63,8 @@ public class MemberController {
 	@GetMapping("/auth/{token}")
 	public String activeAccount(@PathVariable("token") String token) {
 		mService.activeAccount(token);
-		return "redirect:/login";
 		
+		return "redirect:/login";
 	}
 	
 	/**
@@ -125,11 +126,11 @@ public class MemberController {
 	 * @return String
 	 */
 	@ResponseBody
-	@PutMapping("/member/updatePwd/{id}")
-	public String updatePwd(@PathVariable(name = "id")Integer memberId, @RequestBody String memberPwd) {
+	@PutMapping("/member/updatePwd")
+	public String updatePwdByEmail(String email, String memberPwd) {
 		
 		
-		Integer update = mService.updatePwd(memberId, memberPwd);
+		Integer update = mService.updatePwdByEmail(email, memberPwd);
 		System.out.println(memberPwd);
 		if(update!=0) {
 			
@@ -291,6 +292,15 @@ public class MemberController {
 		
 		System.out.println("null");
 		return null;
+	}
+	
+	@GetMapping("/admin/banMember")
+	public String banMember(@RequestParam("id") Integer memberId) {
+		
+		mService.banMemberById(memberId);
+		
+		
+		return "redirect:/admin/memberManage";
 	}
 	
 //	@ResponseBody

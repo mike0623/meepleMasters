@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
-import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FaveriteGameList;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FavoriteGameList;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.michael.util.DataInterface;
 
@@ -51,11 +51,16 @@ public class PagesController {
 	public String playGameLobby(HttpSession session,Model model) {
 		Member member = (Member)session.getAttribute("member");
 		//增加我的最愛的modelAttr
-		FaveriteGameList faveriteGameList = DataInterface.getFaveriteGameByEmail(member.getMemberEmail());
-		List<Product> faveritelist = faveriteGameList.getFaveriteGameList();
-		model.addAttribute("faveritelist", faveritelist);
+		FavoriteGameList favoriteGameList = DataInterface.getFaveriteGameByEmail(member.getMemberEmail());
+		List<Product> favoritelist = favoriteGameList.getFaveriteGameList();
+		model.addAttribute("favoritelist", favoritelist);
 		
 		return "/michael/playGameLobby";
+	}
+	
+	@GetMapping("/gomoku/enterGameView")
+	public String enterGameView() {
+		return "/michael/game/gomoku";
 	}
 	
 	

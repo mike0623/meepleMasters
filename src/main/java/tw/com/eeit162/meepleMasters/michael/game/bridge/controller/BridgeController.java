@@ -216,6 +216,13 @@ public class BridgeController {
 		boolean endOfTheTurn = bridge.isEndOfTheTurn();
 		BridgePlayer newPlayer = bridge.nextTurn(oldPlayer,isBiddingPhase);
 		boolean isTwoPlayerPhaseOne = false;
+//		System.out.println("---------------------------------------");
+//		System.out.println("是否結束一輪: "+endOfTheTurn);
+//		System.out.println("玩家: "+bridge.getPlayer1().getName()+"手牌: "+bridge.getPlayer1().getHandCardList());
+//		System.out.println("玩家: "+bridge.getPlayer2().getName()+"手牌: "+bridge.getPlayer2().getHandCardList());
+//		System.out.println("玩家: "+bridge.getPlayer3().getName()+"手牌: "+bridge.getPlayer3().getHandCardList());
+//		System.out.println("玩家: "+bridge.getPlayer4().getName()+"手牌: "+bridge.getPlayer4().getHandCardList());
+//		System.out.println("---------------------------------------");
 		if(endOfTheTurn) {
 			//設定本輪贏家
 			bridge.setPerTurnWinner();
@@ -247,20 +254,24 @@ public class BridgeController {
 			jsonObject.put("perTurnWinnerTeam", bridge.getPerTurnWinner().getTeam());
 			jsonObject.put("perTurnWinnerWonTricks", bridge.getPerTurnWinner().getWonTricks());
 			jsonObject.put("perTurnWinnerEmail", bridge.getPerTurnWinner().getEmail());
-		}
-		bridge.setPhase(newPlayer,isBiddingPhase);
-		//判斷是否遊戲結束
-		if(bridge.getPlayer1().getHandCardList().size() == 0) {
-			bridge.setIsEndOfTheGame(true);
-			bridge.makeWinTeam();
-			//結束遊戲呼叫的方法，回傳需要回傳的json
-			JSONObject InfoWhenEndOfGame = doWhenEnding(session);
+//			System.out.println("誰是本輪贏家: "+bridge.getPerTurnWinner().getName());
 			
-			return InfoWhenEndOfGame.toString();
+			//判斷是否遊戲結束
+			if(bridge.getPlayer1().getHandCardList().size() == 0) {
+				bridge.setIsEndOfTheGame(true);
+				bridge.makeWinTeam();
+				//結束遊戲呼叫的方法，回傳需要回傳的json
+				JSONObject InfoWhenEndOfGame = doWhenEnding(session);
+				
+				return InfoWhenEndOfGame.toString();
+			}
 		}
+		//在起始玩家決定後，設定遊戲階段
+		bridge.setPhase(newPlayer,isBiddingPhase);
 		//-----------------------------------------------------------------------
 		jsonObject.put("isEndOfTheTurn", endOfTheTurn);
 		jsonObject.put("playerNTurn", bridge.getPlayerNTurn().getName());
+//		System.out.println("輪到誰的回合: "+bridge.getPlayerNTurn().getName());
 		jsonObject.put("playerNTurnEmail", bridge.getPlayerNTurn().getEmail());
 		//之後還是不是phase1
 		jsonObject.put("isTwoPlayerPhaseOne", isTwoPlayerPhaseOne);

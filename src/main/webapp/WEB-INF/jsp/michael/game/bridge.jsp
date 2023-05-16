@@ -9,7 +9,7 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"></jsp:include>
 <link href="${root}/css/bootstrap.min.css" rel="stylesheet">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Bridge</title>
 <style>
 	ol, ul {
      padding-left: 0rem;
@@ -427,7 +427,7 @@
 				<h2>我的手牌</h2>
 					<div class="cardInMyHandArea">
 						<c:forEach items="${myArray.get(0).handCardList}" var="i">
-							<img name="${i}" class="cardInMyHand <c:if test="${myArray.get(0).playerNumber == bridge.playerNTurn.playerNumber && bridge.phase <10 && (bridge.perTurnSuit == null || bridge.perTurnSuit == Integer((i-1) / 13))}">canDo</c:if> <c:if test="${bridge.perTurnSuit != null && bridge.perTurnSuit != Integer((i-1) / 13) && bridge.getNumOfSpecific(myArray.get(0), bridge.perTurnSuit == null?4:bridge.perTurnSuit) == 0}">canDo</c:if>" src="${root}/poker/${i}">
+							<img name="${i}" class="cardInMyHand <c:if test="${myArray.get(0).playerNumber == bridge.playerNTurn.playerNumber && bridge.phase <10 && (bridge.perTurnSuit == null || bridge.perTurnSuit == Integer((i-1) / 13))}">canDo</c:if> <c:if test="${myArray.get(0).playerNumber == bridge.playerNTurn.playerNumber && bridge.perTurnSuit != null && bridge.perTurnSuit != Integer((i-1) / 13) && bridge.getNumOfSpecific(myArray.get(0), bridge.perTurnSuit == null?4:bridge.perTurnSuit) == 0}">canDo</c:if>" src="${root}/poker/${i}">
 						</c:forEach>
 					</div>
 				</div>

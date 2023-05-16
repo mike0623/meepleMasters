@@ -21,6 +21,7 @@ import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.michael.game.Game;
 import tw.com.eeit162.meepleMasters.michael.game.bridge.Bridge;
+import tw.com.eeit162.meepleMasters.michael.game.gomoku.Gomoku;
 import tw.com.eeit162.meepleMasters.michael.util.DataInterface;
 import tw.com.eeit162.meepleMasters.michael.util.DateTimeConverter;
 import tw.com.eeit162.meepleMasters.michael.websocket.service.WebsocketService;
@@ -49,6 +50,9 @@ public class GameRoomController {
 		//每新增一個遊戲這邊要加一個判斷
 		if("Bridge".equals(gameName)) {
 			game = new Bridge();
+		}
+		if("Gomoku".equals(gameName)) {
+			game = new Gomoku();
 		}
 		
 		game.setMaxNumOfPlayer(product.getProductMaxPlayer());
@@ -97,6 +101,9 @@ public class GameRoomController {
 		if(!isExistHost) {
 			if("Bridge".equals(gameName)) {
 				game = new Bridge();
+			}
+			if("Gomoku".equals(gameName)) {
+				game = new Gomoku();
 			}
 		}
 		
@@ -155,6 +162,7 @@ public class GameRoomController {
 			System.out.println(memberEmail);
 			WebsocketUtil.sendMessageByUserEmail(memberEmail, jsonObject.toString());
 		}
+		System.out.println("目前開放的桌數有幾桌"+GameRoomUtil.getOpenedGameRoom().size());
 	}
 	
 	//房主已加入map後的離開遊戲
@@ -254,6 +262,7 @@ public class GameRoomController {
 			session.removeAttribute("tableCode");
 			return "redirect:/game/playGameLobby";
 		}
+		
 		if(game.getGameStatus() == 3) {
 			return "redirect:/game/enterGameView/"+game.getGameName()+"/"+tableCode+"/"+memberEmail;
 		}
@@ -263,7 +272,10 @@ public class GameRoomController {
 				isInTheRoom = true;
 			}
 		}
-		if(!isInTheRoom) {
+		if(!isInTheRoom && game.getPlayers().size() == game.getFinalNumOfPlayer()) {
+			return "redirect:/game/playGameLobby";
+		}
+		if(!isInTheRoom && game.getPlayers().size() < game.getFinalNumOfPlayer()) {
 			Member member = DataInterface.getMemberByEmail(memberEmail);
 			
 			game.addPlayer(member);
@@ -343,6 +355,11 @@ public class GameRoomController {
 					map.put(key, existGameRoom.get(key));
 				}
 			}
+			if("Gomoku".equals(gameName)) {
+				if(existGameRoom.get(key) instanceof Gomoku) {
+					map.put(key, existGameRoom.get(key));
+				}
+			}
 			//增加遊戲時這裡加判斷
 		}
 //		System.out.println(map.size());
@@ -376,6 +393,9 @@ public class GameRoomController {
 		//依照遊戲導向各個遊戲的controller
 		if("Bridge".equals(gameName)) {
 			return "redirect:/bridge/enterGameView/"+tableCode+"/"+memberEmail;
+		}
+		if("Gomoku".equals(gameName)) {
+			return "redirect:/gomoku/enterGameView/"+tableCode+"/"+memberEmail;
 		}
 		return null;
 	}

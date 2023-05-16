@@ -14,6 +14,14 @@
                             td img {
                                 margin-right: 20px;
                             }
+                            
+                            #dataTable{
+                                text-align: center;
+                            }
+                            
+                            tbody td:nth-child(2) {
+                                text-align: left;
+                            }
                         </style>
                     </head>
 
@@ -61,6 +69,7 @@
                                                                 <th>Coin</th>
                                                                 <th>帳號驗證</th>
                                                                 <th>註冊日期</th>
+                                                                <th></th>
                                                             </tr>
                                                         </thead>
                                                         <tfoot>
@@ -75,6 +84,8 @@
                                                                 <th>Coin</th>
                                                                 <th>帳號驗證</th>
                                                                 <th>註冊日期</th>
+                                                                <th></th>
+
                                                             </tr>
                                                         </tfoot>
                                                         <tbody id="memberList">
@@ -95,8 +106,23 @@
                                                                     <td>${all.memberTel}</td>
                                                                     <td>${all.memberAddress}</td>
                                                                     <td>${all.memberCoin}</td>
-                                                                    <td>${all.memberActive}</td>
+                                                                    <c:choose>
+                                                                        <c:when test="${all.memberActive == 1}">
+                                                                            <td>已驗證</td>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <td style="color: red;">已停權</td>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                     <td>${all.createTime}</td>
+                                                                    <c:choose>
+                                                                        <c:when test="${all.memberActive == 1}">
+                                                                            <td><a href="${root}/admin/banMember?id=${all.memberId}" class="btn btn-danger" id="banButton">停權</a></td>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <td><a href="${root}/admin/banMember?id=${all.memberId}" class="btn btn-info" id="banButton">認證</a></td>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 </tr>
 
                                                             </c:forEach>

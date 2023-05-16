@@ -1,3 +1,21 @@
+const banButton = document.querySelector("#banButton");
+
+banButton.addEventListener("click", function(){
+    if(banButton.classList.contains("btn-danger")){
+        console.log("停權")
+        banButton.classList.remove("btn-danger");
+        banButton.classList.add("btn-info");
+        banButton.innerHTML = "取消停權";
+    }
+    if(banButton.classList.contains("btn-info")){
+        console.log("恢復")
+        banButton.classList.remove("btn-info");
+        banButton.classList.add("btn-danger");
+        banButton.innerHTML = "停權";
+    }
+})
+
+
 
 // window.addEventListener("load", function(){
 //     axios.get("/meeple-masters/admin/findAllMember")
@@ -28,3 +46,4 @@
 //     })
 
 // })
+

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
 
@@ -56,15 +57,18 @@ public class MemberService {
 
 		String email = jObject.getString("memberEmail");
 		String password = jObject.getString("memberPwd");
+		String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+		
 		String name = jObject.getString("memberName");
 		Date birth = jObject.isNull("memberBirth") ? null : date;
 		String gender = jObject.isNull("memberGender") ? null : jObject.getString("memberGender");
 		String tel = jObject.isNull("memberTel") ? null : jObject.getString("memberTel");
 		String address = jObject.isNull("memberAddress") ? null : jObject.getString("memberAddress");
+		
 
 		Member member = new Member();
 		member.setMemberEmail(email);
-		member.setMemberPwd(password);
+		member.setMemberPwd(bcryptHashString);
 		member.setMemberName(name);
 		member.setMemberLevel("一般會員");
 		member.setMemberBirth(birth);
@@ -130,6 +134,7 @@ public class MemberService {
 			member.setMemberImg(imageData);
 			member.setMemberLevel("一般會員");
 			member.setMemberActive(1);
+			member.setMemberCoin(500);
 			member.setCreateTime(new Date());
 
 			return memberDao.save(member);
@@ -180,13 +185,15 @@ public class MemberService {
 		JSONObject member = new JSONObject(json);
 		String email = member.getString("memberEmail");
 		String password = member.getString("memberPwd");
-
+		
+		
 		Optional<Member> option = Optional.ofNullable(memberDao.findMemberByEmail(email));
 		if (option.isEmpty()) {
 			return Optional.empty();
 		} else {
 			String memberPwd = option.get().getMemberPwd();
-			if (password.equals(memberPwd)) {
+			BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), memberPwd);
+			if (result.verified) {
 				return option;
 			}
 			return Optional.empty();
@@ -201,13 +208,14 @@ public class MemberService {
 	 * @param json
 	 * @return Integer
 	 */
-	public Integer updatePwd(Integer id, String json) {
-		JSONObject jObject = new JSONObject(json);
-
-//		Integer id = jObject.isNull("memberId")?null:jObject.getInt("memberId");
-		String password = jObject.isNull("memberPwd") ? null : jObject.getString("memberPwd");
-
-		return memberDao.updatePasswordById(id, password);
+	public Integer updatePwdByEmail(String email, String memberPwd) {
+		Member member = memberDao.findMemberByEmail(email);
+		if(member != null) {
+			String memberEmail = member.getMemberEmail();
+			return memberDao.updatePasswordByEmail(memberEmail, memberPwd);
+		}
+		
+		return null;
 
 	}
 
@@ -357,6 +365,22 @@ public class MemberService {
 		
 		return null;
 		
+	}
+	
+	public Member banMemberById(Integer memberId){
+		Optional<Member> option = memberDao.findById(memberId);
+		Member member = option.get();
+		if(member != null && member.getMemberActive()==1) {
+			member.setMemberActive(0);
+			memberDao.save(member);
+			return member;
+		}
+		if(member != null && member.getMemberActive()==0) {
+			member.setMemberActive(1);
+			memberDao.save(member);
+			return member;
+		}
+		return null;
 	}
 
 	@Transactional

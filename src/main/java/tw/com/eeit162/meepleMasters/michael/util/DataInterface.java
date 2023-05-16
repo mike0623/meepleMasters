@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
-import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FaveriteGameList;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FavoriteGameList;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.michael.game.degree.model.GameDegree;
 
@@ -163,13 +163,13 @@ public class DataInterface {
 		return response.getBody();
 	}
 	
-	public static FaveriteGameList getFaveriteGameByEmail(String memberEmail) {
+	public static FavoriteGameList getFaveriteGameByEmail(String memberEmail) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("isServer", "yes");
 		
 		URI uri = URI.create("http://localhost:8080/meeple-masters/favoriteGame/favoriteGameList/"+memberEmail);
 		RequestEntity<Void> requset = RequestEntity.get(uri).headers(headers).header("Content-Type", "application/json;charset=UTF-8").accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<FaveriteGameList> response = template.exchange(requset, FaveriteGameList.class);
+		ResponseEntity<FavoriteGameList> response = template.exchange(requset, FavoriteGameList.class);
 		return response.getBody();
 	}
 	

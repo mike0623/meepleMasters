@@ -11,10 +11,10 @@ const inputs = [memberName, email, password, confirmPwd, birth, gender, tel, add
 
 
 document.querySelector("#member").addEventListener("click", function () {
-  memberName.value = "Test1",
-    email.value = "456456@gmail.com",
-    password.value = "asd123123",
-    confirmPwd.value = "asd123123",
+  memberName.value = "jack",
+    email.value = "testmeeple@gmail.com",
+    password.value = "eeit1622",
+    confirmPwd.value = "eeit1622",
     birth.value = '2002-05-30',
     gender.value = "男",
     tel.value = "0912345678",
@@ -42,14 +42,14 @@ memberName.addEventListener("blur", function () {
 email.addEventListener("blur", function () {
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-    document.querySelector("#email-error").innerText = "Please check your email format.";
+    document.querySelector("#email-error").innerText = "請檢查信箱格式是否錯誤";
     email.classList.add("is-invalid");
   }
   axios.get("/meeple-masters/checkMemberByEmail?memberEmail=" + email.value)
     .then(res => {
       console.log(res)
       if (res.status == 200) {
-        document.querySelector("#email-error").innerText = "Your email has been used."
+        document.querySelector("#email-error").innerText = "此信箱已被註冊"
         email.classList.add("is-invalid");
       }
       if (res.status == 204) {
@@ -64,7 +64,7 @@ email.addEventListener("blur", function () {
 
 password.addEventListener("blur", function () {
   if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password.value)) {
-    document.querySelector("#password-error").innerText = "Your password must contain letter and number at least 8 characters long."
+    document.querySelector("#password-error").innerText = "密碼必須包含英文與數字，且至少8個字元"
     password.classList.add("is-invalid");
   }
 });
@@ -72,7 +72,7 @@ password.addEventListener("blur", function () {
 
 confirmPwd.addEventListener("blur", function () {
   if (confirmPwd.value != password.value) {
-    document.querySelector("#confirmPwd-error").innerText = "Please check your password."
+    document.querySelector("#confirmPwd-error").innerText = "與密碼不符"
     confirmPwd.classList.add("is-invalid");
   }
 });
@@ -90,7 +90,7 @@ function formatPhoneNumber(phoneNumberString) {
 tel.addEventListener("blur", function () {
   tel.value = formatPhoneNumber(tel.value);
   if (!/^\d{4}-\d{3}-\d{3}$/.test(tel.value)) {
-    document.querySelector("#tel-error").innerText = "Please check your phone number."
+    document.querySelector("#tel-error").innerText = "請輸入手機號碼"
     tel.classList.add("is-invalid");
   }
 
@@ -115,7 +115,7 @@ document
   .addEventListener("click", function (e) {
     if (!document.querySelector("#agree").checked) {
       e.preventDefault();
-      document.querySelector("#checkbox-error").innerText = "Please check the box."
+      document.querySelector("#checkbox-error").innerText = "請勾選同意會員條款"
       document.querySelector("#agree").classList.add("is-invalid");
     } else {
 

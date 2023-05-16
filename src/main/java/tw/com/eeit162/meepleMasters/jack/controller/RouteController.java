@@ -138,16 +138,17 @@ public class RouteController {
 			System.out.println(allMember.get(i));
 			System.out.println("Name : "+allMember.get(i).getMemberName());
 			Member member = new Member();
-			member.setMemberId(allMember.get(i).getMemberId());
-			member.setMemberName(allMember.get(i).getMemberName());
-			member.setMemberEmail(allMember.get(i).getMemberEmail());
-			member.setMemberBirth(allMember.get(i).getMemberBirth());
-			member.setMemberGender(allMember.get(i).getMemberGender());
-			member.setMemberTel(allMember.get(i).getMemberTel());
-			member.setMemberAddress(allMember.get(i).getMemberAddress());
-			member.setMemberCoin(allMember.get(i).getMemberCoin());
-			member.setMemberLevel(allMember.get(i).getMemberLevel());
-			member.setCreateTime(allMember.get(i).getCreateTime());
+			member = allMember.get(i);
+//			member.setMemberId(allMember.get(i).getMemberId());
+//			member.setMemberName(allMember.get(i).getMemberName());
+//			member.setMemberEmail(allMember.get(i).getMemberEmail());
+//			member.setMemberBirth(allMember.get(i).getMemberBirth());
+//			member.setMemberGender(allMember.get(i).getMemberGender());
+//			member.setMemberTel(allMember.get(i).getMemberTel());
+//			member.setMemberAddress(allMember.get(i).getMemberAddress());
+//			member.setMemberCoin(allMember.get(i).getMemberCoin());
+//			member.setMemberLevel(allMember.get(i).getMemberLevel());
+//			member.setCreateTime(allMember.get(i).getCreateTime());
 			
 			memberList.add(member);
 			
