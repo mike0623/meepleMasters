@@ -39,14 +39,14 @@
               <img src="${root}/img/logo.png" class="card-img-top" alt="..." style="width: 200px; margin: 10px" />
               <div class="card container" style="width: 30rem; background-color: #e0ccc5">
                 <div class="card-body text-center" id="main-form">
-                  <h5 class="card-title" style="color: #8a513f">Sign-up</h5>
+                  <h5 class="card-title" style="color: #8a513f">註冊</h5>
                   <form class="needs-validation" novalidate>
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="name" placeholder="Name"
                         style="background-color: rgb(250, 240, 217)" required />
-                      <label for="name">Name</label>
+                      <label for="name">姓名</label>
                       <div id="name-error" class="invalid-feedback">
-                        Your name shouldn't be empty.
+                        請輸入您的姓名
                       </div>
                     </div>
                     <div class="form-floating mb-3">
@@ -55,12 +55,12 @@
                       <div id="email-error" class="invalid-feedback">
 
                       </div>
-                      <label for="email">Email address</label>
+                      <label for="email">Email</label>
                     </div>
                     <div class="form-floating mb-3">
                       <input type="password" class="form-control" id="password" placeholder="Password"
                         style="background-color: rgb(250, 240, 217)" required />
-                      <label for="password">Password</label>
+                      <label for="password">密碼</label>
                       <div id="password-error" class="invalid-feedback">
 
                       </div>
@@ -68,7 +68,7 @@
                     <div class="form-floating mb-3">
                       <input type="password" class="form-control" id="confirmPwd" placeholder="Repeat your password"
                         style="background-color: rgb(250, 240, 217)" />
-                      <label for="confirmPwd">Repeat your password</label>
+                      <label for="confirmPwd">再次輸入您的密碼</label>
                       <div id="confirmPwd-error" class="invalid-feedback">
 
                       </div>
@@ -76,7 +76,7 @@
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="birth" placeholder="Birth"
                         style="background-color: rgb(250, 240, 217)" />
-                      <label for="bitrh">Birth</label>
+                      <label for="bitrh">生日</label>
                     </div>
                     <div class="mb-3">
                       <select class="form-select" id="gender" aria-label="Default select example"
@@ -90,18 +90,18 @@
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="tel" placeholder="09xxxxxxxx"
                         style="background-color: rgb(250, 240, 217)" />
-                      <label for="tel">Phone</label>
+                      <label for="tel">電話</label>
                       <div id="tel-error" class="invalid-feedback">
                       </div>
                     </div>
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="address" placeholder="Address"
                         style="background-color: rgb(250, 240, 217)" />
-                      <label for="address">Address</label>
+                      <label for="address">地址</label>
                     </div>
                     <span>
-                      <input type="checkbox" name="agree" id="agree" />I agree all statement.
-                      <a href="#" class="" style="text-decoration: none; color: #8a513f">Terms of service</a>
+                      <input type="checkbox" name="agree" id="agree" />我同意所有會員條款
+                      <a href="#" class="" style="text-decoration: none; color: #8a513f">會員條款</a>
                       <div id="checkbox-error" class="invalid-feedback">
 
                       </div>
@@ -116,7 +116,7 @@
                     </div>
                   </form>
                   <button class="btn btn-outline-primary btn-sm" type="button" id="member">
-                    Member
+                    註冊測試
                   </button>
                   <button class="btn btn-outline-secondary btn-sm" type="button" id="reset">
                     Reset

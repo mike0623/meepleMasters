@@ -126,11 +126,11 @@ public class MemberController {
 	 * @return String
 	 */
 	@ResponseBody
-	@PutMapping("/member/updatePwd/{id}")
-	public String updatePwd(@PathVariable(name = "id")Integer memberId, @RequestBody String memberPwd) {
+	@PutMapping("/member/updatePwd")
+	public String updatePwdByEmail(String email, String memberPwd) {
 		
 		
-		Integer update = mService.updatePwd(memberId, memberPwd);
+		Integer update = mService.updatePwdByEmail(email, memberPwd);
 		System.out.println(memberPwd);
 		if(update!=0) {
 			
