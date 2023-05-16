@@ -572,6 +572,7 @@ public class Bridge extends Game{
 		jsonObject.put("action", "bridgeGame");
 		jsonObject.put("gameAction", "infoWhenEndOfGame");
 		jsonObject.put("isEndOfTheGame", getIsEndOfTheGame());
+		jsonObject.put("isEndOfTheTurn", true);
 		Integer winTeamInt = 0;
 		if("紅隊".equals(winTeam)) {
 			winTeamInt = 1;
@@ -621,6 +622,7 @@ public class Bridge extends Game{
 		jsonObject.put("trumpLevel", trumpLevel);
 		jsonObject.put("winTeam", winTeam);
 		jsonObject.put("playerSeat", playerSeat);
+		jsonObject.put("isThisTurnTwoPlayerPhaseOne", false);
 		
 		
 		return jsonObject;

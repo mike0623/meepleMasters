@@ -47,7 +47,7 @@
     // 宣告需要用到的變數
     LocalDate currentDate = LocalDate.now();
     LocalDate minDate = currentDate.plusDays(1);
-    LocalDate maxDate = currentDate.plusDays(31);
+    LocalDate maxDate = currentDate.plusDays(60);
 %>
 
 

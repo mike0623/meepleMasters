@@ -107,6 +107,11 @@ public class BookingBean {
 	public void setBookTime(String bookTime) {
 		this.bookTime = bookTime;
 	}
+	@Override
+	public String toString() {
+		return "BookingBean [bookId=" + bookId + ", bookMemberId=" + bookMemberId + ", bookDeskId=" + bookDeskId
+				+ ", createdAt=" + createdAt + ", bookDate=" + bookDate + ", bookTime=" + bookTime + "]";
+	}
 	
 	
 	

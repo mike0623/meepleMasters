@@ -26,6 +26,7 @@ public class DeskBean {
 	@Column(name = "deskPrice")
 	private Integer deskPrice;
 
+	
 	public Integer getDeskId() {
 		return deskId;
 	}

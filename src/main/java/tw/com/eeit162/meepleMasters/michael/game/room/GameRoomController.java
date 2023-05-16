@@ -254,6 +254,7 @@ public class GameRoomController {
 			session.removeAttribute("tableCode");
 			return "redirect:/game/playGameLobby";
 		}
+		
 		if(game.getGameStatus() == 3) {
 			return "redirect:/game/enterGameView/"+game.getGameName()+"/"+tableCode+"/"+memberEmail;
 		}
@@ -263,7 +264,10 @@ public class GameRoomController {
 				isInTheRoom = true;
 			}
 		}
-		if(!isInTheRoom) {
+		if(!isInTheRoom && game.getPlayers().size() == game.getFinalNumOfPlayer()) {
+			return "redirect:/game/playGameLobby";
+		}
+		if(!isInTheRoom && game.getPlayers().size() < game.getFinalNumOfPlayer()) {
 			Member member = DataInterface.getMemberByEmail(memberEmail);
 			
 			game.addPlayer(member);

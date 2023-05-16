@@ -189,3 +189,9 @@ header>nav>ul>li>a {
     height: 75px;
     line-height: 75px;
 }
+.shoppingCartButton{
+	position: fixed;
+	right: 300px;
+	top: 37px;
+	color: #8a513f;
+}

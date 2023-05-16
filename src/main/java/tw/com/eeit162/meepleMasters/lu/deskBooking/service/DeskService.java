@@ -27,7 +27,13 @@ public class DeskService {
 	public DeskBean getDeskById(int deskId) {
 		return deskDao.findById(deskId).orElse(null);
 	}
-	
+	public String getDeskTypeById(int deskId) {
+		DeskBean desk = deskDao.getDeskById(deskId);
+			if (desk != null) {
+		        return desk.getDeskType();
+		    }
+		    return null;
+	}
 
 	
 	public void updateDesk(DeskBean desk) {
