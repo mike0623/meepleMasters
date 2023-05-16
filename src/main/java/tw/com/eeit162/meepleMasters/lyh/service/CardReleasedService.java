@@ -434,4 +434,15 @@ public class CardReleasedService {
 
 		return null;
 	}
+	
+	public String addFiveMinutes(Integer releasedId, Date endTime) {
+		Integer addFiveMinutes = cRDao.addFiveMinutes(releasedId, endTime);
+		
+		if (addFiveMinutes != 0) {
+			return "success";
+		}
+		
+		return null;
+	}
+	
 }

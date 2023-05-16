@@ -137,12 +137,16 @@ public class CardReleasedController {
 			@RequestParam("endTime") String endTime) throws ParseException {
 
 		Date date = null;
-
-		date = new SimpleDateFormat("yyyy-MM-dd").parse(endTime);
-
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, 1);
+
+		if (endTime.length() > 10) {
+			date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endTime);	
+			cal.setTime(date);
+		} else {
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(endTime);
+			cal.setTime(date);
+			cal.add(Calendar.DATE, 1);
+		}	
 
 		Date newDate = cal.getTime();
 		
@@ -443,6 +447,7 @@ public class CardReleasedController {
 	}
 
 	@PostMapping("/editAuction")
+	@ResponseBody
 	public String editMyAuction(@RequestParam("releasedId") Integer releasedId,	@RequestParam("startPrice") Integer startPrice, @RequestParam(value = "directPrice", required = false) Integer directPrice, @RequestParam("endTime") String endTime)
 			throws ParseException {
 
@@ -467,5 +472,29 @@ public class CardReleasedController {
 		}
 		
 		return null;
+	}
+	
+	@PostMapping("/addFiveMinutes")
+	@ResponseBody
+	public String addFiveMinutes(@RequestParam("releasedId") Integer releasedId) {
+		
+		Date date = new Date();
+				
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		System.out.println(cal);
+		cal.add(Calendar.MINUTE, 5);
+		System.out.println(cal);
+		
+		Date newDate = cal.getTime();
+		System.out.println(newDate);
+		
+		String addFiveMinutes = cRService.addFiveMinutes(releasedId, newDate);
+		
+		if (addFiveMinutes != null) {
+			return "加時成功";
+		}
+		
+		return "加時失敗";
 	}
 }

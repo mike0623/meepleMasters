@@ -161,7 +161,7 @@
             return axios.get("${root}/released/all/" + status)
                 .then(res => {
                     let htmlstr = "";
-                    
+
                     let count = 0;
 
                     console.log(res)
@@ -243,6 +243,13 @@
 
                                 let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
+
+                                // 檢查 endTime 是否為午夜 00:00:00
+                                if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                    // 將日期減少一天
+                                    endTime.setDate(endTime.getDate() + 1);
+                                }
+
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
@@ -283,6 +290,7 @@
 
                                     let intervalId = setInterval(() => {
                                         let now = new Date().getTime();
+                                        endTime = new Date(getEndTime);
                                         let distance = endTime - now;
 
                                         let days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -443,6 +451,13 @@
 
                                 let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
+
+                                // 檢查 endTime 是否為午夜 00:00:00
+                                if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                    // 將日期減少一天
+                                    endTime.setDate(endTime.getDate() + 1);
+                                }
+
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
@@ -547,6 +562,13 @@
 
                                 let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
+
+                                // 檢查 endTime 是否為午夜 00:00:00
+                                if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                    // 將日期減少一天
+                                    endTime.setDate(endTime.getDate() + 1);
+                                }
+
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
@@ -603,6 +625,7 @@
 
                                 let intervalId = setInterval(() => {
                                     let now = new Date().getTime();
+                                    endTime = new Date(getEndTime);
                                     let distance = endTime - now;
 
                                     let days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -635,8 +658,8 @@
                                             if (result.isConfirmed) {
                                                 let memberCoin = Number("${member.memberCoin}")
                                                 let price = $("#forPurchase").val();
-                                                console.log("memberCoin="+memberCoin)
-                                                console.log("price="+price)
+                                                console.log("memberCoin=" + memberCoin)
+                                                console.log("price=" + price)
                                                 if (memberId == "") {
                                                     window.location.href = "${root}/login";
                                                 } else if (memberCoin < price) {
@@ -653,9 +676,20 @@
                                                         reverseButtons: true
                                                     }).then((result) => {
                                                         if (result.isConfirmed) {
-                                                            console.log("price=" + price);
+                                                            // console.log("price=" + price);
+
+                                                            const now = new Date();
+                                                            getEndTime = `\${res.data.endTime}`;
+                                                            endTime = new Date(getEndTime);
+                                                            diffInMs = endTime - now;
+                                                            diffInDays = diffInMs / (1000 * 60 * 60);
+
+                                                            if (diffInDays < 5) {
+                                                                axios.post("${root}/released/addFiveMinutes?releasedId=" + res.data.releasedId)
+                                                            }
+
                                                             axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&purchasePrice=" + price)
-                                                            
+
                                                             window.location.href = "${root}/card/releasedList"
                                                         }
 
@@ -731,8 +765,8 @@
                                             } else if (result.isDenied) {
                                                 let memberCoin = Number("${member.memberCoin}")
                                                 let price = $("#forPurchase").val();
-                                                console.log("memberCoin="+memberCoin)
-                                                console.log("price="+price)
+                                                console.log("memberCoin=" + memberCoin)
+                                                console.log("price=" + price)
                                                 if (memberId == "") {
                                                     window.location.href = "${root}/login";
                                                 } else if (memberCoin < price) {
@@ -750,7 +784,7 @@
                                                     }).then((result) => {
                                                         if (result.isConfirmed) {
                                                             axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&price=" + res.data.purchasePrice)
-                                                            
+
                                                             window.location.href = "${root}/card/releasedList"
                                                         }
 
@@ -847,6 +881,13 @@
 
                                 let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
+
+                                // 檢查 endTime 是否為午夜 00:00:00
+                                if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                    // 將日期減少一天
+                                    endTime.setDate(endTime.getDate() + 1);
+                                }
+
                                 let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
@@ -889,6 +930,7 @@
 
                                     let intervalId = setInterval(() => {
                                         let now = new Date().getTime();
+                                        endTime = new Date(getEndTime);
                                         let distance = endTime - now;
 
                                         let days = Math.floor(distance / (1000 * 60 * 60 * 24));
