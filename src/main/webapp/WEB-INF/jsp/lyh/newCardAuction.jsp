@@ -59,6 +59,7 @@
                     <div class="dot"></div>
                     <span>拍賣</span>
                 </label>
+                <i class="fa-solid fa-stopwatch"></i>
             </div>
             <input class="inputSubmit" value="上架" type="submit">
         </form>
@@ -202,7 +203,7 @@
         }
 
         $(".inputSubmit").click(function (e) {
-            e.preventDefault(); 
+            e.preventDefault();
             Swal.fire({
                 title: '確定要上架嗎？',
                 showCancelButton: true,
@@ -227,6 +228,32 @@
                 }
 
             })
+        });
+
+        function formatDateTime(date) {
+            let year = date.getFullYear();
+            let month = padZero(date.getMonth() + 1);
+            let day = padZero(date.getDate());
+            let hours = padZero(date.getHours());
+            let minutes = padZero(date.getMinutes());
+            let seconds = padZero(date.getSeconds());
+
+            return `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+        }
+
+        function padZero(value) {
+            return value.toString().padStart(2, '0');
+        }
+
+        $(".fa-stopwatch").click(function () {
+            let time = new Date();
+            let newTime = new Date(time.getTime());
+            newTime.setMinutes(newTime.getMinutes() + 5);
+            console.log(formatDateTime(newTime));
+            let selectedDate = $("#endTime").val(formatDateTime(newTime))
+            if (selectedDate != "") {
+                $("#endTime").parent().addClass("inputs--filled");
+            }
         });
 
 

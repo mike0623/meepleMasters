@@ -341,3 +341,8 @@
         .fa-arrow-left-long{
             color: #74bdb7;
         }
+
+        .fa-stopwatch {
+            position: absolute;
+            right: 50px;
+        }
