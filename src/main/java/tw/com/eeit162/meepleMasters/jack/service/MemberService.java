@@ -158,6 +158,7 @@ public class MemberService {
 				+ "※ 如果您無法連結信中網址，請讓我們知道。<br/>" + "<br/>" + "Meeple Masters團隊 敬上<br/>";
 		mailService.sendEmail(member.getMemberEmail(), subject, content);
 	}
+	
 
 	/**
 	 * 會員認證
@@ -173,6 +174,39 @@ public class MemberService {
 				memberDao.save(member);
 			}
 		}
+	}
+	
+	/**
+	 * 忘記密碼
+	 * 
+	 * @param member
+	 */
+	public void sendUpdatePwdEmail(Member member) {
+		System.out.println("已寄出");
+		String token = jwtService.generateToken(member);
+		String subject = "MeepleMasters會員密碼更改";
+		String url = "http://localhost:8080/meeple-masters/updatePwd/" + token;
+		String content = "您好! 這封信是由Meeple Masters的會員註冊系統所寄出，<br/>"
+				+ "<h4>請點選下面的連結來進行密碼修改：<br/></h4>" + "<h3><a href=\"" + url + "\">" + "更改密碼連結" + "</a></h3>" + "<br/>"
+				+ "※ 如果您無法連結信中網址，請讓我們知道。<br/>" + "<br/>" + "Meeple Masters團隊 敬上<br/>";
+		mailService.sendEmail(member.getMemberEmail(), subject, content);
+	}
+	
+	/**
+	 * 更改密碼連結，導到更改密碼頁面
+	 * 
+	 * @param token
+	 */
+	public Member tokenfindemail(String token) {
+		if (jwtService.validateToken(token)) {
+			String email = jwtService.extractEmail(token);
+			Member member = findMemberByEmail(email);
+			if (member != null) {
+				
+				return member;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -208,11 +242,13 @@ public class MemberService {
 	 * @param json
 	 * @return Integer
 	 */
-	public Integer updatePwdByEmail(String email, String memberPwd) {
+	public Member updatePwdByEmail(String email, String password) {
 		Member member = memberDao.findMemberByEmail(email);
-		if(member != null) {
-			String memberEmail = member.getMemberEmail();
-			return memberDao.updatePasswordByEmail(memberEmail, memberPwd);
+		if(member !=null) {
+			String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+			member.setMemberPwd(bcryptHashString);
+			
+			return memberDao.save(member);
 		}
 		
 		return null;
