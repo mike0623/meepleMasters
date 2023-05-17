@@ -11,7 +11,7 @@ import tw.com.eeit162.meepleMasters.lyh.model.bean.CardAuction;
 
 public interface CardAuctionDao extends JpaRepository<CardAuction, Integer> {
 
-	@Query("from CardAuction join CardReleased on releasedId = fk_releasedId where releasedId = :releasedId")
+	@Query("from CardAuction where fk_releasedId = :releasedId")
 	CardAuction findByReleasedId(Integer releasedId);
 	
 	@Modifying(clearAutomatically = true)

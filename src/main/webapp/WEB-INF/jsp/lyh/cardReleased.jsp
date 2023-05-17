@@ -34,7 +34,7 @@
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <span class="myCoinDiv">我的米寶幣 <span class="myCoin"></span> <i class="fa-solid fa-coins"></i></span>
+                    <span class="myCoinDiv"><h4>我的米寶幣 <span class="myCoin"></span> <i class="fa-solid fa-coins"></i></h4></span>
                     <div class="btn-group row justify-content-end">
                         <button type="button" class="btn btn-outline-warning dropdown-toggle d-none"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -43,12 +43,6 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-item" id="newList">最新上架</li>
                             <li class="dropdown-item" id="endTimeList">下架時間</li>
-                            <li class="dropdown-item" id="priceDESCList">價格　
-                                <i class="fa-solid fa-arrow-down-wide-short"></i>
-                            </li>
-                            <li class="dropdown-item" id="priceASCList">價格　
-                                <i class="fa-solid fa-arrow-up-short-wide"></i>
-                            </li>
                             <li class="dropdown-item" id="starDESCList">星數　
                                 <i class="fa-solid fa-arrow-down-wide-short"></i>
                             </li>
@@ -83,6 +77,12 @@
 
     <script>
 
+        let memberId = "${member.memberId}"
+        let memberCoin = "${member.memberCoin}"
+
+        $(".myCoin").empty();
+        $(".myCoin").append(memberCoin);
+
         $(async function () {
             await getAllList();
             await getMyList();
@@ -113,18 +113,6 @@
             getMyList();
         })
 
-        $("#priceDESCList").click(function () {
-            status = 5;
-            getAllList();
-            getMyList();
-        })
-
-        $("#priceASCList").click(function () {
-            status = 6;
-            getAllList();
-            getMyList();
-        })
-
         $("#newRelease").click(function () {
             Swal.fire({
                 title: '選擇上架方式',
@@ -151,11 +139,6 @@
         let diffInMs;
         let diffInDays;
 
-        let memberId = "${member.memberId}"
-        let memberCoin = "${member.memberCoin}"
-
-        $(".myCoin").empty();
-        $(".myCoin").append(memberCoin);
 
         function getAllList() {
             return axios.get("${root}/released/all/" + status)
@@ -245,7 +228,7 @@
                                 let endTime = new Date(getEndTime);
 
                                 // 檢查 endTime 是否為午夜 00:00:00
-                                if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                if (endTime.getHours() !== 0 && endTime.getMinutes() !== 0 && endTime.getSeconds() !== 0) {
                                     // 將日期減少一天
                                     endTime.setDate(endTime.getDate() + 1);
                                 }
@@ -453,7 +436,7 @@
                                 let endTime = new Date(getEndTime);
 
                                 // 檢查 endTime 是否為午夜 00:00:00
-                                if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                if (endTime.getHours() !== 0 && endTime.getMinutes() !== 0 && endTime.getSeconds() !== 0) {
                                     // 將日期減少一天
                                     endTime.setDate(endTime.getDate() + 1);
                                 }
@@ -498,7 +481,8 @@
                                             Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
                                         } else {
                                             Swal.fire({
-                                                title: '確定要購買嗎？',
+                                                title: `確定要花 \${res.data.directPrice} <i class="fa-solid fa-coins"></i> 購買嗎？`,
+                                                html: `購買後剩餘 \${memberCoin-res.data.directPrice} <i class="fa-solid fa-coins"></i>`,
                                                 showCancelButton: true,
                                                 confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
                                                 cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
@@ -564,7 +548,7 @@
                                 let endTime = new Date(getEndTime);
 
                                 // 檢查 endTime 是否為午夜 00:00:00
-                                if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                if (endTime.getHours() !== 0 && endTime.getMinutes() !== 0 && endTime.getSeconds() !== 0) {
                                     // 將日期減少一天
                                     endTime.setDate(endTime.getDate() + 1);
                                 }
@@ -666,7 +650,8 @@
                                                     Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
                                                 } else {
                                                     Swal.fire({
-                                                        title: '確定要出價嗎？',
+                                                        title: `確定要以 \${price} <i class="fa-solid fa-coins"></i> 出價嗎？`,
+                                                        html: '出價後會先扣除您持有的米寶幣，若有其他會員再出價時則返還',
                                                         showCancelButton: true,
                                                         confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
                                                         cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
@@ -682,17 +667,21 @@
                                                             getEndTime = `\${res.data.endTime}`;
                                                             endTime = new Date(getEndTime);
                                                             diffInMs = endTime - now;
-                                                            diffInDays = diffInMs / (1000 * 60 * 60);
+                                                            diffInMinutes = Math.floor(diffInMs / (1000 * 60));
 
-                                                            if (diffInDays < 5) {
+                                                            if (diffInMinutes < 5) {
                                                                 axios.post("${root}/released/addFiveMinutes?releasedId=" + res.data.releasedId)
                                                             }
 
                                                             axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&purchasePrice=" + price)
+                                                            let memberId = "${member.memberId}"
+                                                            let memberCoin = "${member.memberCoin}"
 
+                                                            $(".myCoin").empty();
+                                                            $(".myCoin").append(memberCoin);
                                                             window.location.href = "${root}/card/releasedList"
                                                         }
-
+                                                        
                                                     })
                                                 }
                                             }
@@ -722,7 +711,8 @@
                                                     Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
                                                 } else {
                                                     Swal.fire({
-                                                        title: '確定要購買嗎？',
+                                                        title: `確定要花 \${res.data.directPrice} <i class="fa-solid fa-coins"></i> 購買嗎？`,
+                                                        html: `購買後剩餘 \${memberCoin-res.data.directPrice} <i class="fa-solid fa-coins"></i>`,
                                                         showCancelButton: true,
                                                         confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
                                                         cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
@@ -773,7 +763,8 @@
                                                     Swal.fire({ title: '餘額不足', confirmButtonColor: '#CA7159', customClass: 'confirmAlert' })
                                                 } else {
                                                     Swal.fire({
-                                                        title: '確定要出價嗎？',
+                                                        title: `確定要以 \${price} <i class="fa-solid fa-coins"></i> 出價嗎？`,
+                                                        html: '出價後會先扣除您持有的米寶幣，若有其他會員再出價時則返還',
                                                         showCancelButton: true,
                                                         confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
                                                         cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
@@ -783,11 +774,26 @@
                                                         reverseButtons: true
                                                     }).then((result) => {
                                                         if (result.isConfirmed) {
-                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&price=" + res.data.purchasePrice)
+
+                                                            const now = new Date();
+                                                            getEndTime = `\${res.data.endTime}`;
+                                                            endTime = new Date(getEndTime);
+                                                            diffInMs = endTime - now;
+                                                            diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+
+                                                            if (diffInMinutes < 5) {
+                                                                axios.post("${root}/released/addFiveMinutes?releasedId=" + res.data.releasedId)
+                                                            }
+
+                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&purchasePrice=" + price)
+                                                            let memberId = "${member.memberId}"
+                                                            let memberCoin = "${member.memberCoin}"
+    
+                                                            $(".myCoin").empty();
+                                                            $(".myCoin").append(memberCoin);
 
                                                             window.location.href = "${root}/card/releasedList"
                                                         }
-
                                                     })
                                                 }
                                             }
@@ -883,7 +889,7 @@
                                 let endTime = new Date(getEndTime);
 
                                 // 檢查 endTime 是否為午夜 00:00:00
-                                if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                if (endTime.getHours() !== 0 && endTime.getMinutes() !== 0 && endTime.getSeconds() !== 0) {
                                     // 將日期減少一天
                                     endTime.setDate(endTime.getDate() + 1);
                                 }

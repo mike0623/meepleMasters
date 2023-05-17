@@ -312,9 +312,10 @@ public class CardReleasedService {
 		}
 		
 		Integer lastPurchaserId = cADao.findByReleasedId(releasedId).getFkPurchaserId(); 
+		Integer lastPurchasePrice = cADao.findByReleasedId(releasedId).getPurchasePrice();
 		
+//		還回原本出價的錢
 		if (lastPurchaserId != null) {
-			Integer lastPurchasePrice = cADao.findByReleasedId(releasedId).getPurchasePrice();
 			mDao.updateMemberCoin(lastPurchaserId, lastPurchasePrice);
 		}
 		
@@ -384,9 +385,7 @@ public class CardReleasedService {
 
 		CardOwned newCard = cODao.save(cO);
 
-		Integer buyerUpdateCoin = mDao.updateMemberCoin(purchaserId, -price);
-
-		if (updateReleased != 0 && updateCardOwned != 0 && buyerUpdateCoin != 0 && sellerUpdateCoin != 0
+		if (updateReleased != 0 && updateCardOwned != 0 && sellerUpdateCoin != 0
 				&& newCard != null) {
 			return "success";
 		}

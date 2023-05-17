@@ -3,18 +3,15 @@ package tw.com.eeit162.meepleMasters.lyh.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.ObjectUtils.Null;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -479,7 +474,7 @@ public class CardReleasedController {
 	public String addFiveMinutes(@RequestParam("releasedId") Integer releasedId) {
 		
 		Date date = new Date();
-				
+		System.out.println(date);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		System.out.println(cal);

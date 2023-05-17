@@ -12,7 +12,8 @@ import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 
 public interface CardOwnedDao extends JpaRepository<CardOwned, Integer> {
 	
-	List<CardOwned> findByFkMemberId(Integer fkMemberId);
+	@Query("from CardOwned where fk_memberId = :memberId order by ownedId DESC")
+	List<CardOwned> findByMemberId(Integer memberId);
 	
 	@Query("from CardOwned join Card on cardId = fk_cardId where fk_memberId = :memberId order by cardStar DESC")
 	List<Object[]> ownedCardStar(@Param("memberId") Integer memberId);

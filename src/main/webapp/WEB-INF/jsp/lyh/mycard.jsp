@@ -42,8 +42,8 @@
 					卡片排序
 				</button>
 				<ul class="dropdown-menu">
-					<li class="dropdown-item" id="order">獲得順序</li>
 					<li class="dropdown-item" id="orderDESC">最新獲得</li>
+					<li class="dropdown-item" id="order">獲得順序</li>
 					<li class="dropdown-item" id="starOrderDESC">星數　
 						<i class="fa-solid fa-arrow-down-wide-short"></i>
 					</li>
@@ -159,37 +159,6 @@
 		})
 
 		let outputString = "<div class='cardStarTableDiv'><table class='cardStarTable'><tr><td colspan='2'>總機率</td></tr><tr><td><img src='${root}/img/lyh/star/star5.png'class='cardStarlabel'></td><td>2%</td></tr><tr><td><img src='${root}/img/lyh/star/star4.png'class='cardStarlabel'></td><td>6%</td></tr><tr><td><img src='${root}/img/lyh/star/star3.png'class='cardStarlabel'></td><td>10%</td></tr><tr><td><img src='${root}/img/lyh/star/star2.png'class='cardStarlabel'></td><td>22%</td></tr><tr><td><img src='${root}/img/lyh/star/star1.png'class='cardStarlabel'></td><td>60%</td></tr></table></div><div class='sellingNote'><img src='${root}/img/lyh/having.png' style='width: 60px;''> 已擁有卡片</div>";
-
-		// getMyList().then(() => {
-		// 	for (let i = 4; i >= 0; i--) {
-		// 		outputString += `<div class='row container cardContainer justify-content-center' id='card'>`;
-		// 		outputString += `<div class='starDiv' id='starDiv'>`;
-		// 		outputString += `<img src='${root}/img/lyh/star/star\${i+1}.png' class='star' id='star'>`;
-		// 		outputString += ` <i class="fa-solid fa-caret-down fa-beat fa-2xl caret" style="color: #F0EBE2;"></i></div>`;
-
-
-		// 		for (let item of cardList[i].imgs) {
-		// 			let matchedCard = cardListArray.find(card => card.cardId === item.id);
-		// 			if (matchedCard) {
-		// 				// 有符合cardListArray中擁有的卡片ID
-		// 				outputString += "<div class='col-3 d-flex d-none' id='cardContent'>";
-		// 				outputString += "<div class='card'>";
-		// 				outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda' id='\${item.id}'>`;
-		// 				outputString += `<figcaption>\${item.name}</figcaption>`;
-		// 				outputString += `<img src="${root}/img/lyh/having.png" class="sellingCard"></figure></div></div>`;
-		// 			} else {
-		// 				outputString += "<div class='col-3 d-flex d-none' id='cardContent'>";
-		// 				outputString += "<div class='card'>";
-		// 				outputString += `<figure><img src='${root}/img/lyh/nostarCard/\${item.src}' class='hanafuda' id='\${item.id}'>`;
-		// 				outputString += `<figcaption>\${item.name}</figcaption>`;
-		// 				outputString += `</figure></div></div>`;
-		// 			}
-		// 		}
-
-		// 		outputString += "</div>";
-		// 	}
-		// })
-
 
 		$("#showCardList").click(function () {
 			Swal.fire({
