@@ -32,7 +32,9 @@ public class Gomoku extends Game{
 	
 	private boolean endOfTheGame = false;
 	
-	private String winner;
+	private String winner; //記名子
+	
+	private String loser;
 	
 	
 	
@@ -276,6 +278,14 @@ public class Gomoku extends Game{
 
 	public void setEndOfTheGame(boolean endOfTheGame) {
 		this.endOfTheGame = endOfTheGame;
+	}
+
+	public String getLoser() {
+		return loser;
+	}
+
+	public void setLoser(String loser) {
+		this.loser = loser;
 	}
 
 	@Override
