@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Order;
-import tw.com.eeit162.meepleMasters.jim.mall.model.bean.OrderDetail;
 import tw.com.eeit162.meepleMasters.jim.mall.service.OrderService;
 
 @Controller
@@ -27,23 +26,17 @@ public class OrderController {
 	public String order(HttpSession session, Model model) {
 
 		Member member = (Member) session.getAttribute("member");
-
 		if (member == null) {
 			return "jack/loginPage";
 		}
 
 		Order order = oService.findByMemberAndOrderStatus(member.getMemberId());
-
 		if (order == null) {
 			return "jim/product";
 		} else {
 			model.addAttribute("order", order);
-
-			List<OrderDetail> orderDetails = order.getOrderDetails();
-
-			model.addAttribute("orderDetails", orderDetails);
+			model.addAttribute("orderDetails", order.getOrderDetails());
 		}
-
 		return "jim/order";
 	}
 
@@ -119,13 +112,18 @@ public class OrderController {
 
 		oService.setOrderStatus(order.getOrderId());
 
-		return "include/index";
+		return "jim/orderList";
 	}
 
+	// 透過會員ID找到他的所有訂單
 	@GetMapping("/order/orderList/")
-	public String orderList(@RequestParam(required = false) Integer memberId, Model model) {
+	public String orderList(@RequestParam(required = false) Integer memberId, Model model,
+			@RequestParam(required = false) String oldOrder) {
 		if (memberId == null) {
 			return "jack/loginPage";
+		}
+		if (oldOrder != null) {
+			model.addAttribute("oldOrderExist", "舊訂單存在");
 		}
 
 		List<Order> allOrder = oService.findByMember(memberId);
@@ -134,10 +132,4 @@ public class OrderController {
 		return "jim/orderList";
 	}
 
-//	@GetMapping("/order/ecPayTradeInfo")
-//	public void tradeInfo() {
-//		QueryTradeInfoObj queryTradeInfoObj = new QueryTradeInfoObj();
-//		queryTradeInfoObj.setMerchantID("2000132");
-//		queryTradeInfoObj.setMerchantTradeNo("NX13cFKVbGWlitKBlZg3");
-//	}
 }

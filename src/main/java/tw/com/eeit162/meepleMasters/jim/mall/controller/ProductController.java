@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
+import tw.com.eeit162.meepleMasters.jim.mall.model.dto.ProductDTO;
 import tw.com.eeit162.meepleMasters.jim.mall.service.ProductService;
 
 @Controller
@@ -31,11 +35,13 @@ public class ProductController {
 	// 依照頁數顯示商品
 	@GetMapping("/mall/productList")
 	@ResponseBody
-	public Page<Product> productList(@RequestParam(defaultValue = "1") Integer page,
-			@RequestParam(defaultValue = "6") Integer count) {
-		Page<Product> productPage = pService.findAllProduct(page, count);
+	public PageImpl<ProductDTO> productList(@RequestParam(defaultValue = "1") Integer page,
+			@RequestParam(defaultValue = "6") Integer count, HttpSession session) {
+		Member member = (Member) session.getAttribute("member");
 
-		return productPage;
+		Integer mID = member != null ? member.getMemberId() : null;
+
+		return pService.findAllProduct(page, count, mID);
 	}
 
 	// 透過ID尋找商品
@@ -49,9 +55,7 @@ public class ProductController {
 	@GetMapping("/mall/findProductByProductName/{productName}")
 	@ResponseBody
 	public Product findProductByProductName(@PathVariable("productName") String productName) {
-		Product product = pService.findProductByProductName(productName);
-
-		return product;
+		return pService.findProductByProductName(productName);
 	}
 
 	// 新增商品
@@ -67,28 +71,23 @@ public class ProductController {
 			}
 		}
 		pService.addProduct(p);
-		return "redirect:/mall/adminProduct";
+		return "jim/adminProduct";
 	}
 
 	// 透過ID刪除商品
 	@DeleteMapping("/mall/deleteProductById")
 	@ResponseBody
 	public String deleteProductById(@RequestParam Integer id) {
-		if (pService.findProductById(id) != null) {
-			pService.deleteProductById(id);
-			return "刪除成功";
-		}
-		return "刪除失敗";
+		return pService.deleteProductById(id);
 	}
 
 	// 更新商品
 	@PostMapping("/mall/updateProduct")
 	public String updateProductById(@ModelAttribute Product p, @RequestParam(required = false) MultipartFile pImg)
 			throws IOException {
-
 		pService.updateProductById(p, pImg);
 
-		return "redirect:/mall/adminProduct";
+		return "jim/adminProduct";
 	}
 
 	// 取得圖片
@@ -108,15 +107,19 @@ public class ProductController {
 		return pImg;
 	}
 
+	// 多條件查詢
 	@GetMapping("/mall/multiConditionQuery")
 	@ResponseBody
-	public List<Product> multiConditionQuery(@RequestParam(required = false) String playTime,
-			@RequestParam(required = false) Integer price) {
+	public List<ProductDTO> multiConditionQuery(@RequestParam(required = false) String playTime,
+			@RequestParam(required = false) String difficulty, HttpSession session) {
 
-		List<Product> productList = pService.findAllProduct(1, 6).getContent();
+		Member member = (Member) session.getAttribute("member");
 
-		List<Product> collect = productList.stream().filter(p -> p.getProductPlayTime().contains(playTime))
-				.filter(p -> p.getProductPrice() < price).collect(Collectors.toList());
+		Integer mID = member != null ? member.getMemberId() : null;
+		List<ProductDTO> productList = pService.findAllProduct(1, 6, mID).getContent();
+
+		List<ProductDTO> collect = productList.stream().filter(p -> p.getProductPlayTime().contains(playTime))
+				.filter(p -> p.getProductDifficulty().contains(difficulty)).collect(Collectors.toList());
 
 		return collect;
 	}
