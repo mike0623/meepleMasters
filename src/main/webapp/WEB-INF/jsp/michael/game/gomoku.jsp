@@ -120,7 +120,7 @@
 		height:16px; 
 		border:1px solid black; 
 		border-radius:50%; 
-		background-color:red;
+		background-color:black;
 		display:block;
 	}
 	.whitePiece{
@@ -131,18 +131,18 @@
 		height:16px; 
 		border:1px solid black; 
 		border-radius:50%; 
-		background-color:red;
+		background-color:white;
 		display:block;
 	}
 </style>
 </head>
 <body>
 <div style="width:100%; position:relative; top:75px;">
-	<h2>${gomoku.chessBoard['x1y1']}</h2>
 	<div class="box">
 		<div class="showGameProgress">
-			<c:if test="${member.memberEmail eq gomoku.playerNTurn}">輪到你的回合</c:if>
-			<c:if test="${member.memberEmail ne gomoku.playerNTurn}">等待<c:if test="${'player1' == myself}">${gomoku.player2Name}</c:if><c:if test="${'player1' != myself}">${gomoku.player1Name}</c:if>回合</c:if>
+			<c:if test="${gomoku.endOfTheGame == true}">遊戲結束，${gomoku.winner}贏了</c:if>
+			<c:if test="${member.memberEmail eq gomoku.playerNTurn && gomoku.endOfTheGame == false}">輪到你的回合</c:if>
+			<c:if test="${member.memberEmail ne gomoku.playerNTurn && gomoku.endOfTheGame == false}">等待<c:if test="${'player1' == myself}">${gomoku.player2Name}</c:if><c:if test="${'player1' != myself}">${gomoku.player1Name}</c:if>行動</c:if>
 		</div>
 		<div class="container-fluid text-center">
 		    <div class="row">
@@ -154,9 +154,10 @@
 								<c:forEach begin="1" end="19" step="1" var="i">
 									<tr>
 									<c:forEach begin="1" end="19" step="1" var="j">
-										<td id="x${j}y${20-i}" class="chessBoardTd <c:if test="${member.memberEmail eq gomoku.playerNTurn}">canDo</c:if>" style="">
+										<c:set value="x${j}y${20-i}" var="key"/>
+										<td id="x${j}y${20-i}" class="chessBoardTd <c:if test="${member.memberEmail == gomoku.playerNTurn && gomoku.chessBoard[key] == null}">canDo</c:if>" style="">
 											<span style="visibility: hidden;">+</span>
-											<div class="here"></div>
+											<div class="here <c:if test="${gomoku.chessBoard[key] == 'black'}">blackPiece</c:if><c:if test="${gomoku.chessBoard[key] == 'white'}">whitePiece</c:if>"></div>
 										</td>
 									</c:forEach>
 									</tr>
@@ -231,12 +232,39 @@
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"></jsp:include>
 <script type="text/javascript">
-	$(".chessBoardDiv").on("click","td",function(){
+	isGomokuGamePage = true;
+	$(".chessBoardDiv").on("click","td.canDo",function(){
 		let position = this.id
 		let yIndex = this.id.indexOf("y");
-		console.log(position.substring(1,yIndex));
-		console.log(position.substring(yIndex+1));
-// 		axios.get().then().
+		let x = position.substring(1,yIndex);
+		let y = position.substring(yIndex+1);
+		axios.get("${root}/gomoku/action/"+x+"/"+y).then(function(response){
+			console.log(response);
+			console.log(response.data.color);
+			let color = response.data.color;
+			let playerNTurn = response.data.playerNTurn;
+			let json = response.data;
+			if(!response.data.endOfTheGame){
+				$(".showGameProgress").text("等待"+playerNTurn+"行動");
+				$(".canDo").removeClass("canDo");
+				$(".here").removeClass("redPiece");
+				if(color == "black"){
+					$("#x"+x+"y"+y).children(".here").addClass("blackPiece");
+				}
+				if(color == "white"){
+					$("#x"+x+"y"+y).children(".here").addClass("whitePiece");
+				}
+			}else{
+				//贏了要做的事情
+				$(".showGameProgress").text("遊戲結束，"+response.data.winner+"贏了");
+				$(".canDo").removeClass("canDo");
+				endingView(json);
+			}
+		}).catch(function(error){
+			console.log("下棋出錯啦",error);
+		}).finally(function(){
+			
+		});
 	});
 	
 	$(".chessBoardDiv").on("mouseenter","td.canDo",function(){
@@ -246,6 +274,19 @@
 	$(".chessBoardDiv").on("mouseleave","td.canDo",function(){
 		$(this).children("div").removeClass("redPiece");
 	});
+	
+	function endingView(json){
+		Swal.fire({
+			backdrop: false,
+			title: '遊戲結束',
+			html: "<p>遊戲結束</p>",
+			customClass: 'endGameStyle',
+			//confirmButtonColor: '#CA7159',
+			confirmButtonText: '回到遊戲大廳'
+		}).then((value) => {
+			location.href = "${root}/game/playGameLobby";
+		});
+	}
 </script>
 </body>
 </html>

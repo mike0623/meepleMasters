@@ -30,6 +30,10 @@ public class Gomoku extends Game{
 	
 	private String playerNTurn; //誰的回合，記email
 	
+	private boolean endOfTheGame = false;
+	
+	private String winner;
+	
 	
 	
 	
@@ -74,14 +78,105 @@ public class Gomoku extends Game{
 		 if(i == 0) {
 			 player1Color = "black";
 			 player2Color = "white";
+			 this.playerNTurn = player1Email;
 		 }
 		 if(i == 1) {
 			 player2Color = "black";
 			 player1Color = "white";
+			 this.playerNTurn = player2Email;
 		 }
-		 this.playerNTurn = player1Email;
 	 }
 	 
+	 //判斷是否獲勝
+	 public boolean isWin(Integer x,Integer y) {
+		 String color = chessBoard.get("x"+x+"y"+y);
+		 Integer count = 1;
+		 Integer i = 1;
+		 //y軸---------------------------------------------------
+		 while(color.equals(chessBoard.get("x"+x+"y"+(y+i)))) {
+			 count++;
+			 i++;
+		 }
+		 i = 1;
+		 while(color.equals(chessBoard.get("x"+x+"y"+(y-i)))) {
+			 count++;
+			 i++;
+		 }
+		 if(count >= 5) {
+			 return true;
+		 }else {
+			 count = 1;
+			 i = 1;
+		 }
+		//---------------------------------------------------
+		//右上左下---------------------------------------------------
+		 while(color.equals(chessBoard.get("x"+(x+i)+"y"+(y+i)))) {
+			 count++;
+			 i++;
+		 }
+		 i = 1;
+		 while(color.equals(chessBoard.get("x"+(x-i)+"y"+(y-i)))) {
+			 count++;
+			 i++;
+		 }
+		 if(count >= 5) {
+			 return true;
+		 }else {
+			 count = 1;
+			 i = 1;
+		 }
+		//---------------------------------------------------
+		//x軸---------------------------------------------------
+		 while(color.equals(chessBoard.get("x"+(x+i)+"y"+y))) {
+			 count++;
+			 i++;
+		 }
+		 i = 1;
+		 while(color.equals(chessBoard.get("x"+(x-i)+"y"+y))) {
+			 count++;
+			 i++;
+		 }
+		 if(count >= 5) {
+			 return true;
+		 }else {
+			 count = 1;
+			 i = 1;
+		 }
+		//---------------------------------------------------
+		//左上右下---------------------------------------------------
+		 while(color.equals(chessBoard.get("x"+(x-i)+"y"+(y+i)))) {
+			 count++;
+			 i++;
+		 }
+		 i = 1;
+		 while(color.equals(chessBoard.get("x"+(x+i)+"y"+(y-i)))) {
+			 count++;
+			 i++;
+		 }
+		 if(count >= 5) {
+			 return true;
+		 }else {
+			 count = 1;
+			 i = 1;
+		 }
+		//---------------------------------------------------
+		 return false;
+	 }
+	 
+	 //換人
+	 public void changePlayerTurn(String memberEmail) {
+		 if(memberEmail.equals(player1Email)) {
+			 playerNTurn = player2Email;
+		 }
+		 if(memberEmail.equals(player2Email)) {
+			 playerNTurn = player1Email;
+		 }
+	 }
+	 
+	 //取得顏色
+	 public String getColorByPosition(Integer x,Integer y) {
+		 return chessBoard.get("x"+x+"y"+y);
+	 }
 	 
 	 
 	 
@@ -164,6 +259,23 @@ public class Gomoku extends Game{
 
 	public void setPlayer2Color(String player2Color) {
 		this.player2Color = player2Color;
+	}
+
+	
+	public String getWinner() {
+		return winner;
+	}
+
+	public void setWinner(String winner) {
+		this.winner = winner;
+	}
+
+	public boolean isEndOfTheGame() {
+		return endOfTheGame;
+	}
+
+	public void setEndOfTheGame(boolean endOfTheGame) {
+		this.endOfTheGame = endOfTheGame;
 	}
 
 	@Override
