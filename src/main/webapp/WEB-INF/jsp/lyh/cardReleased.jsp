@@ -34,7 +34,9 @@
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <span class="myCoinDiv"><h4>我的米寶幣 <span class="myCoin"></span> <i class="fa-solid fa-coins"></i></h4></span>
+                    <span class="myCoinDiv">
+                        <h4>我的米寶幣 <span class="myCoin"></span> <i class="fa-solid fa-coins"></i></h4>
+                    </span>
                     <div class="btn-group row justify-content-end">
                         <button type="button" class="btn btn-outline-warning dropdown-toggle d-none"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -80,6 +82,10 @@
         let memberId = "${member.memberId}"
         let memberCoin = "${member.memberCoin}"
 
+        if (memberId == "") {
+            window.location.href = "${root}/login";
+        }
+
         $(".myCoin").empty();
         $(".myCoin").append(memberCoin);
 
@@ -118,16 +124,16 @@
                 title: '選擇上架方式',
                 showDenyButton: true,
                 showCancelButton: false,
-                confirmButtonText: '拍賣',
-                denyButtonText: `直購`,
+                confirmButtonText: '<i class="fa-solid fa-coins"></i> 直購',
+                denyButtonText: '<i class="fa-solid fa-gavel"></i> 拍賣',
                 confirmButtonColor: '#dc7e6a',
                 denyButtonColor: '#da9255',
                 customClass: 'endAlert'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "${root}/newAuction"
-                } else if (result.isDenied) {
                     window.location.href = `${root}/newRelease`
+                } else if (result.isDenied) {
+                    window.location.href = "${root}/newAuction"
                 }
             })
         })
@@ -227,14 +233,18 @@
                                 let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
 
-                                // 檢查 endTime 是否為午夜 00:00:00
-                                if (endTime.getHours() !== 0 && endTime.getMinutes() !== 0 && endTime.getSeconds() !== 0) {
-                                    // 將日期減少一天
-                                    endTime.setDate(endTime.getDate() + 1);
-                                }
+                                // // 檢查 endTime 是否為午夜 00:00:00
+                                // if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                //     // 將日期減少一天
+                                //     endTime.setDate(endTime.getDate() + 1);
+                                // }
 
-                                let formattedEndTime = endTime.toISOString().substr(0, 10);
-                                // console.log("formattedEndTime:"+formattedEndTime)
+                                let formattedEndTime;
+                                if (getEndTime.substr(-8) != "00:00:00") {
+                                    formattedEndTime = getEndTime.substr(0, 10);
+                                } else {
+                                    formattedEndTime = endTime.toISOString().substr(0, 10);
+                                }
 
 
                                 let cardHtml = "";
@@ -344,7 +354,24 @@
                                             }
                                         }).then((result) => {
                                             if (result.isConfirmed) {
-                                                axios.post("${root}/released/stopAuction?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.purchasePrice)
+                                                Swal.fire({
+                                                    title: `確定要提前結標？`,
+                                                    showCancelButton: true,
+                                                    confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
+                                                    cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
+                                                    confirmButtonColor: '#CA7159',
+                                                    cancelButtonColor: '#CBC0AA',
+                                                    customClass: 'confirmAlert',
+                                                    reverseButtons: true
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        axios.post("${root}/released/stopAuction?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.purchasePrice)
+
+                                                        $(".myCoin").empty();
+                                                        $(".myCoin").append(memberCoin);
+                                                        window.location.href = "${root}/card/releasedList"
+                                                    }
+                                                })
                                             }
                                         })
                                     }
@@ -436,13 +463,17 @@
                                 let endTime = new Date(getEndTime);
 
                                 // 檢查 endTime 是否為午夜 00:00:00
-                                if (endTime.getHours() !== 0 && endTime.getMinutes() !== 0 && endTime.getSeconds() !== 0) {
-                                    // 將日期減少一天
-                                    endTime.setDate(endTime.getDate() + 1);
-                                }
+                                // if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                //     // 將日期減少一天
+                                //     endTime.setDate(endTime.getDate() + 1);
+                                // }
 
-                                let formattedEndTime = endTime.toISOString().substr(0, 10);
-                                // console.log("formattedEndTime:"+formattedEndTime)
+                                let formattedEndTime;
+                                if (getEndTime.substr(-8) != "00:00:00") {
+                                    formattedEndTime = getEndTime.substr(0, 10);
+                                } else {
+                                    formattedEndTime = endTime.toISOString().substr(0, 10);
+                                }
 
 
                                 let cardHtml = "";
@@ -548,12 +579,17 @@
                                 let endTime = new Date(getEndTime);
 
                                 // 檢查 endTime 是否為午夜 00:00:00
-                                if (endTime.getHours() !== 0 && endTime.getMinutes() !== 0 && endTime.getSeconds() !== 0) {
-                                    // 將日期減少一天
-                                    endTime.setDate(endTime.getDate() + 1);
-                                }
+                                // if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                //     // 將日期減少一天
+                                //     endTime.setDate(endTime.getDate() + 1);
+                                // }
 
-                                let formattedEndTime = endTime.toISOString().substr(0, 10);
+                                let formattedEndTime;
+                                if (getEndTime.substr(-8) != "00:00:00") {
+                                    formattedEndTime = getEndTime.substr(0, 10);
+                                } else {
+                                    formattedEndTime = endTime.toISOString().substr(0, 10);
+                                }
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
 
@@ -651,7 +687,7 @@
                                                 } else {
                                                     Swal.fire({
                                                         title: `確定要以 \${price} <i class="fa-solid fa-coins"></i> 出價嗎？`,
-                                                        html: '出價後會先扣除您持有的米寶幣，若有其他會員再出價時則返還',
+                                                        html: '出價後會先扣除您持有的米寶幣<br>若有其他會員再出價時則返還',
                                                         showCancelButton: true,
                                                         confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
                                                         cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
@@ -681,7 +717,7 @@
                                                             $(".myCoin").append(memberCoin);
                                                             window.location.href = "${root}/card/releasedList"
                                                         }
-                                                        
+
                                                     })
                                                 }
                                             }
@@ -764,7 +800,7 @@
                                                 } else {
                                                     Swal.fire({
                                                         title: `確定要以 \${price} <i class="fa-solid fa-coins"></i> 出價嗎？`,
-                                                        html: '出價後會先扣除您持有的米寶幣，若有其他會員再出價時則返還',
+                                                        html: '出價後會先扣除您持有的米寶幣<br>若有其他會員再出價時則返還',
                                                         showCancelButton: true,
                                                         confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
                                                         cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
@@ -788,7 +824,7 @@
                                                             axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&purchasePrice=" + price)
                                                             let memberId = "${member.memberId}"
                                                             let memberCoin = "${member.memberCoin}"
-    
+
                                                             $(".myCoin").empty();
                                                             $(".myCoin").append(memberCoin);
 
@@ -888,13 +924,19 @@
                                 let getEndTime = `\${res.data.endTime}`;
                                 let endTime = new Date(getEndTime);
 
-                                // 檢查 endTime 是否為午夜 00:00:00
-                                if (endTime.getHours() !== 0 && endTime.getMinutes() !== 0 && endTime.getSeconds() !== 0) {
-                                    // 將日期減少一天
-                                    endTime.setDate(endTime.getDate() + 1);
+                                // // 檢查 endTime 是否為午夜 00:00:00
+                                // if (endTime.getHours() !== 0 || endTime.getMinutes() !== 0 || endTime.getSeconds() !== 0) {
+                                //     // 將日期減少一天
+                                //     endTime.setDate(endTime.getDate() + 1);
+                                // }
+
+                                let formattedEndTime;
+                                if (getEndTime.substr(-8) != "00:00:00") {
+                                    formattedEndTime = getEndTime.substr(0, 10);
+                                } else {
+                                    formattedEndTime = endTime.toISOString().substr(0, 10);
                                 }
 
-                                let formattedEndTime = endTime.toISOString().substr(0, 10);
                                 // console.log("formattedEndTime:"+formattedEndTime)
 
                                 let releasedId = `\${res.data.releasedId}`;

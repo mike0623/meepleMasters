@@ -352,14 +352,13 @@ public class CardReleasedController {
 			@RequestParam("ownedId") Integer ownedId, @RequestParam("price") Integer price, HttpSession session) {
 //		JSONObject jsonObject = new JSONObject(body);
 //		String price = jsonObject.getString("price");
-		String buyCard = cRService.buyCardDirect(releasedId, ownedId, price, session);
+		String buyCard = cRService.buyCardAuctionDirect(releasedId, ownedId, price, session);
 
-		Member member = (Member) session.getAttribute("member");
-		Integer memberId = member.getMemberId();
 		
 		if (buyCard != null) {
-			
-			member = cListService.findMember(memberId);
+			Member member = (Member) session.getAttribute("member");
+			Integer oldCoin = member.getMemberCoin();
+			member.setMemberCoin(oldCoin - price);
 			session.setAttribute("member", member);
 			return "購買成功";
 		}

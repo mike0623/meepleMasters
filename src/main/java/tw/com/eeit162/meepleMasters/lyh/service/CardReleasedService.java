@@ -192,6 +192,8 @@ public class CardReleasedService {
 		if (memberCoin < price) {
 			return null;
 		}
+		
+		
 
 //		更新卡片狀態、扣購買會員的錢
 		Integer updateReleased = cRDao.updateReleased(releasedId);
@@ -248,6 +250,14 @@ public class CardReleasedService {
 //		確認會員的錢是否足夠
 		if (memberCoin < price) {
 			return null;
+		}
+		
+		Integer lastPurchaserId = cADao.findByReleasedId(releasedId).getFkPurchaserId(); 
+		Integer lastPurchasePrice = cADao.findByReleasedId(releasedId).getPurchasePrice();
+		
+//		還回原本出價的錢
+		if (lastPurchaserId != null) {
+			mDao.updateMemberCoin(lastPurchaserId, lastPurchasePrice);
 		}
 
 //		更新卡片狀態、扣購買會員的錢
