@@ -11,40 +11,6 @@
                             <meta charset="UTF-8">
                             <title>${adminWebName}</title>
 
-                            <!-- <style>
-        .container {
-            position: relative;
-            height: 100%;
-        }
-
-        .editIcon {
-            position: absolute;
-            bottom: 0;
-            right: 10;
-        }
-
-        .imgLabel {
-            position: relative;
-            overflow: hidden;
-
-        }
-
-        body {
-            display: grid;
-            grid-template-rows: 1fr auto;
-            background: #f0ebe2 !important;
-        }
-
-        .profile {
-            margin-top: 50px;
-        }
-        
-        div.list-group{
-            position: absolute;
-            z-index: 1;
-        }
-
-    </style> -->
                         </head>
 
                         <body id="page-top">
