@@ -90,6 +90,7 @@
                                                         </tfoot>
                                                         <tbody id="memberList">
                                                             <c:forEach items="${allMember}" var="all">
+                                                                <c:if test='${!all.memberLevel.equals("管理員")}'>
                                                                 <tr>
                                                                     <td>${all.memberId}</td>
                                                                     <td><img src="${root}/member/findMemberImg/${all.memberId}"
@@ -125,7 +126,9 @@
                                                                     </c:choose>
                                                                 </tr>
 
+                                                            </c:if>
                                                             </c:forEach>
+
                                                             <!-- <tr>
                                                                 <td>id</td>
                                                                 <td><img src="${root}/member/findMemberImg/${member.memberId}"

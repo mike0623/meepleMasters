@@ -46,6 +46,9 @@
 								position: absolute;
 								z-index: 1;
 							}
+							
+
+							
 
 						</style>
 					</head>
@@ -56,31 +59,7 @@
 
 
 						<div class="container rounded mt-5 mb-5">
-							<!-- Topbar Search -->
-							<div
-								class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 p-3 py-5">
-								<div class="input-group">
-									<div class="input-group-append">
-										<button class="btn btn-warning" type="button" style="border-radius: 5px">
-											<i class="fas fa-search fa-sm"></i>
-										</button>
-									</div>
-									<input type="text" class="form-control bg-light border-0 small" placeholder="搜尋會員"
-										aria-label="Search" aria-describedby="basic-addon2" id="searchMember"
-										style="width: 400px; border-radius: 5px">
-								</div>
-								<div class="list-group" id="result"
-									style="width: 400px; border-radius: 5px; margin-left:auto;">
-									<a href="#" class="list-group-item list-group-item-action">
-										Cras justo odio
-									</a>
-									<a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis
-										in</a>
-									<a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-									<a href="#" class="list-group-item list-group-item-action">Porta ac consectetur
-										ac</a>
-								</div>
-							</div>
+							
 
 
 							<div class="row profile">
@@ -88,7 +67,7 @@
 									<div class="d-flex flex-column align-items-center text-center p-3 py-5">
 										<div class="imgLabel">
 											<label for="theImg">
-												<img class="rounded-circle mt-5" width="150px"
+												<img class="rounded-circle mt-5" width="200px" height="200px" style="object-fit: cover;"
 													src="${root}/member/findMemberImg/${member.memberId}" id="memberImg"
 													accept=".png, .jpg, .jpeg" />
 												<input type="file" id="theImg" style="display: none">
@@ -104,7 +83,7 @@
 								<div class="col-md-5 border-right">
 									<div class="p-3 py-5">
 										<div class="d-flex justify-content-between align-items-center mb-3">
-											<h4 class="text-right">Profile Settings</h4>
+											<h4 class="text-right">修改資料</h4>
 											<button type="button" id="edit"
 												class="btn btn-outline-secondary btn-floating btn-sm">Edit
 												<i class="fas fa-magic"></i>
@@ -116,14 +95,14 @@
 										</div>
 										<div class="row mt-2">
 											<div class="col-md-6">
-												<label class="labels">Name</label>
+												<label class="labels">姓名</label>
 												<input type="text" class="form-control" value="${member.memberName}"
 													id="memberName" readonly>
 											</div>
 										</div>
 										<div class="row mt-3">
 											<div class="col-md-12">
-												<label class="labels">Birth</label>
+												<label class="labels">生日</label>
 												<c:set var="BirthDate" value="${member.memberBirth}" />
 												<fmt:formatDate value="${BirthDate}" pattern="yyyy-MM-dd"
 													var="formattedDate" />
@@ -134,17 +113,17 @@
 												</div>
 											</div>
 											<div class="col-md-12">
-												<label class="labels">Address</label>
+												<label class="labels">地址</label>
 												<input type="text" class="form-control" value="${member.memberAddress}"
 													id="memberAddress" readonly>
 											</div>
 											<div class="col-md-12">
-												<label class="labels">phone</label>
+												<label class="labels">電話</label>
 												<input type="text" class="form-control" value="${member.memberTel}"
 													id="memberTel" readonly>
 											</div>
 											<div class="col-md-12">
-												<label class="labels">Gender</label>
+												<label class="labels">性別</label>
 												<select class="form-select" id="memberGender"
 													value="${member.memberGender}" aria-label="Default select example"
 													disabled>

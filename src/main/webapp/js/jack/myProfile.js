@@ -11,12 +11,18 @@ search.addEventListener("keyup", function () {
       $("#result").empty()
       if (search.value !== "") {
         $.each(res.data, function (index, member) {
-          $("#result").append(
-            '<a href="' + root + '/member/myProfile/' + member.memberId + '"' + 'class="list-group-item list-group-item-action">' +
-            '<img src="' + root + '/member/findMemberImg/' + member.memberId + '"' + 'class="rounded-circle" width="50px" height="50px">' +
-            '&nbsp; &nbsp;' + member.memberName + '</a>'
+          console.log(member.memberLevel)
+          if(member.memberLevel !=="管理員"){
 
-          );
+            $("#result").append(
+              '<a href="' + root + '/member/myProfile/' + member.memberId + '"' + 'class="list-group-item list-group-item-action">' +
+              '<img src="' + root + '/member/findMemberImg/' + member.memberId + '"' + 'class="rounded-circle" width="50px" height="50px">' +
+              '&nbsp; &nbsp;' + member.memberName + '</a>'
+              
+              );
+              
+            }
+
         });
       }
      
@@ -31,8 +37,8 @@ search.addEventListener("keyup", function () {
 result.addEventListener("click", function () {
   $("#result").empty()
 })
-result.addEventListener("blur", function () {
-  $("#result").empty()
-})
 
+document.body.addEventListener("click",function(){
+  $("#result").empty()
+},true)
 

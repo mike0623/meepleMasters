@@ -13,7 +13,7 @@ public interface ChatRoomOrderDao extends JpaRepository<ChatRoomOrder, Integer> 
 	@Query("delete ChatRoomOrder where fkOwner = :fkOwner")
 	void deleteByFkOwner(@Param("fkOwner") Integer fkOwner);
 	
-	@Query("from ChatRoomOrder where fkOwner = :fkOwner order by chatOrderWhenLeave,createdDate")
+	@Query("from ChatRoomOrder where fkOwner = :fkOwner order by chatOrderWhenLeave,createdDate desc")
 	List<ChatRoomOrder> findByFkOwner(@Param("fkOwner") Integer fkOwner);
 	
 	@Query("from ChatRoomOrder where fkOwner = :fkOwner and fkChatToWhom = :fkChatToWhom")

@@ -237,6 +237,9 @@ public class BridgeController {
 				jsonObject.put("isThisTurnTwoPlayerPhaseOne", true);
 				//做完行動後判斷，是否還是第一階段慮牌
 				isTwoPlayerPhaseOne = bridge.twoPlayerPhaseOne();
+				//回傳新的牌庫數量與展示卡牌
+				jsonObject.put("restSizeOfDesk",bridge.getDeskList().size());
+				jsonObject.put("newForTwoPlayerCard",bridge.getForTwoPlayersCard());
 			}else {
 				bridge.plusScoreWhenEndOfTheTurn();
 			}
@@ -361,7 +364,7 @@ public class BridgeController {
 		if("藍隊".equals(bridge.getWinTeam())) {
 			winTeamInt = 2;
 		}
-		Integer averageScore = 0;
+		Integer averageScore = 500;
 		for(BridgePlayer player:bridge.getPlayerSeat()) {
 			averageScore += player.getBridgeDegree();
 		}

@@ -158,6 +158,12 @@ public class RouteController {
 		return "jack/memberManage";
 	}
 	
+	@GetMapping("/forgetPwd")
+	public String goFoegetPwd() {
+		
+		return "jack/forgetPwd";
+	}
+	
 	
 
 }	

@@ -182,7 +182,7 @@ public class GomokuController {
 		Gomoku gomoku = (Gomoku)game;
 		//玩家加減熟練度
 		//發遊戲幣給玩家
-		Integer averageScore = (gomoku.getPlayer1Degree() + gomoku.getPlayer2Degree())/2;
+		Integer averageScore = (500+gomoku.getPlayer1Degree() + gomoku.getPlayer2Degree())/2;
 		Member player1 = DataInterface.getMemberByEmail(gomoku.getPlayer1Email());
 		Member player2 = DataInterface.getMemberByEmail(gomoku.getPlayer2Email());
 		Product product = DataInterface.getProductByProductName(game.getGameName());

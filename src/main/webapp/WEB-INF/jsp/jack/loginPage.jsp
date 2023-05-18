@@ -24,9 +24,9 @@
             <jsp:include page="../include/header.jsp"></jsp:include>
             <div class="bodyContainer" style="text-align: center">
               <img src="${root}/img/logo.png" class="card-img-top" alt="..." style="width: 200px; margin: 10px" />
-              <form action="${root}/member/login" method="post">
+              <!-- <form action="${root}/member/login" method="post"> -->
                 <div class="card container"
-                  style="width: 30rem; background-color: #e0ccc5; position: relative; top:80px">
+                  style="width: 30rem; background-color: #e0ccc5; position: relative; top:80px; margin-bottom:120;">
 
                   <div class="card-body  text-center">
                     <h5 class="card-title" style="color: #8a513f">登入</h5>
@@ -41,7 +41,7 @@
                       <label for="password">密碼</label>
                     </div>
                     <div>
-                      <a href="">忘記密碼</a>
+                      <a href="${root}/forgetPwd">忘記密碼</a>
                     </div>
                     <div id="login-error" class="d-none alert alert-danger alert-dismissible fade show" role="alert">
                       <strong>錯誤!</strong> 帳號密碼不能空白
@@ -86,9 +86,9 @@
                     </div>
                   </div>
                 </div>
-              </form>
+              <!-- </form> -->
             </div>
-
+            <jsp:include page="../include/footer.jsp"></jsp:include>
             <script type="text/javascript" src="${root}/js/jack/loginPage.js"></script>
 
 
