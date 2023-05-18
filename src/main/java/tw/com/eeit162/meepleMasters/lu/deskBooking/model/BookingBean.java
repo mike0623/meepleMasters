@@ -99,6 +99,7 @@ public class BookingBean {
 	public void setBookDate(Date bookDate) {
 		this.bookDate = bookDate;
 	}
+	
 
 	public String getBookTime() {
 		return bookTime;

@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
+import tw.com.eeit162.meepleMasters.jack.service.JwtService;
 import tw.com.eeit162.meepleMasters.jack.service.MemberService;
 
 @Controller
@@ -33,6 +36,8 @@ public class MemberController {
 
 	@Autowired
 	private MemberService mService;
+	@Autowired
+	private JwtService jwtService;
 
 	@GetMapping("/test123")
 	public String test() {
@@ -60,6 +65,11 @@ public class MemberController {
 		return false;
 	}
 	
+	/**
+	 * 會員驗證
+	 * @param token
+	 * @return
+	 */
 	@GetMapping("/auth/{token}")
 	public String activeAccount(@PathVariable("token") String token) {
 		mService.activeAccount(token);
@@ -120,25 +130,73 @@ public class MemberController {
 	}
 	
 	/**
-	 * 更新密碼
-	 * @param memberId
-	 * @param memberPwd
-	 * @return String
+	 * 接收ajax忘記密碼的email
+	 * @param email
+	 * @return
 	 */
 	@ResponseBody
-	@PutMapping("/member/updatePwd")
-	public String updatePwdByEmail(String email, String memberPwd) {
+	@PostMapping("/forgetPwdCheckEmail")
+	public Member forgetPwdCheckEmail(@RequestBody String email) {
+		JSONObject jsonObject = new JSONObject(email);
 		
+		Member member = mService.findMemberByEmail(jsonObject.getString("memberEmail"));
+		System.out.println(member);
+		if(member!=null) {
+			mService.sendUpdatePwdEmail(member);
+			return member;
+		}
+		return null;
+	}
+	
+	/**
+	 * 跳到更改密碼頁面
+	 * @param token
+	 * @return
+	 */
+	@GetMapping("/updatePwd/{token}")
+	public String toUpdatePwdPage(@PathVariable("token") String token, Model model) {
+		 Member exsistMember = mService.tokenfindemail(token);
+		 
+		 if(exsistMember==null) {
+			 return "redirect:/";
+		 }
+		 
+		 model.addAttribute("memberEmail", exsistMember.getMemberEmail());
+		 return "jack/updatePwd";
+	}
+	
+	@PostMapping("/updateConfirm")
+	public String updatePwd(@RequestParam("email") String email, @RequestParam("password")String password) {
 		
-		Integer update = mService.updatePwdByEmail(email, memberPwd);
-		System.out.println(memberPwd);
-		if(update!=0) {
+		Member updatePwdByEmail = mService.updatePwdByEmail(email, password);
+		if(updatePwdByEmail == null) {
 			
-			return "success";
+			return "redirect:/";
 		}
 		
-		return "fail";
+		return "redirect:/login";
 	}
+	
+//	/**
+//	 * 更新密碼
+//	 * @param memberId
+//	 * @param memberPwd
+//	 * @return String
+//	 */
+//	@ResponseBody
+//	@PutMapping("/member/updatePwd")
+//	public String updatePwdByEmail(String email, String memberPwd) {
+//		
+//		
+//		Integer update = mService.updatePwdByEmail(email, memberPwd);
+//		System.out.println(memberPwd);
+//		if(update!=0) {
+//			
+//			return "success";
+//		}
+//		
+//		return "fail";
+//	}
 	
 	/**
 	 * 更改Member資料

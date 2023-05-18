@@ -104,7 +104,7 @@
                           <li><a class="dropdown-item" href="${root}/order/orderList/?memberId=${member.memberId}">我的訂單</a></li>
                           <li><a class="dropdown-item" href="${root}/member/profile">修改資料</a></li>
                           <li><hr class="dropdown-divider"></li>
-                          <li><a class="dropdown-item" href="${root}/member/logout">Logout</a></li>
+                          <li><a class="dropdown-item" href="${root}/member/logout">登出</a></li>
                         </ul>
                       </li>
                       <div><a href="${root}/shoppingCart"><i class="fa-solid fa-cart-shopping fa-2xl shoppingCartButton"></i></a></div>

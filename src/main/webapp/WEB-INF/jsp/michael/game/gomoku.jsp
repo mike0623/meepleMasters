@@ -134,6 +134,16 @@
 		background-color:white;
 		display:block;
 	}
+	.endGameStyle{
+		text-align:center;
+		
+	}
+	.endGameStyle td{
+		width: 200px;
+	    border: 1px solid black;
+	    background-color: azure;
+	    text-align: center;
+	}
 </style>
 </head>
 <body>
@@ -256,8 +266,6 @@
 				}
 			}else{
 				//贏了要做的事情
-				$(".showGameProgress").text("遊戲結束，"+response.data.winner+"贏了");
-				$(".canDo").removeClass("canDo");
 				endingView(json);
 			}
 		}).catch(function(error){
@@ -275,11 +283,60 @@
 		$(this).children("div").removeClass("redPiece");
 	});
 	
+	function giveUpTheGame(){
+		bootbox.confirm({
+			title: "放棄遊戲",
+			message: '確定要放棄遊戲嗎?這樣會導致您和您的隊友輸掉遊戲',
+			buttons: {
+				confirm: {
+					label: "確定"
+				},
+				cancel: {
+					label: "取消"
+				}
+			},
+			callback: function(result) {
+				axios.get("${root}/gomoku/giveUp").then(function(response){
+					let json = response.data;
+					endingView(json);
+				}).catch(function(error){
+					console.log("下棋出錯啦",error);
+				}).finally(function(){
+					
+				});
+			}
+		});
+	}
+	
 	function endingView(json){
+		$(".showGameProgress").text("遊戲結束，"+json.winner+"贏了");
+		$(".canDo").removeClass("canDo");
 		Swal.fire({
 			backdrop: false,
 			title: '遊戲結束',
-			html: "<p>遊戲結束</p>",
+			html: `
+				<h2>遊戲結束，`+json.winner+`勝利</h2>
+				<table><tbody>
+					<tr>
+						<td></td>
+						<td>原本分數</td>
+						<td>增減分數</td>
+						<td>增加遊戲幣</td>
+					</tr>
+					<tr>
+						<td>`+json.winner+`</td>
+						<td>`+json.winnerDegree+`</td>
+						<td>`+json.winnerChange+`</td>
+						<td>200</td>
+					</tr>
+					<tr>
+						<td>`+json.loser+`</td>
+						<td>`+json.loserDegree+`</td>
+						<td>`+json.loserChange+`</td>
+						<td>100</td>
+					</tr>
+				</tbody></table>
+			`,
 			customClass: 'endGameStyle',
 			//confirmButtonColor: '#CA7159',
 			confirmButtonText: '回到遊戲大廳'

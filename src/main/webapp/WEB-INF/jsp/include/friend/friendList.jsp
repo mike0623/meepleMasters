@@ -588,7 +588,29 @@
 							Swal.fire({
 								backdrop: false,
 								title: '遊戲結束',
-								html: "<p>遊戲結束</p>",
+								html: `
+									<h2>遊戲結束，`+json.winner+`勝利</h2>
+									<table><tbody>
+										<tr>
+											<td></td>
+											<td>原本分數</td>
+											<td>增減分數</td>
+											<td>增加遊戲幣</td>
+										</tr>
+										<tr>
+											<td>`+json.winner+`</td>
+											<td>`+json.winnerDegree+`</td>
+											<td>`+json.winnerChange+`</td>
+											<td>200</td>
+										</tr>
+										<tr>
+											<td>`+json.loser+`</td>
+											<td>`+json.loserDegree+`</td>
+											<td>`+json.loserChange+`</td>
+											<td>100</td>
+										</tr>
+									</tbody></table>
+								`,
 								customClass: 'endGameStyle',
 								//confirmButtonColor: '#CA7159',
 								confirmButtonText: '回到遊戲大廳'

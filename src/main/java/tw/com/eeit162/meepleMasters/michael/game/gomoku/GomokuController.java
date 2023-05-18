@@ -1,5 +1,7 @@
 package tw.com.eeit162.meepleMasters.michael.game.gomoku;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.michael.game.Game;
-import tw.com.eeit162.meepleMasters.michael.game.bridge.Bridge;
 import tw.com.eeit162.meepleMasters.michael.game.room.GameRoomUtil;
 import tw.com.eeit162.meepleMasters.michael.util.DataInterface;
 import tw.com.eeit162.meepleMasters.michael.websocket.util.WebsocketUtil;
@@ -32,9 +33,16 @@ public class GomokuController {
 		}
 //		System.out.println(gomoku.getChessBoard().get(new int[5][4]));
 		
-		
+		while(gomoku.getPlayer1Email() == null) {
+			System.out.println("位置還沒印好，請等等");
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		model.addAttribute("gomoku", gomoku);
-		if(gomoku.getPlayer1Email().equals(memberEmail)) {
+		if(memberEmail.equals(gomoku.getPlayer1Email())) {
 			model.addAttribute("myself", "player1");
 		}else {
 			model.addAttribute("myself", "player2");
@@ -85,13 +93,22 @@ public class GomokuController {
 			gomoku.setEndOfTheGame(isWin);
 			if(member.getMemberEmail().equals(gomoku.getPlayer1Email())) {
 				gomoku.setWinner(gomoku.getPlayer1Name());
+				gomoku.setLoser(gomoku.getPlayer2Name());
+				jsonObject.put("winnerDegree", gomoku.getPlayer1Degree());
+				jsonObject.put("loserDegree", gomoku.getPlayer2Degree());
 			}
 			if(member.getMemberEmail().equals(gomoku.getPlayer2Email())) {
 				gomoku.setWinner(gomoku.getPlayer2Name());
+				gomoku.setLoser(gomoku.getPlayer1Name());
+				jsonObject.put("winnerDegree", gomoku.getPlayer2Degree());
+				jsonObject.put("loserDegree", gomoku.getPlayer1Degree());
 			}
 			jsonObject.put("endOfTheGame", true);
 			jsonObject.put("winner", gomoku.getWinner());
-			ending(session);
+			jsonObject.put("loser", gomoku.getLoser());
+			ArrayList<Integer> changeDegreeList = ending(session);
+			jsonObject.put("winnerChange", changeDegreeList.get(0));
+			jsonObject.put("loserChange", changeDegreeList.get(1));
 		}
 		
 		//ws通知對方
@@ -111,15 +128,83 @@ public class GomokuController {
 		return jsonObject.toString();
 	}
 	
-	//遊戲結束時的方法
-	public void ending(HttpSession session) {
+	//按下投降按鈕
+	@GetMapping("/gomoku/giveUp")
+	@ResponseBody
+	public String giveUp(HttpSession session) {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("action", "gomokuGame");
+		jsonObject.put("gameAction", "playChess");
+		jsonObject.put("endOfTheGame", true);
+		String tableCode = (String)session.getAttribute("tableCode");
+		Game game = GameRoomUtil.getGameByTableCode(tableCode);
+		Gomoku gomoku = (Gomoku)game;
+		Member member = (Member)session.getAttribute("member");
+		if(member.getMemberEmail().equals(gomoku.getPlayer1Email())) {
+			gomoku.setWinner(gomoku.getPlayer2Name());
+			gomoku.setLoser(gomoku.getPlayer1Name());
+			jsonObject.put("winnerDegree", gomoku.getPlayer1Degree());
+			jsonObject.put("loserDegree", gomoku.getPlayer2Degree());
+		}
+		if(member.getMemberEmail().equals(gomoku.getPlayer2Email())) {
+			gomoku.setWinner(gomoku.getPlayer1Name());
+			gomoku.setLoser(gomoku.getPlayer2Name());
+			jsonObject.put("winnerDegree", gomoku.getPlayer2Degree());
+			jsonObject.put("loserDegree", gomoku.getPlayer1Degree());
+		}
+		jsonObject.put("winner", gomoku.getWinner());
+		jsonObject.put("loser", gomoku.getLoser());
+		ArrayList<Integer> changeDegreeList = ending(session);
+		jsonObject.put("winnerChange", changeDegreeList.get(0));
+		jsonObject.put("loserChange", changeDegreeList.get(1));
+		
+		//ws通知對方
+		if(member.getMemberEmail().equals(gomoku.getPlayer1Email())) {
+			WebsocketUtil.sendMessageByUserEmail(gomoku.getPlayer2Email(), jsonObject.toString());
+		}
+		if(member.getMemberEmail().equals(gomoku.getPlayer2Email())) {
+			WebsocketUtil.sendMessageByUserEmail(gomoku.getPlayer1Email(), jsonObject.toString());
+		}
+		
+		//刪除session
+		session.removeAttribute("tableCode");
+		//消滅遊戲桌
+		GameRoomUtil.removeGameByTableCode(tableCode);
+		
+		
+		return jsonObject.toString();
+	}
+	
+	//遊戲結束時的方法，回傳改變的degree，前面是贏家，後面是輸家
+	public ArrayList<Integer> ending(HttpSession session) {
 		String tableCode = (String)session.getAttribute("tableCode");
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
 		Gomoku gomoku = (Gomoku)game;
 		//玩家加減熟練度
 		//發遊戲幣給玩家
+		Integer averageScore = (500+gomoku.getPlayer1Degree() + gomoku.getPlayer2Degree())/2;
+		Member player1 = DataInterface.getMemberByEmail(gomoku.getPlayer1Email());
+		Member player2 = DataInterface.getMemberByEmail(gomoku.getPlayer2Email());
 		Product product = DataInterface.getProductByProductName(game.getGameName());
+		ArrayList<Integer> changeDegreeList = new ArrayList<Integer>();
+		if(gomoku.getWinner().equals(gomoku.getPlayer1Name())) {
+			Integer winnerChange = DataInterface.updateGameDegreeByBoth(true, averageScore, player1.getMemberId(), product.getProductId());
+			Integer loserChange = DataInterface.updateGameDegreeByBoth(false, averageScore, player2.getMemberId(), product.getProductId());
+			DataInterface.updateMemberCoin(player1.getMemberId(), 200);
+			DataInterface.updateMemberCoin(player2.getMemberId(), 100);
+			changeDegreeList.add(winnerChange);
+			changeDegreeList.add(loserChange);
+		}
+		if(gomoku.getWinner().equals(gomoku.getPlayer2Name())) {
+			Integer loserChange = DataInterface.updateGameDegreeByBoth(false, averageScore, player1.getMemberId(), product.getProductId());
+			Integer winnerChange = DataInterface.updateGameDegreeByBoth(true, averageScore, player2.getMemberId(), product.getProductId());
+			DataInterface.updateMemberCoin(player2.getMemberId(), 200);
+			DataInterface.updateMemberCoin(player1.getMemberId(), 100);
+			changeDegreeList.add(winnerChange);
+			changeDegreeList.add(loserChange);
+		}
 		
+		return changeDegreeList;
 		
 	}
 	

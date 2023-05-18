@@ -37,7 +37,7 @@
             <jsp:include page="../include/header.jsp"></jsp:include>
             <div class="bodyContainer" style="text-align: center">
               <img src="${root}/img/logo.png" class="card-img-top" alt="..." style="width: 200px; margin: 10px" />
-              <div class="card container" style="width: 30rem; background-color: #e0ccc5">
+              <div class="card container" style="width: 30rem; background-color: #e0ccc5; margin-bottom: 30 " >
                 <div class="card-body text-center" id="main-form">
                   <h5 class="card-title" style="color: #8a513f">註冊</h5>
                   <form class="needs-validation" novalidate>
@@ -137,6 +137,7 @@
                 </div>
               </div>
             </div>
+            <jsp:include page="../include/footer.jsp"></jsp:include>
             <script type="text/javascript" src="${root}/js/jack/createMember.js"></script>
 
           </body>
