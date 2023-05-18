@@ -78,9 +78,6 @@ password.addEventListener("focus", function(){
     document.querySelector("#login-error").classList.add("d-none");
 })
 
-document.querySelector("#remember").addEventListener("change", function () {
-    document.querySelector("#remember").classList.remove("is-invalid")
-  });
 
 // Remember me
 // document.querySelector("#login").addEventListener("click",function(){

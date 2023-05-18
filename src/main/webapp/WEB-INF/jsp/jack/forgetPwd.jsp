@@ -24,9 +24,8 @@
             <jsp:include page="../include/header.jsp"></jsp:include>
             <div class="bodyContainer" style="text-align: center">
               <img src="${root}/img/logo.png" class="card-img-top" alt="..." style="width: 200px; margin: 10px" />
-              <!-- <form action="${root}/member/login" method="post"> -->
                 <div class="card container"
-                  style="width: 30rem; background-color: #e0ccc5; position: relative; top:80px">
+                  style="width: 30rem; background-color: #e0ccc5; position: relative; top:80px;">
 
                   <div class="card-body  text-center">
                     <h5 class="card-title" style="color: #8a513f">請輸入您註冊的Email</h5>
@@ -34,6 +33,10 @@
                       <input type="email" class="form-control" id="email" placeholder="name@example.com"
                         style="background-color: rgb(255, 245, 223)" />
                       <label for="email">Email</label>
+                     
+                      <div id="email-error" class="invalid-feedback">
+                      </div>
+                   
                     </div>
                     
                     
@@ -55,9 +58,8 @@
                     
                   </div>
                 </div>
-              <!-- </form> -->
             </div>
-
+            <jsp:include page="../include/footer.jsp"></jsp:include>
             <script type="text/javascript" src="${root}/js/jack/forgetPwd.js"></script>
 
 

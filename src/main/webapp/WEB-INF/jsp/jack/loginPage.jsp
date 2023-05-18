@@ -26,7 +26,7 @@
               <img src="${root}/img/logo.png" class="card-img-top" alt="..." style="width: 200px; margin: 10px" />
               <!-- <form action="${root}/member/login" method="post"> -->
                 <div class="card container"
-                  style="width: 30rem; background-color: #e0ccc5; position: relative; top:80px">
+                  style="width: 30rem; background-color: #e0ccc5; position: relative; top:80px; margin-bottom:120;">
 
                   <div class="card-body  text-center">
                     <h5 class="card-title" style="color: #8a513f">登入</h5>
@@ -88,7 +88,7 @@
                 </div>
               <!-- </form> -->
             </div>
-
+            <jsp:include page="../include/footer.jsp"></jsp:include>
             <script type="text/javascript" src="${root}/js/jack/loginPage.js"></script>
 
 
