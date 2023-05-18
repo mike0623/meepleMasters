@@ -111,6 +111,7 @@
 		var isRoomPage = false;
 		var isGameLobbyPage = false;
 		var isBridgeGamePage = false;
+		var isGomokuGamePage = false;
 		
 
 		
@@ -575,6 +576,57 @@
 				
 				
 				
+			}
+			//五子棋遊戲
+			if("gomokuGame" == action && true == isGomokuGamePage){
+				if("playChess" == json.gameAction){
+					if(json.endOfTheGame){
+						//toDo
+						$(".showGameProgress").text("遊戲結束，"+json.winner+"贏了");
+						$(".canDo").removeClass("canDo");
+						axios.get("${root}/game/removeSessionTableCode").then(function(response){
+							Swal.fire({
+								backdrop: false,
+								title: '遊戲結束',
+								html: `
+									<h2>遊戲結束，`+json.winner+`勝利</h2>
+									<table><tbody>
+										<tr>
+											<td></td>
+											<td>原本分數</td>
+											<td>增減分數</td>
+											<td>增加遊戲幣</td>
+										</tr>
+										<tr>
+											<td>`+json.winner+`</td>
+											<td>`+json.winnerDegree+`</td>
+											<td>`+json.winnerChange+`</td>
+											<td>200</td>
+										</tr>
+										<tr>
+											<td>`+json.loser+`</td>
+											<td>`+json.loserDegree+`</td>
+											<td>`+json.loserChange+`</td>
+											<td>100</td>
+										</tr>
+									</tbody></table>
+								`,
+								customClass: 'endGameStyle',
+								//confirmButtonColor: '#CA7159',
+								confirmButtonText: '回到遊戲大廳'
+							}).then((value) => {
+								location.href = "${root}/game/playGameLobby";
+							});
+						}).catch(function(error){
+							console.log("遊戲結束時發出消滅session的錯誤",error);
+						}).finally(function(){
+							
+						});
+						return;
+					}
+					//有空改
+					window.location.reload();
+				}
 			}
 			
 			

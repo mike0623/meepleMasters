@@ -22,7 +22,7 @@
             </picture>
         </figure>
 
-        <form action="${root}/released/insertCardDirect" method="post" id="formConfirm">
+        <form action="${root}/released/insertCardAuction" method="post" id="formConfirm" style="bottom: 10px;">
 
             <span class="headline">
                 <i class="fa-solid fa-arrow-left-long" onclick="location.href='${root}/card/releasedList'"></i>
@@ -37,10 +37,16 @@
                 </label>
             </span>
             <span class="form-group mb-3">
-                <label for="price" class="text-small-uppercase form-label">售出價</label>
-                <input class="text-body" id="price" name="price" type="text"
+                <label for="startPrice" class="text-small-uppercase form-label">拍賣起價</label>
+                <input class="text-body" id="startPrice" name="startPrice" type="text"
                     onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')"
-                    path="directPrice" required />
+                    path="startPrice" required />
+            </span>
+            <span class="form-group mb-3">
+                <label for="directPrice" class="text-small-uppercase form-label">直購價（選填）</label>
+                <input class="text-body" id="directPrice" name="directPrice" type="text"
+                    onkeyup="if(event.keyCode !=37 && event.keyCode != 39)value=value.replace(/\D/g,'')"
+                    path="directPrice" />
             </span>
             <span class="form-group mb-3">
                 <label for="endTime" class="text-small-uppercase form-label">結束時間（至選擇日期的23:59截止）</label>
@@ -48,10 +54,12 @@
             </span>
             <div class="wrapper form-group mb-3">
                 <input type="radio" name="select" id="option-1" checked>
-                <label for="option-1" class="option option-1 form-label">
+                <label for="option-1" class="option option-1 form-label"
+                    style="width: 120px; position: absolute; bottom: 130px;">
                     <div class="dot"></div>
-                    <span>直接購買</span>
+                    <span>拍賣</span>
                 </label>
+                <i class="fa-solid fa-stopwatch"></i>
             </div>
             <input class="inputSubmit" value="上架" type="submit">
         </form>
@@ -220,6 +228,32 @@
                 }
 
             })
+        });
+
+        function formatDateTime(date) {
+            let year = date.getFullYear();
+            let month = padZero(date.getMonth() + 1);
+            let day = padZero(date.getDate());
+            let hours = padZero(date.getHours());
+            let minutes = padZero(date.getMinutes());
+            let seconds = padZero(date.getSeconds());
+
+            return `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+        }
+
+        function padZero(value) {
+            return value.toString().padStart(2, '0');
+        }
+
+        $(".fa-stopwatch").click(function () {
+            let time = new Date();
+            let newTime = new Date(time.getTime());
+            newTime.setMinutes(newTime.getMinutes() + 5);
+            console.log(formatDateTime(newTime));
+            let selectedDate = $("#endTime").val(formatDateTime(newTime))
+            if (selectedDate != "") {
+                $("#endTime").parent().addClass("inputs--filled");
+            }
         });
 
 

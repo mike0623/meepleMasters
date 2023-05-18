@@ -12,7 +12,8 @@ import tw.com.eeit162.meepleMasters.lyh.model.bean.CardOwned;
 
 public interface CardOwnedDao extends JpaRepository<CardOwned, Integer> {
 	
-	List<CardOwned> findByFkMemberId(Integer fkMemberId);
+	@Query("from CardOwned where fk_memberId = :memberId order by ownedId DESC")
+	List<CardOwned> findByMemberId(Integer memberId);
 	
 	@Query("from CardOwned join Card on cardId = fk_cardId where fk_memberId = :memberId order by cardStar DESC")
 	List<Object[]> ownedCardStar(@Param("memberId") Integer memberId);
@@ -28,5 +29,12 @@ public interface CardOwnedDao extends JpaRepository<CardOwned, Integer> {
 	@Query("update CardOwned set cardStatus = 3 where ownedId = :ownedId")
 	Integer updateCardStatusToSell(@Param("ownedId") Integer ownedId);
 	
+	@Modifying(clearAutomatically = true)
+	@Query("update CardOwned set cardStatus = 2 where ownedId = :ownedId")
+	Integer updateCardOwned(@Param("ownedId") Integer ownedId);
+	
+	@Modifying(clearAutomatically = true)
+	@Query("update CardOwned set cardStatus = 1 where ownedId = :ownedId")
+	Integer continuedCardOwned(@Param("ownedId") Integer ownedId);
 	
 }

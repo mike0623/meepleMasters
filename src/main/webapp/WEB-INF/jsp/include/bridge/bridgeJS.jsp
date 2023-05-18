@@ -106,6 +106,11 @@
 						$(".player2ShowCardArea img").remove();
 						$(".player3ShowCardArea img").remove();
 						$(".player4ShowCardArea img").remove();
+						//如果下回合兩人階段變更牌庫數量及顯示的卡片
+						if(json.isTwoPlayerPhaseOne){
+							$(".desk").children("span").text("x"+json.restSizeOfDesk);
+							$(".showCardForToPlayers").children("img").attr("src","/meeple-masters/poker/"+json.newForTwoPlayerCard);
+						}
 						if(json.playerNTurnEmail == "${member.memberEmail}"){
 							//輪到我
 							//上面的進度說明
@@ -141,16 +146,18 @@
 					}
 				},
 				callback: function(result) {
-					axios.get("${root}/bridge/giveUpGame").then(function(response){
-						console.log("放棄遊戲的回應",response);
-						let json = response.data;
-						//秀出結束畫面
-						makeEndingView(json);
-					}).catch(function(error){
-						console.log("放棄遊戲時的錯誤",error);
-					}).finally(function(){
-						
-					});
+					if(result){
+						axios.get("${root}/bridge/giveUpGame").then(function(response){
+							console.log("放棄遊戲的回應",response);
+							let json = response.data;
+							//秀出結束畫面
+							makeEndingView(json);
+						}).catch(function(error){
+							console.log("放棄遊戲時的錯誤",error);
+						}).finally(function(){
+							
+						});
+					}
 				}
 			});
 		}

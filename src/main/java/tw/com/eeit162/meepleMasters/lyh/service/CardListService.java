@@ -69,7 +69,7 @@ public class CardListService {
 
 	public List<CardOwned> listOwnedCard(Integer memberId) {
 
-		List<CardOwned> ownedCard = cODao.findByFkMemberId(memberId);
+		List<CardOwned> ownedCard = cODao.findByMemberId(memberId);
 
 		if (ownedCard.isEmpty()) {
 			return null;
@@ -115,6 +115,8 @@ public class CardListService {
 		}
 		return allCard;
 	}
+	
+	
 
 	
 	

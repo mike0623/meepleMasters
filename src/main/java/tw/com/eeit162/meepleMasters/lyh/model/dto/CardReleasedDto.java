@@ -2,13 +2,18 @@ package tw.com.eeit162.meepleMasters.lyh.model.dto;
 
 import java.util.Date;
 
-public class CardDto {
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+public class CardReleasedDto {
 
 	private Integer releasedId;
 	private Integer ownedId;
 	private Integer directPrice;
 	private Integer startPrice;
 	private Integer type;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
+	private Date startTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
 	private Date endTime;
 	private Integer releasedStatus;
 	private Integer cardId;
@@ -16,6 +21,51 @@ public class CardDto {
 	private Integer cardStatus;
 	private String cardName;
 	private Integer cardStar;
+	private String memberName;
+	private Integer purchasePrice;
+	private String purchaserName;
+	private Integer purchaserId;
+	
+	
+	public Integer getPurchaserId() {
+		return purchaserId;
+	}
+
+	public void setPurchaserId(Integer purchaserId) {
+		this.purchaserId = purchaserId;
+	}
+
+	public String getPurchaserName() {
+		return purchaserName;
+	}
+
+	public void setPurchaserName(String purchaserName) {
+		this.purchaserName = purchaserName;
+	}
+
+	public Integer getPurchasePrice() {
+		return purchasePrice;
+	}
+
+	public void setPurchasePrice(Integer purchasePrice) {
+		this.purchasePrice = purchasePrice;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
 
 	public Integer getReleasedId() {
 		return releasedId;
@@ -113,4 +163,14 @@ public class CardDto {
 		this.cardStar = cardStar;
 	}
 
+	@Override
+	public String toString() {
+		return "CardReleasedDto [releasedId=" + releasedId + ", ownedId=" + ownedId + ", directPrice=" + directPrice
+				+ ", startPrice=" + startPrice + ", type=" + type + ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", releasedStatus=" + releasedStatus + ", cardId=" + cardId + ", memberId=" + memberId
+				+ ", cardStatus=" + cardStatus + ", cardName=" + cardName + ", cardStar=" + cardStar + ", memberName="
+				+ memberName + "]";
+	}
+
+	
 }
