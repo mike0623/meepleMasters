@@ -151,8 +151,6 @@
 								
 									<script>
 										function submitForm() {
-											// var dateoption = document.querySelector("#date");
-											// console.log(dateoption);
 											document.forms[0].submit();
 										}
 
