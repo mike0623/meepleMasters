@@ -408,7 +408,7 @@ input:focus {
 	top: 75px;
 	width: 420px;
 	border: 3px solid black;
-	z-index:10;
+	z-index:1031;
 	background-color:#F0EBE2;
 }
 
@@ -419,12 +419,12 @@ input:focus {
 	width: 771px;
 	height: 600px;
 	border: 3px solid black;
-	z-index:10;
+	z-index:1032;
 }
 
 .controllerDialogBox {
 	position: fixed;
-	z-index:10;
+	z-index:1032;
 	background-color:#F0EBE2;
 	cursor:pointer;
 }
