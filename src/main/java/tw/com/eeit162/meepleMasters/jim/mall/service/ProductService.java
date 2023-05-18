@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,21 +37,26 @@ public class ProductService {
 	@Autowired
 	private FavoriteGameDAO fgDAO;
 
-	public void multiConditionQuery(Integer page, Integer count, Integer mID) {
-		PageRequest pageRequest = PageRequest.of(page - 1, count);
+	public PageImpl<Product> multiConditionQuery(Integer page, Integer count, String productContent) {
+
+		List<Product> pList = pDAO.findAll();
+
+		JSONObject jsonProduct = new JSONObject(productContent);
+
+		List<Product> collect = pList.stream()
+				.filter(p -> p.getProductPlayTime().contains(jsonProduct.getString("productpPlayTime")))
+				.filter(p -> p.getProductDifficulty().contains(jsonProduct.getString("productDifficulty")))
+				.collect(Collectors.toList());
 		
-		Page<Product> productPerPage = pDAO.findAll(pageRequest);
-		
-		List<Product> content = productPerPage.getContent();
-		
-		content.stream().filter(p->p.getProductPlayTime().contains(""));
-		
-		
+		PageRequest ofSize = PageRequest.ofSize(6);
+
+		PageImpl<Product> filterPage = new PageImpl<>(collect, ofSize, 0);
+		return filterPage;
 	}
 
 	public PageImpl<ProductDTO> findAllProduct(Integer page, Integer count, Integer mID) {
 		PageRequest pageRequest = PageRequest.of(page - 1, count);
-
+		
 		Page<Product> productPerPage = pDAO.findAll(pageRequest);
 
 		List<Product> content = productPerPage.getContent();
@@ -74,10 +80,8 @@ public class ProductService {
 			}
 			return pDTO;
 		}).collect(Collectors.toList());
-
 		PageImpl<ProductDTO> pageImpl = new PageImpl<>(collect, productPerPage.getPageable(),
 				productPerPage.getTotalElements());
-
 		return pageImpl;
 	}
 

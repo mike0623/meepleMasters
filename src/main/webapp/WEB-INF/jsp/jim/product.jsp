@@ -36,7 +36,7 @@ prefix="c"%>
   <body>
     <jsp:include page="../include/header.jsp" />
     <div class="container gameCardDiv">
-      <!-- <div>
+      <div>
         <select id="productpPlayTime">
           <option value="">請選擇</option>
           <option value="簡短">簡短</option>
@@ -50,7 +50,7 @@ prefix="c"%>
           <option value="適合深度玩家">適合深度玩家</option>
         </select>
         <button type="button" id="queryButton">查詢</button>
-      </div> -->
+      </div>
       <div class="gameListTitle">
         遊戲列表
         <div class="link-top"></div>

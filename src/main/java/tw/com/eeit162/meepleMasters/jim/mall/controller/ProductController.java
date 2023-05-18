@@ -3,8 +3,6 @@ package tw.com.eeit162.meepleMasters.jim.mall.controller;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,19 +107,10 @@ public class ProductController {
 	}
 
 	// 多條件查詢
-	@GetMapping("/mall/multiConditionQuery")
+	@PostMapping("/mall/multiConditionQuery")
 	@ResponseBody
-	public List<ProductDTO> multiConditionQuery(@RequestParam(required = false) String playTime,
-			@RequestParam(required = false) String difficulty, HttpSession session) {
-
-		Member member = (Member) session.getAttribute("member");
-
-		Integer mID = member != null ? member.getMemberId() : null;
-		List<ProductDTO> productList = pService.findAllProduct(1, 6, mID).getContent();
-
-		List<ProductDTO> collect = productList.stream().filter(p -> p.getProductPlayTime().contains(playTime))
-				.filter(p -> p.getProductDifficulty().contains(difficulty)).collect(Collectors.toList());
-
-		return collect;
+	public PageImpl<Product> multiConditionQuery(@RequestBody String productContent) {
+		PageImpl<Product> pageImpl = pService.multiConditionQuery(1, 6, productContent);
+		return pageImpl;
 	}
 }

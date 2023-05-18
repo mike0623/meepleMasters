@@ -184,20 +184,17 @@ pageButton.addEventListener("click", function (e) {
 });
 
 // 多條件查詢
-// document.querySelector("#queryButton").addEventListener("click", function () {
-//   let productpPlayTime = $("#productpPlayTime").val();
-//   let productDifficulty = $("#productDifficulty").val();
-//   axios
-//     .get(`${root}/mall/multiConditionQuery`, {
-//       params: {
-//         playTime: productpPlayTime,
-//         difficulty: productDifficulty,
-//       },
-//     })
-//     .then((response) => {
-//       console.log(response);
-//       renderProduct(response.data);
-//       pageButton.innerHTML = "";
-//     })
-//     .catch((error) => console.log(error));
-// });
+document.querySelector("#queryButton").addEventListener("click", function () {
+  let productpPlayTime = $("#productpPlayTime").val();
+  let productDifficulty = $("#productDifficulty").val();
+  axios
+    .post(`${root}/mall/multiConditionQuery`, {
+      productpPlayTime: productpPlayTime,
+      productDifficulty: productDifficulty,
+    })
+    .then((response) => {
+      console.log(response.data);
+      // renderProduct(response.data);
+    })
+    .catch((error) => console.log(error));
+});
