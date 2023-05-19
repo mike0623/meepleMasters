@@ -435,7 +435,7 @@
 		    <div class="col-3 rightSide">
 		    	<div class="giveUpButtonDiv">
 		    		<c:if test="${bridge.finalNumOfPlayer == 2 && bridge.deskList.size() > 0 && bridge.isEndOfTheGame == false}">
-		    			<form action="${root}/bridge/forTwoPlayersfastForward"><button class="btn btn-primary">快轉到牌庫剩一張</button></form>
+		    			<form action="${root}/bridge/forTwoPlayersfastForward"><button class="fastForwardBtn btn btn-primary">快轉到牌庫剩一張</button></form>
 		    		</c:if>
 		    		<button class="giveUpButton btn btn-secondary" onclick="giveUpTheGame()">投降</button>
 		    	</div>

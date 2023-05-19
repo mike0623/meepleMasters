@@ -83,6 +83,7 @@
 						if(!json.isTwoPlayerPhaseOne){
 							$(".showCardForToPlayers").remove();
 							$(".desk").remove();
+							$(".fastForwardBtn").remove();
 						}
 					}else{
 						$(".showGameProgress").text(`
