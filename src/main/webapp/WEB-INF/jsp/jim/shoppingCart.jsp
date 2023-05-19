@@ -12,11 +12,9 @@ pageEncoding="UTF-8"%>
         width: 40px !important;
         height: auto;
       }
-
       .card {
         box-shadow: 0 1px 15px 1px rgba(52, 40, 104, 0.08);
       }
-
       .ui-product-color {
         display: inline-block;
         overflow: hidden;
@@ -32,6 +30,12 @@ pageEncoding="UTF-8"%>
         width: 100px;
         height: 100px;
         vertical-align: middle;
+      }
+      .text-center{
+        font-size: 25px;
+      }
+      .text-right{
+        font-size: 25px;
       }
     </style>
   </head>
@@ -172,10 +176,10 @@ pageEncoding="UTF-8"%>
         let outputString = "";
         let totalPrice = 0;
         for (let cartItem of cartList) {
-          outputString += "<tr><td>";
+          outputString += "<tr><td class='text-center'>";
           outputString += `<img class="shoppingCartImg" src='${root}/mall/getPhoto?pId=\${cartItem.product.productId}' class='d-block ui-w-40 ui-bordered mr-4'/>`;
           outputString += "</td>";
-          outputString += "<td class='text-center p-4'>";
+          outputString += "<td class='text-center p-5'>";
           outputString += "<div class='media align-items-center'>";
           outputString += "<div class='media-body'>";
           outputString += `<div class='d-block text-dark'>\${cartItem.product.productName}</div>`;

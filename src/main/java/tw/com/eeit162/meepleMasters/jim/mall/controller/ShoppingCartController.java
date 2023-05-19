@@ -50,8 +50,7 @@ public class ShoppingCartController {
 	@GetMapping("/shoppingCart/findShoppingCartByMemberId")
 	@ResponseBody
 	public List<ShoppingCart> findShoppingCartByMemberId(@RequestParam Integer memberId) {
-		List<ShoppingCart> cartByMember = scService.findShoppingCartByMember(memberId);
-		return cartByMember;
+		return scService.findShoppingCartByMember(memberId);
 	}
 
 	// 透過會員ID將購物車轉換成訂單
@@ -60,7 +59,7 @@ public class ShoppingCartController {
 		Order oldOrder = oService.findByMemberAndOrderStatus(memberId);
 
 		if (oldOrder != null) {
-			return "jim/shoppingCart";
+			return "redirect:/order/orderList/?memberId=" + memberId + "&oldOrder=exist";
 		}
 
 		Order order = scService.cartToOrder(memberId);

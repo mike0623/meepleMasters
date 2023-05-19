@@ -3,6 +3,7 @@ package tw.com.eeit162.meepleMasters.jim.mall.model.bean;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -189,11 +190,26 @@ public class Product implements Serializable {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(productId, productName, productPrice);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		return Objects.equals(productId, other.productId) && Objects.equals(productName, other.productName)
+				&& Objects.equals(productPrice, other.productPrice);
+	}
+
+	@Override
 	public String toString() {
-		return "Product [productId=" + productId + ", productName=" + productName + ", productPrice=" + productPrice
-				+ ", addedTime=" + addedTime + ", productPlayTime=" + productPlayTime + ", productMaxPlayer="
-				+ productMaxPlayer + ", productMinPlayer=" + productMinPlayer + ", productDifficulty="
-				+ productDifficulty + "]";
+		return "Product [productId=" + productId + ", productName=" + productName + "]";
 	}
 
 }

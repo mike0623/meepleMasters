@@ -30,11 +30,8 @@ public class ShoppingCartService {
 	public String addShoppingCartAndRemoveItWhenExist(Integer productId, Integer memberId) {
 
 		ShoppingCart shoppingCartItem = new ShoppingCart();
-
 		Member m = new Member(memberId);
-
 		Product p = new Product(productId);
-
 		ShoppingCart sc = scDAO.findByMemberAndProduct(m, p);
 
 		if (sc != null) {
@@ -51,9 +48,7 @@ public class ShoppingCartService {
 	}
 
 	public List<ShoppingCart> findShoppingCartByMember(Integer memberId) {
-		List<ShoppingCart> cartByMember = scDAO.findByMember(new Member(memberId));
-
-		return cartByMember;
+		return scDAO.findByMember(new Member(memberId));
 	}
 
 	public Order cartToOrder(Integer memberId) {

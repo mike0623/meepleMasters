@@ -16,7 +16,7 @@ public class FavoriteGameService {
 	@Autowired
 	private FavoriteGameDAO fgDAO;
 
-	public String addFavoriteGame(Integer productId, Integer memberId) {
+	public String addFavoriteGameAndRemoveItWhenExist(Integer productId, Integer memberId) {
 
 		FavoriteGame fg = fgDAO.findByMemberAndProduct(new Member(memberId), new Product(productId));
 
