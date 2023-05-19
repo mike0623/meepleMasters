@@ -296,14 +296,16 @@
 				}
 			},
 			callback: function(result) {
-				axios.get("${root}/gomoku/giveUp").then(function(response){
-					let json = response.data;
-					endingView(json);
-				}).catch(function(error){
-					console.log("下棋出錯啦",error);
-				}).finally(function(){
-					
-				});
+				if(result){
+					axios.get("${root}/gomoku/giveUp").then(function(response){
+						let json = response.data;
+						endingView(json);
+					}).catch(function(error){
+						console.log("下棋出錯啦",error);
+					}).finally(function(){
+						
+					});
+				}
 			}
 		});
 	}

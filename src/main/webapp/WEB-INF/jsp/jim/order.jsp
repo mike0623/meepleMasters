@@ -79,8 +79,8 @@ prefix="c"%>
       }
 
       .btn2 {
-        background-color: #04aa6d;
-        color: white;
+        background-color: #F3D18E;
+        color: #613E3B;
         padding: 12px;
         margin: 10px 0;
         border: none;

@@ -124,7 +124,6 @@
 			
 		}
 		
-		
 		ws.onclose = function(){
 			console.log("onclose發動");
 		}

@@ -28,9 +28,13 @@ function renderProduct(pList) {
     outputString += `<img class="productImg" src="${root}/mall/getPhoto?pId=${p.productId}">`;
     outputString += "</div>";
     outputString += `<div class="card-header">${p.productPrice}元`;
-    outputString += `<button class="faviroteButton" value="${p.productId}">`;
-    outputString += '<i class="fa-regular fa-heart fa-2xl"></i>';
-    outputString += "</button>";
+    if (p.isFavorite) {
+      outputString += `<button class="faviroteButton" value="${p.productId}">`;
+      outputString += '<i class="fa-solid fa-heart fa-2xl"></i></button>';
+    } else {
+      outputString += `<button class="faviroteButton" value="${p.productId}">`;
+      outputString += '<i class="fa-regular fa-heart fa-2xl"></i></button>';
+    }
     outputString += "</div>";
     outputString += '<div class="card-body">';
     outputString += `<h3 class="title">${p.productName}</h3>`;
@@ -43,8 +47,13 @@ function renderProduct(pList) {
     outputString += "</ul>";
     outputString += "</div>";
     outputString += '<div class="card-footer">';
-    outputString += `<button class="cartButton" value="${p.productId}">`;
-    outputString += '<i class="fa-solid fa-cart-plus fa-2xl"></i></button>';
+    if (p.isInCart) {
+      outputString += `<button class="cartButton" value="${p.productId}">`;
+      outputString += '<i class="fa-solid fa-xmark fa-2xl"></i></button>';
+    } else {
+      outputString += `<button class="cartButton" value="${p.productId}">`;
+      outputString += '<i class="fa-solid fa-cart-plus fa-2xl"></i></button>';
+    }
     outputString += "</div></div></div>";
   }
   $("#dataHome").html(outputString);
@@ -59,7 +68,7 @@ function addCartButton() {
   for (i = 0; i < cartButton.length; i++) {
     cartButton[i].addEventListener("click", function (event) {
       let pId = this.value;
-      let heart = event.target;
+      let cart = event.target;
       if (mId == "") {
         Swal.fire({
           title: "請先登入",
@@ -77,13 +86,13 @@ function addCartButton() {
           })
           .then((response) => {
             if (response.data == "join") {
-              heart.classList.remove("fa-cart-plus");
-              heart.classList.add("fa-xmark");
+              cart.classList.remove("fa-cart-plus");
+              cart.classList.add("fa-xmark");
               Swal.fire("加入購物車");
             }
             if (response.data == "remove") {
-              heart.classList.remove("fa-xmark");
-              heart.classList.add("fa-cart-plus");
+              cart.classList.remove("fa-xmark");
+              cart.classList.add("fa-cart-plus");
               Swal.fire("移除購物車");
             }
           })
@@ -174,20 +183,18 @@ pageButton.addEventListener("click", function (e) {
   getProductList(page, 6);
 });
 
+// 多條件查詢
 document.querySelector("#queryButton").addEventListener("click", function () {
   let productpPlayTime = $("#productpPlayTime").val();
-  let productPrice = $("#productPrice").val();
+  let productDifficulty = $("#productDifficulty").val();
   axios
-    .get(`${root}/mall/multiConditionQuery`, {
-      params: {
-        playTime: productpPlayTime,
-        price: productPrice,
-      },
+    .post(`${root}/mall/multiConditionQuery`, {
+      productpPlayTime: productpPlayTime,
+      productDifficulty: productDifficulty,
     })
     .then((response) => {
-      console.log(response);
-      renderProduct(response.data);
-      pageButton.innerHTML = "";
+      console.log(response.data);
+      // renderProduct(response.data);
     })
     .catch((error) => console.log(error));
 });

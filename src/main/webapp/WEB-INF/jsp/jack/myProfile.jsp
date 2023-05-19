@@ -18,7 +18,7 @@
 								z-index: 10;
 							} */
 
-                            .container{
+                            .container.repeatContainer{
                                 margin-top:150px;
                             }
 
@@ -28,7 +28,7 @@
 
                             #searchBar{
                                 position: absolute;
-                                z-index: 10;
+                                z-index: 1031;
                                 left: 350;
                                 top: 50;
                             }
@@ -67,7 +67,7 @@
                      </div>
                      <!-- Topbar Search -->
                         
-                        <div class="container">
+                        <div class="container repeatContainer">
 
                            
 

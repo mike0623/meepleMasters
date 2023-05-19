@@ -30,12 +30,14 @@ public class FavoriteGameController {
 	@Autowired
 	private ProductService pService;
 
+	// 判斷資料庫有無進行購物車增加或刪除
 	@GetMapping("/favoriteGame/addFavoriteGame")
 	@ResponseBody
-	public String addFavoriteGame(@RequestParam Integer productId, @RequestParam Integer memberId) {
-		return fgService.addFavoriteGame(productId, memberId);
+	public String addFavoriteGameAndRemoveItWhenExist(@RequestParam Integer productId, @RequestParam Integer memberId) {
+		return fgService.addFavoriteGameAndRemoveItWhenExist(productId, memberId);
 	}
 
+	// 透過會員email找到他的最愛遊戲清單
 	@GetMapping("/favoriteGame/favoriteGameList/{memberEmail}")
 	@ResponseBody
 	public FavoriteGameList favoriteGameList(@PathVariable String memberEmail) {
@@ -51,8 +53,8 @@ public class FavoriteGameController {
 			productList.add(product);
 		}
 		
-		FavoriteGameList faveriteGameList = new FavoriteGameList(productList);
-		return faveriteGameList;
+		FavoriteGameList favoriteGameList = new FavoriteGameList(productList);
+		return favoriteGameList;
 	}
 
 }
