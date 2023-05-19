@@ -709,13 +709,17 @@
                                                                 axios.post("${root}/released/addFiveMinutes?releasedId=" + res.data.releasedId)
                                                             }
 
-                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&purchasePrice=" + price)
-                                                            let memberId = "${member.memberId}"
-                                                            let memberCoin = "${member.memberCoin}"
+                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&purchasePrice=" + price).then(() => {
+                                                                window.location.href = "${root}/card/releasedList"
 
-                                                            $(".myCoin").empty();
-                                                            $(".myCoin").append(memberCoin);
-                                                            window.location.href = "${root}/card/releasedList"
+                                                                let memberId = "${member.memberId}"
+                                                                let memberCoin = "${member.memberCoin}"
+
+                                                                $(".myCoin").empty();
+                                                                $(".myCoin").append(memberCoin);
+                                                            })
+                                                            
+                                                            
                                                         }
 
                                                     })
@@ -821,14 +825,17 @@
                                                                 axios.post("${root}/released/addFiveMinutes?releasedId=" + res.data.releasedId)
                                                             }
 
-                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&purchasePrice=" + price)
-                                                            let memberId = "${member.memberId}"
-                                                            let memberCoin = "${member.memberCoin}"
+                                                            axios.post("${root}/released/purchaseAuction?releasedId=" + res.data.releasedId + "&purchasePrice=" + price).then(function(){
+                                                                window.location.href = "${root}/card/releasedList"
+                                                                
+                                                                let memberId = "${member.memberId}"
+                                                                let memberCoin = "${member.memberCoin}"
 
-                                                            $(".myCoin").empty();
-                                                            $(".myCoin").append(memberCoin);
+                                                                $(".myCoin").empty();
+                                                                $(".myCoin").append(memberCoin);
 
-                                                            window.location.href = "${root}/card/releasedList"
+                                                            })
+                                                            
                                                         }
                                                     })
                                                 }
