@@ -93,8 +93,18 @@
 
 <!-- 讚、噓按鈕實作 -->
 <script type="text/javascript">
+	if("${review}" == ""){
+		var review = null;
+	}
+	if("${review}" == "true"){
+		var review = true;
+	}
+	if("${review}" == "false"){
+		var review = false;
+	}
+	
+	console.log(review);
 
-	var review = ${review==null}?null:${review};
 
 
 	$("#like").on("click",function(){
