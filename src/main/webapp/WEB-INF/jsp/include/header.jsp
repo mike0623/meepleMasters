@@ -50,15 +50,17 @@
                         <a href="#">遊戲討論</a>
                     </li>
                     <li>
-                        <a href="${root}/bookingForm">場地預約</a>
+                        <a href="javascript:void(0);" onclick="js_method()">場地預約</a>
                         <div>
                             <c:if test="${member == null }">
                                 <ul>
+                                    <li><a href="${root}/bookingForm">開始預約</a></li>
                                     <li><a href="${root}/member/login">訂位紀錄</a></li>
                                 </ul>
                             </c:if>
                             <c:if test="${member != null }">
                                 <ul>
+                                    <li><a href="${root}/bookingForm">場地預約</a></li>
                                     <li><a href="${root}/booking/record">訂位紀錄</a></li>
                                 </ul>
                             </c:if>
