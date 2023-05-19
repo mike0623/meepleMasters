@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import ecpay.payment.integration.AllInOne;
 import ecpay.payment.integration.domain.AioCheckOutALL;
+import tw.com.eeit162.meepleMasters.jack.model.bean.CollectLibrary;
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jack.model.dao.CollectLibraryDao;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Order;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.OrderDetail;
 import tw.com.eeit162.meepleMasters.jim.mall.model.dao.OrderDAO;
@@ -21,6 +23,9 @@ public class OrderService {
 
 	@Autowired
 	private OrderDAO oDAO;
+
+	@Autowired
+	private CollectLibraryDao clDAO;
 
 	public Order findByMemberAndOrderStatus(Integer memberId) {
 		return oDAO.findByMemberAndOrderStatus(new Member(memberId), "未付款");
@@ -41,8 +46,18 @@ public class OrderService {
 	}
 
 	@Transactional
-	public void setOrderStatus(Integer orderId) {
-		Order order = oDAO.findById(orderId).get();
+	public void setOrderStatus(Integer memberId) {
+
+		Order order = oDAO.findByMemberAndOrderStatus(new Member(memberId), "未付款");
+		List<OrderDetail> orderDetails = order.getOrderDetails();
+
+		for (OrderDetail od : orderDetails) {
+			CollectLibrary collectLibrary = new CollectLibrary();
+			collectLibrary.setFkMemberId(memberId);
+			collectLibrary.setFkProductId(od.getProduct().getProductId());
+			clDAO.save(collectLibrary);
+		}
+
 		order.setOrderStatus("已付款");
 	}
 

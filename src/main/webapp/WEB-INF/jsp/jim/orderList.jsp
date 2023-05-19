@@ -50,7 +50,7 @@ prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
                         <td>${order.totalPrice}</td>
                         <c:if test="${order.orderStatus=='未付款'}">
                           <td>
-                            <a href="${root}/order/"> ${order.orderStatus} </a>
+                            <a href="${root}/order"> ${order.orderStatus} </a>
                           </td>
                         </c:if>
                         <c:if test="${order.orderStatus=='已付款'}">

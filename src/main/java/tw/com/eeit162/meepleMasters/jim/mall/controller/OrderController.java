@@ -22,7 +22,7 @@ public class OrderController {
 	private OrderService oService;
 
 	// 進入未付款訂單時，透過會員ID找到其未結帳訂單
-	@GetMapping("/order/")
+	@GetMapping("/order")
 	public String order(HttpSession session, Model model) {
 
 		Member member = (Member) session.getAttribute("member");
@@ -108,15 +108,14 @@ public class OrderController {
 	@GetMapping("/order/checkoutComplete")
 	public String checkoutComplete(HttpSession session) {
 		Member member = (Member) session.getAttribute("member");
-		Order order = oService.findByMemberAndOrderStatus(member.getMemberId());
 
-		oService.setOrderStatus(order.getOrderId());
+		oService.setOrderStatus(member.getMemberId());
 
-		return "jim/orderList";
+		return "redirect:/order/orderList";
 	}
 
 	// 透過會員ID找到他的所有訂單
-	@GetMapping("/order/orderList/")
+	@GetMapping("/order/orderList")
 	public String orderList(@RequestParam(required = false) Integer memberId, Model model,
 			@RequestParam(required = false) String oldOrder) {
 		if (memberId == null) {

@@ -29,6 +29,8 @@ public class ProductDTO {
 
 	private Boolean isFavorite;
 
+	private Boolean isInLibrary;
+
 	public ProductDTO(Product p) {
 		this.productId = p.getProductId();
 		this.productName = p.getProductName();
@@ -135,6 +137,14 @@ public class ProductDTO {
 
 	public void setIsFavorite(Boolean isFavorite) {
 		this.isFavorite = isFavorite;
+	}
+
+	public Boolean getIsInLibrary() {
+		return isInLibrary;
+	}
+
+	public void setIsInLibrary(Boolean isInLibrary) {
+		this.isInLibrary = isInLibrary;
 	}
 
 }
