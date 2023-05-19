@@ -13,31 +13,29 @@ public class ResponseCommentReview {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="responseCommentReview")
-	private Integer responseCommentReview;
+	@Column(name="responseCommentReviewId")
+	private Integer responseCommentReviewId;
 	
 	@Column(name = "fk_memberId")
 	private Integer fkMemberId;
 	
 	@Column(name = "fk_responseCommentId")
-	private String fkResponseCommentId;
+	private Integer fkResponseCommentId;
 	
-	@Column(name = "commentGoodReview")
-	private String commentGoodReview;
-	
-	@Column(name = "commentBadReview")
-	private String commentBadReview;
+	@Column(name = "commentReview")
+	private Boolean commentReview;
+
 
 	public ResponseCommentReview() {
 		super();
 	}
 
-	public Integer getResponseCommentReview() {
-		return responseCommentReview;
+	public Integer getResponseCommentReviewId() {
+		return responseCommentReviewId;
 	}
 
-	public void setResponseCommentReview(Integer responseCommentReview) {
-		this.responseCommentReview = responseCommentReview;
+	public void setResponseCommentReviewId(Integer responseCommentReviewId) {
+		this.responseCommentReviewId = responseCommentReviewId;
 	}
 
 	public Integer getFkMemberId() {
@@ -48,28 +46,22 @@ public class ResponseCommentReview {
 		this.fkMemberId = fkMemberId;
 	}
 
-	public String getFkResponseCommentId() {
+	public Integer getFkResponseCommentId() {
 		return fkResponseCommentId;
 	}
 	
-	public void setFkResponseCommentId(String fkResponseCommentId) {
+	public void setFkResponseCommentId(Integer fkResponseCommentId) {
 		this.fkResponseCommentId = fkResponseCommentId;
 	}
+
+	public Boolean getCommentReview() {
+		return commentReview;
+	}
+
+	public void setCommentReview(Boolean commentReview) {
+		this.commentReview = commentReview;
+	}
 	
-	public String getCommentGoodReview() {
-		return commentGoodReview;
-	}
 
-	public void setCommentGoodReview(String commentGoodReview) {
-		this.commentGoodReview = commentGoodReview;
-	}
-
-	public String getCommentBadReview() {
-		return commentBadReview;
-	}
-
-	public void setCommentBadReview(String commentBadReview) {
-		this.commentBadReview = commentBadReview;
-	}
 
 }

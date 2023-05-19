@@ -22,11 +22,9 @@ public class ArticleReview {
 	@Column(name = "fk_articleId")
 	private Integer fkArticleId;
 	
-	@Column(name = "articleGoodReview")
-	private String articleGoodReview;
+	@Column(name = "articleReview")
+	private Boolean articleReview;
 	
-	@Column(name = "articleBadReview")
-	private String articleBadReview;
 
 	public ArticleReview() {
 		super();
@@ -56,21 +54,15 @@ public class ArticleReview {
 		this.fkArticleId = fkArticleId;
 	}
 
-	public String getArticleGoodReview() {
-		return articleGoodReview;
+	public Boolean getArticleReview() {
+		return articleReview;
 	}
 
-	public void setArticleGoodReview(String articleGoodReview) {
-		this.articleGoodReview = articleGoodReview;
+	public void setArticleReview(Boolean articleReview) {
+		this.articleReview = articleReview;
 	}
 
-	public String getArticleBadReview() {
-		return articleBadReview;
-	}
 
-	public void setArticleBadReview(String articleBadReview) {
-		this.articleBadReview = articleBadReview;
-	}
 	
 	
 }

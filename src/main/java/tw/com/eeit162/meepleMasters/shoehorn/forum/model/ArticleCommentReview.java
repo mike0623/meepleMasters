@@ -22,11 +22,8 @@ public class ArticleCommentReview {
 	@Column(name = "fk_articleCommentId")
 	private Integer fkArticleCommentId;
 	
-	@Column(name = "commentGoodReview")
-	private String commentGoodReview;
-	
-	@Column(name = "commentBadReview")
-	private String commentBadReview;
+	@Column(name = "commentReview")
+	private Boolean commentReview;
 
 	public ArticleCommentReview() {
 		super();
@@ -56,20 +53,14 @@ public class ArticleCommentReview {
 		this.fkArticleCommentId = fkArticleCommentId;
 	}
 
-	public String getCommentGoodReview() {
-		return commentGoodReview;
+	public Boolean getCommentReview() {
+		return commentReview;
 	}
 
-	public void setCommentGoodReview(String commentGoodReview) {
-		this.commentGoodReview = commentGoodReview;
+	public void setCommentReview(Boolean commentReview) {
+		this.commentReview = commentReview;
 	}
 
-	public String getCommentBadReview() {
-		return commentBadReview;
-	}
 
-	public void setCommentBadReview(String commentBadReview) {
-		this.commentBadReview = commentBadReview;
-	}
 
 }

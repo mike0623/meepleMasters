@@ -43,9 +43,8 @@ public class Response {
 	@Column(name = "responseUpdatedDate")
 	private Date responseUpdatedDate;
 	
-	@Lob
 	@Column(name = "responseContent")
-	private byte[] responseContent;
+	private String responseContent;
 
 	public Response() {
 		super();
@@ -91,11 +90,11 @@ public class Response {
 		this.responseUpdatedDate = responseUpdatedDate;
 	}
 
-	public byte[] getResponseContent() {
+	public String getResponseContent() {
 		return responseContent;
 	}
 
-	public void setResponseContent(byte[] responseContent) {
+	public void setResponseContent(String responseContent) {
 		this.responseContent = responseContent;
 	}
 

@@ -46,9 +46,9 @@ public class Article {
 	@Column(name = "articleTitle")
 	private String articleTitle;
 
-	@Lob
+//	@Lob
 	@Column(name = "articleContent")
-	private byte[] articleContent;
+	private String articleContent;
 
 	public Article() {
 		super();
@@ -102,11 +102,11 @@ public class Article {
 		this.articleTitle = articleTitle;
 	}
 
-	public byte[] getArticleContent() {
+	public String getArticleContent() {
 		return articleContent;
 	}
 
-	public void setArticleContent(byte[] articleContent) {
+	public void setArticleContent(String articleContent) {
 		this.articleContent = articleContent;
 	}
 

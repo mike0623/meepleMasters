@@ -21,8 +21,8 @@ public class ArticleComment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="articleCommenttId")
-	private Integer articleCommenttId;
+	@Column(name="articleCommentId")
+	private Integer articleCommentId;
 	
 	@Column(name = "fk_memberId")
 	private Integer fkMemberId;
@@ -49,12 +49,12 @@ public class ArticleComment {
 		super();
 	}
 
-	public Integer getArticleCommenttId() {
-		return articleCommenttId;
+	public Integer getArticleCommentId() {
+		return articleCommentId;
 	}
 
-	public void setArticleCommenttId(Integer articleCommenttId) {
-		this.articleCommenttId = articleCommenttId;
+	public void setArticleCommentId(Integer articleCommentId) {
+		this.articleCommentId = articleCommentId;
 	}
 
 	public Integer getFkMemberId() {

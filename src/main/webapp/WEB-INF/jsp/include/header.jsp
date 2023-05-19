@@ -47,7 +47,7 @@
                         </li>
                     </c:if>
                     <li>
-                        <a href="#">遊戲討論</a>
+                        <a href="${root}/forum">遊戲討論</a>
                     </li>
                     <li>
                         <a href="javascript:void(0);" onclick="js_method()">場地預約</a>

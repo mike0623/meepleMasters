@@ -13,7 +13,7 @@ public class FollowArticle {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="followArticletId")
+	@Column(name="followArticleId")
 	private Integer followArticletId;
 	
 	@Column(name = "fk_memberId")
