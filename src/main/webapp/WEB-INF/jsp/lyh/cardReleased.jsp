@@ -762,7 +762,7 @@
                                                         reverseButtons: true
                                                     }).then((result) => {
                                                         if (result.isConfirmed) {
-                                                            axios.post("${root}/released/buy?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.directPrice)
+                                                            axios.post("${root}/released/buyAuctionDirect?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.directPrice)
                                                                 .then(res => {
                                                                     Swal.fire({
                                                                         title: '購買成功！',
