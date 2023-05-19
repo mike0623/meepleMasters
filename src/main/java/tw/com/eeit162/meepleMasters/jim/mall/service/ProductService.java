@@ -2,6 +2,7 @@ package tw.com.eeit162.meepleMasters.jim.mall.service;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jack.model.dao.CollectLibraryDao;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.FavoriteGame;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.ShoppingCart;
@@ -37,7 +39,10 @@ public class ProductService {
 	@Autowired
 	private FavoriteGameDAO fgDAO;
 
-	public PageImpl<Product> multiConditionQuery(Integer page, Integer count, String productContent) {
+	@Autowired
+	private CollectLibraryDao clDAO;
+
+	public PageImpl<ProductDTO> multiConditionQuery(Integer page, Integer count, String productContent, Integer mID) {
 
 		List<Product> pList = pDAO.findAll();
 
@@ -46,20 +51,36 @@ public class ProductService {
 		List<Product> collect = pList.stream()
 				.filter(p -> p.getProductPlayTime().contains(jsonProduct.getString("productpPlayTime")))
 				.filter(p -> p.getProductDifficulty().contains(jsonProduct.getString("productDifficulty")))
+				.filter(p -> p.getProductPrice() >= jsonProduct.getInt("productMinPrice")
+						&& p.getProductPrice() <= jsonProduct.getInt("productMaxPrice"))
 				.collect(Collectors.toList());
-		
-		PageRequest ofSize = PageRequest.ofSize(6);
 
-		PageImpl<Product> filterPage = new PageImpl<>(collect, ofSize, 0);
+		List<ProductDTO> productDTOs = convertProductToDTO(mID, collect);
+
+		int originSize = productDTOs.size();
+
+		if (productDTOs.size() > count) {
+			productDTOs = productDTOs.subList((page - 1) * count, (page - 1) * count + 6);
+		}
+
+		PageImpl<ProductDTO> filterPage = new PageImpl<>(productDTOs, PageRequest.ofSize(count), originSize);
+
 		return filterPage;
 	}
 
 	public PageImpl<ProductDTO> findAllProduct(Integer page, Integer count, Integer mID) {
 		PageRequest pageRequest = PageRequest.of(page - 1, count);
-		
+
 		Page<Product> productPerPage = pDAO.findAll(pageRequest);
 
 		List<Product> content = productPerPage.getContent();
+		List<ProductDTO> collect = convertProductToDTO(mID, content);
+		PageImpl<ProductDTO> pageImpl = new PageImpl<>(collect, productPerPage.getPageable(),
+				productPerPage.getTotalElements());
+		return pageImpl;
+	}
+
+	private List<ProductDTO> convertProductToDTO(Integer mID, List<Product> content) {
 		List<ProductDTO> collect = content.stream().map(p -> {
 			ProductDTO pDTO = new ProductDTO(p);
 			if (mID != null) {
@@ -77,12 +98,23 @@ public class ProductService {
 						break;
 					}
 				}
+				List<Object[]> findMemberCollect = clDAO.findMemberCollect(mID);
+				List<Product> currentMemberCollects = new ArrayList<>();
+				for (Object[] cl : findMemberCollect) {
+					Product product = new Product();
+					product = (Product) cl[2];
+					currentMemberCollects.add(product);
+				}
+				for (Product clp : currentMemberCollects) {
+					if (clp.equals(p)) {
+						pDTO.setIsInLibrary(true);
+						break;
+					}
+				}
 			}
 			return pDTO;
 		}).collect(Collectors.toList());
-		PageImpl<ProductDTO> pageImpl = new PageImpl<>(collect, productPerPage.getPageable(),
-				productPerPage.getTotalElements());
-		return pageImpl;
+		return collect;
 	}
 
 	public Product findProductById(Integer id) {

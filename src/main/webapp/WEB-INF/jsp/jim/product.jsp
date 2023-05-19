@@ -9,9 +9,6 @@ prefix="c"%>
     <jsp:include page="../include/common_link.jsp" />
     <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
     <style>
-      .container {
-        height: 1450px;
-      }
       .card-body ul > li:not(:last-child) {
         border-bottom: 1px dashed;
       }
@@ -35,21 +32,47 @@ prefix="c"%>
   </head>
   <body>
     <jsp:include page="../include/header.jsp" />
-    <div class="container gameCardDiv">
-      <div>
-        <select id="productpPlayTime">
-          <option value="">請選擇</option>
-          <option value="簡短">簡短</option>
-          <option value="長度適中">長度適中</option>
-          <option value="耗時">耗時</option>
-        </select>
-        <select id="productDifficulty">
-          <option value="">請選擇</option>
-          <option value="休閒小品">休閒小品</option>
-          <option value="適合一般玩家">適合一般玩家</option>
-          <option value="適合深度玩家">適合深度玩家</option>
-        </select>
-        <button type="button" id="queryButton">查詢</button>
+    <div style="height: 100px"></div>
+    <div class="container">
+      <div class="row">
+        <div class="text-center mb-3">
+          <span>
+            遊戲時長：
+            <select id="productpPlayTime">
+              <option value="">請選擇</option>
+              <option value="簡短">簡短</option>
+              <option value="長度適中">長度適中</option>
+              <option value="耗時">耗時</option>
+            </select>
+          </span>
+          <span>
+            遊戲難度：
+            <select id="productDifficulty" class="">
+              <option value="">請選擇</option>
+              <option value="休閒小品">休閒小品</option>
+              <option value="適合一般玩家">適合一般玩家</option>
+              <option value="適合深度玩家">適合深度玩家</option>
+            </select>
+          </span>
+          <div class="mt-1">
+            價格範圍：
+            <input
+              type="number"
+              min="0"
+              placeholder="最小金額"
+              id="productMinPrice"
+            />~
+            <input
+              type="number"
+              min="0"
+              placeholder="最大金額"
+              id="productMaxPrice"
+            />
+          </div>
+          <div class="mt-1">
+            <button type="button" id="queryButton">查詢</button>
+          </div>
+        </div>
       </div>
       <div class="gameListTitle">
         遊戲列表

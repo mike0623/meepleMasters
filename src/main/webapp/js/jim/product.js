@@ -13,6 +13,7 @@ function getProductList(page = 1, count = 6) {
       },
     })
     .then((response) => {
+      console.log(response);
       renderProduct(response.data.content);
       renderPageButton(response.data);
     });
@@ -20,41 +21,50 @@ function getProductList(page = 1, count = 6) {
 
 // 渲染商品列表
 function renderProduct(pList) {
-  let outputString = "";
-  for (let p of pList) {
-    outputString += '<div class="col-4 d-flex align-items-stretch">';
-    outputString += '<div class="card">';
-    outputString += '<div class="pic">';
-    outputString += `<img class="productImg" src="${root}/mall/getPhoto?pId=${p.productId}">`;
-    outputString += "</div>";
-    outputString += `<div class="card-header">${p.productPrice}元`;
-    if (p.isFavorite) {
-      outputString += `<button class="faviroteButton" value="${p.productId}">`;
-      outputString += '<i class="fa-solid fa-heart fa-2xl"></i></button>';
-    } else {
-      outputString += `<button class="faviroteButton" value="${p.productId}">`;
-      outputString += '<i class="fa-regular fa-heart fa-2xl"></i></button>';
+  let outputString =
+    "<div class='text-center fs-1 mb-5' style='height:450px'>查無資料</div>";
+  if (pList.length != 0) {
+    outputString = "";
+    for (let p of pList) {
+      outputString += '<div class="col-4 d-flex align-items-stretch">';
+      outputString += '<div class="card mb-3">';
+      outputString += '<div class="pic">';
+      outputString += `<img class="productImg" src="${root}/mall/getPhoto?pId=${p.productId}">`;
+      outputString += "</div>";
+      outputString += `<div class="card-header">${p.productPrice}元`;
+      if (p.isFavorite) {
+        outputString += `<button class="faviroteButton" value="${p.productId}">`;
+        outputString += '<i class="fa-solid fa-heart fa-2xl"></i></button>';
+      } else {
+        outputString += `<button class="faviroteButton" value="${p.productId}">`;
+        outputString += '<i class="fa-regular fa-heart fa-2xl"></i></button>';
+      }
+      outputString += "</div>";
+      outputString += '<div class="card-body">';
+      outputString += `<h3 class="title">${p.productName}</h3>`;
+      outputString += "<ul>";
+      outputString += `<li>${p.addedTime}</li>`;
+      outputString += `<li>${p.productDescription}</li>`;
+      outputString += `<li>${p.productPlayTime}</li>`;
+      outputString += `<li>${p.productMinPlayer}~${p.productMaxPlayer}</li>`;
+      outputString += `<li>${p.productDifficulty}</li>`;
+      outputString += "</ul>";
+      outputString += "</div>";
+      outputString += '<div class="card-footer">';
+      if (p.isInLibrary) {
+        outputString += "<div>已擁有</div>";
+      } else {
+        if (p.isInCart) {
+          outputString += `<button class="cartButton" value="${p.productId}">`;
+          outputString += '<i class="fa-solid fa-xmark fa-2xl"></i></button>';
+        } else {
+          outputString += `<button class="cartButton" value="${p.productId}">`;
+          outputString +=
+            '<i class="fa-solid fa-cart-plus fa-2xl"></i></button>';
+        }
+      }
+      outputString += "</div></div></div>";
     }
-    outputString += "</div>";
-    outputString += '<div class="card-body">';
-    outputString += `<h3 class="title">${p.productName}</h3>`;
-    outputString += "<ul>";
-    outputString += `<li>${p.addedTime}</li>`;
-    outputString += `<li>${p.productDescription}</li>`;
-    outputString += `<li>${p.productPlayTime}</li>`;
-    outputString += `<li>${p.productMinPlayer}~${p.productMaxPlayer}</li>`;
-    outputString += `<li>${p.productDifficulty}</li>`;
-    outputString += "</ul>";
-    outputString += "</div>";
-    outputString += '<div class="card-footer">';
-    if (p.isInCart) {
-      outputString += `<button class="cartButton" value="${p.productId}">`;
-      outputString += '<i class="fa-solid fa-xmark fa-2xl"></i></button>';
-    } else {
-      outputString += `<button class="cartButton" value="${p.productId}">`;
-      outputString += '<i class="fa-solid fa-cart-plus fa-2xl"></i></button>';
-    }
-    outputString += "</div></div></div>";
   }
   $("#dataHome").html(outputString);
 
@@ -183,18 +193,41 @@ pageButton.addEventListener("click", function (e) {
   getProductList(page, 6);
 });
 
+let productMinPrice = document.querySelector("#productMinPrice");
+let productMaxPrice = document.querySelector("#productMaxPrice");
+
 // 多條件查詢
 document.querySelector("#queryButton").addEventListener("click", function () {
-  let productpPlayTime = $("#productpPlayTime").val();
-  let productDifficulty = $("#productDifficulty").val();
+  let minPrice = productMinPrice.value;
+  let maxPrice = productMaxPrice.value;
+  if (minPrice == "") {
+    minPrice = 0;
+  }
+  if (maxPrice == "") {
+    maxPrice = 9999;
+  }
+  let requestBody = {
+    productpPlayTime: $("#productpPlayTime").val(),
+    productDifficulty: $("#productDifficulty").val(),
+    productMinPrice: minPrice,
+    productMaxPrice: maxPrice,
+  };
   axios
-    .post(`${root}/mall/multiConditionQuery`, {
-      productpPlayTime: productpPlayTime,
-      productDifficulty: productDifficulty,
-    })
+    .post(`${root}/mall/multiConditionQuery`, requestBody)
     .then((response) => {
-      console.log(response.data);
-      // renderProduct(response.data);
+      console.log(response);
+      renderProduct(response.data.content);
+      renderPageButton(response.data);
     })
     .catch((error) => console.log(error));
+});
+
+productMinPrice.addEventListener("change", function () {
+  productMaxPrice.min = this.value;
+});
+
+productMaxPrice.addEventListener("change", function () {
+  if (+this.value < +productMinPrice.value) {
+    this.value = productMinPrice.value;
+  }
 });

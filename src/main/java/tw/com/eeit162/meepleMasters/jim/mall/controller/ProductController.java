@@ -109,8 +109,13 @@ public class ProductController {
 	// 多條件查詢
 	@PostMapping("/mall/multiConditionQuery")
 	@ResponseBody
-	public PageImpl<Product> multiConditionQuery(@RequestBody String productContent) {
-		PageImpl<Product> pageImpl = pService.multiConditionQuery(1, 6, productContent);
+	public PageImpl<ProductDTO> multiConditionQuery(@RequestBody String productContent, HttpSession session) {
+
+		Member member = (Member) session.getAttribute("member");
+
+		Integer mID = member != null ? member.getMemberId() : null;
+		PageImpl<ProductDTO> pageImpl = pService.multiConditionQuery(1, 6, productContent, mID);
+
 		return pageImpl;
 	}
 }
