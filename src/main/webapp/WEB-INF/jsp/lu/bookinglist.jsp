@@ -99,7 +99,7 @@
 											<img alt src="/meeple-masters/img/lu/MeepleMasterStore.png">
 										</div>
 										<div class="selection-area">
-											<P>店名: MeepleMaster</P>
+											<p>店名: MeepleMaster</p>
 											<p>地址: 台北市大安區復興南路一段390號2樓</p>
 											<p>連絡電話: (02)2345-6789</p>
 											<form action="${root}/booking/continue">

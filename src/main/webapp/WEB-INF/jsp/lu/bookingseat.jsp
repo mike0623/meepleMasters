@@ -12,30 +12,65 @@
 							<title>${webName}</title>
 						
 							<style>
-							.table-btn {
-        background-repeat: no-repeat;
-        background-size: 200px 200px;
-        background-position: center;
-        border: none;
-        cursor: pointer;
-        width: 200px;
-        height: 200px;
-        outline: none;
-        background-image: url(/meeple-masters/img/lu/meeting-room.png);
+								.table-btn {
+									background-repeat: no-repeat;
+									background-size: 200px 200px;
+									background-position: center;
+									border: none;
+									cursor: pointer;
+									width: 200px;
+									height: 200px;
+									outline: none;
+								}
 
-        
-    }
 							
-								.table-btn.clicked {
-									background-image: url(/meeple-masters/img/lu/meeting-room-click.png);
-            /* 設定被點擊時的圖片 */
+								/* 定義每個按鈕的未點擊樣式 */
+								.table-btn.desk2 {
+									background-image: url(/meeple-masters/img/lu/meeting-room2.png);
+								}
+
+								.table-btn.desk4 {
+									background-image: url(/meeple-masters/img/lu/meeting-room4.png);
+								}
+
+								.table-btn.desk5 {
+									background-image: url(/meeple-masters/img/lu/meeting-room5.png);
+								}
+
+							
+									
+								
+								/* 設定unshow狀態的圖片 */
+								.table-btn.unshow2 {
+									background-image: url(/meeple-masters/img/lu/meeting-room-unshow2.png);
+													
+								}	
+
+								.table-btn.unshow4 {
+									background-image: url(/meeple-masters/img/lu/meeting-room-unshow4.png);
+           							 		
+								}	
+
+								.table-btn.unshow5 {
+									background-image: url(/meeple-masters/img/lu/meeting-room-unshow5.png);
+           							 			
 								}	
 								
-								.unshow {
-										background-image: url(/meeple-masters/img/lu/meeting-room-unshow.png);
-           							 /* 設定unshow狀態的圖片 */				
-								}	
-								
+
+								/* 定義每個按鈕的點擊樣式 */
+								.table-btn.desk2.clicked {
+									background-image: url(/meeple-masters/img/lu/meeting-room-click2.png);
+								}
+
+								.table-btn.desk4.clicked {
+									background-image: url(/meeple-masters/img/lu/meeting-room-click4.png);
+								}
+
+								.table-btn.desk5.clicked {
+									background-image: url(/meeple-masters/img/lu/meeting-room-click5.png);
+								}
+							
+
 								.container {
 									display: flex;
 									justify-content: center;
@@ -86,12 +121,13 @@
 										    </c:choose>
 										</c:forEach>
 										
-										<button type="button" class="table-btn ${desk1 ? 'unshow' : ''}" name="tableId" value="1" ${desk1 ? 'disabled' : ''}>2人桌(1號)</button>
-										<button type="button" class="table-btn ${desk2 ? 'unshow' : ''}" name="tableId" value="2" ${desk2 ? 'disabled' : ''}>2人桌(2號)</button>
-										<button type="button" class="table-btn ${desk3 ? 'unshow' : ''}" name="tableId" value="3" ${desk3 ? 'disabled' : ''}>4人桌(3號)</button>
-										<button type="button" class="table-btn ${desk4 ? 'unshow' : ''}" name="tableId" value="4" ${desk4 ? 'disabled' : ''}>4人桌(4號)</button>
-										<button type="button" class="table-btn ${desk5 ? 'unshow' : ''}" name="tableId" value="5" ${desk5 ? 'disabled' : ''}>5人桌(5號)</button>
-
+										
+										<button type="button" class="table-btn desk2 ${desk1 ? 'unshow2' : ''}" name="tableId" value="1" ${desk1 ? 'disabled' : ''}>2人桌(1號)</button>
+										<button type="button" class="table-btn desk2 ${desk2 ? 'unshow2' : ''}" name="tableId" value="2" ${desk2 ? 'disabled' : ''}>2人桌(2號)</button>
+										<button type="button" class="table-btn desk4 ${desk3 ? 'unshow4' : ''}" name="tableId" value="3" ${desk3 ? 'disabled' : ''}>4人桌(3號)</button>
+										<button type="button" class="table-btn desk4 ${desk4 ? 'unshow4' : ''}" name="tableId" value="4" ${desk4 ? 'disabled' : ''}>4人桌(4號)</button>
+										<button type="button" class="table-btn desk5 ${desk5 ? 'unshow5' : ''}" name="tableId" value="5" ${desk5 ? 'disabled' : ''}>5人桌(5號)</button>
+								
 
 										<br><br>
 										<input type="button" value="繼續" onclick="submitForm()">
@@ -109,28 +145,26 @@
 											tableNumberInput.type = 'hidden';
 											tableNumberInput.name = 'deskId';
 											tableNumberInput.value = clickedButton.value;
-											console.log('666666', clickedButton.value)
+										
 											document.forms[0].appendChild(tableNumberInput);
 										}
 										document.forms[0].submit(); // 提交表單
 									}
 
 									// 將每個按鈕加上click事件，當點擊時將其樣式更改
+									 window.addEventListener('DOMContentLoaded', function () {
+									// 將每個按鈕加上click事件，當點擊時切換其類別
 									const buttons = document.querySelectorAll('.table-btn');
 									for (let i = 0; i < buttons.length; i++) {
-										buttons[i].addEventListener('click', function () {
-											const clickedButton = document.querySelector('.table-btn.clicked');
-											if (clickedButton) {
-												clickedButton.classList.remove('clicked');
-											}
-											this.classList.add('clicked');
-										});
+									buttons[i].addEventListener('click', function () {
+										const clickedButton = document.querySelector('.table-btn.clicked');
+										if (clickedButton) {
+										clickedButton.classList.remove('clicked');
+										}
+										this.classList.add('clicked');
+									});
 									}
-									let DId = "${bookedDeskId}";
-									let TId = "${selectedTime}";
-									console.log("值="+DId);console.log()
-									console.log(TId)
-
+								});
 								</script>
 
 
