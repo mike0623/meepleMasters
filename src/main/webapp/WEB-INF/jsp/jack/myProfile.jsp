@@ -19,7 +19,7 @@
 							} */
 
                             .container.repeatContainer{
-                                margin-top:150px;
+                                margin-top:220px;
                             }
 
                             #divContainer{
