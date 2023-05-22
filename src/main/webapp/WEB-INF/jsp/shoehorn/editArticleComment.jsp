@@ -18,14 +18,15 @@
 		margin:auto;
 		text-align:center;
 	}
+	
 	label{
 		font-size:30px;
 	}
 	button{
   		font-size: 20px;
   }
-</style>
 
+</style>
 
 
 </head>
@@ -34,32 +35,26 @@
 <body>
 	<div class="bodyContainer">
 
-		<!-- 新增文章 -->
+		<!-- 顯示文章留言 -->
 		<div class="articleBody">
-		
-			<form action="${root}/newArticle" method="post">
 
-				<input type="text" id="poster" name="poster" value="${member.memberId}" style="display: none;"> <br>
-				
-				<label for="product">遊戲:</label>
-					<select id="product" name="product">
-						<c:forEach begin="0" end="${allProduct.size()-1}" step="1"	var="i">
-							<option value="${allProduct[i].productId}">${allProduct[i].productName}</option>
-						</c:forEach>
-					</select>
-				
-				<label for="title">標題:</label>
-				<input type="text" id="title" name="title"> <br>
-				
-				<label for="content">內容編輯:</label>
-				<textarea  id="editor" name="content"></textarea><br>
 
-				<button type="submit">新增</button>
+			<form action="${root}/editComment" method="post">
+
+				<input type="text" id="articleCommentId" name="articleCommentId" value="${articleComment.articleCommentId}" style="display: none;"> <br>
 				
+				<label for="content">留言內容編輯</label> 
+				<textarea  id="editor" name="content">${articleComment.articleCommentContent}</textarea> <br>
+
+				<button type="submit">修改</button>
+
+			</form>
+			<form action="${root}/deleteComment/${articleComment.articleCommentId}" method="get">
+				<button >刪除</button>
 			</form>
 
 		</div>
-		
+
 	</div>
 </body>
 <!-- 最下面標題 -->

@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
+import tw.com.eeit162.meepleMasters.lu.deskBooking.model.BookingDto;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.Article;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.ArticleComment;
+import tw.com.eeit162.meepleMasters.shoehorn.forum.model.ArticleCommentReview;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.ArticleReview;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.FaviroteArticle;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.FollowArticle;
@@ -39,17 +43,34 @@ public class ArticleController {
 		List<Integer> goodReviewCount = new ArrayList<Integer>();
 		List<Integer> badReviewCount = new ArrayList<Integer>();
 		List<Article> dynamicSelect = articleService.dynamicSelect(jsonObject.toString());
+		List<String> memberNameList = new ArrayList<String>();
+		List<String> productNameList = new ArrayList<String>();
+//		List<String> memberList = new ArrayList<String>();
+//		List<String> productList = new ArrayList<String>();
+		
+		List<Member> allMember = articleService.getAllMemberName();
+		List<Product> allProduct = articleService.getAllProductName();
+		
 		
 		for(Article article:dynamicSelect) {
 			Integer goodCount = articleService.selectArticleGoodReviewCount(article.getArticleId());
 			goodReviewCount.add(goodCount);
 			Integer badCount = articleService.selectArticleBadReviewCount(article.getArticleId());
 			badReviewCount.add(badCount);
+			
+			String memberName = articleService.getMemberName(article.getFkMemberId());
+			memberNameList.add(memberName);
+			String productName = articleService.getProductName(article.getFkProductId());
+			productNameList.add(productName);
 		}
 		
 		model.addAttribute("articleList",dynamicSelect);
 		model.addAttribute("goodReviewCount",goodReviewCount);
 		model.addAttribute("badReviewCount",badReviewCount);
+		model.addAttribute("memberNameList",memberNameList);
+		model.addAttribute("productNameList",productNameList);
+		model.addAttribute("allMember",allMember);
+		model.addAttribute("allProduct",allProduct);
 		
 		return "shoehorn/forum";
 	}
@@ -59,28 +80,42 @@ public class ArticleController {
 	@PostMapping("/forum")
 	public String forumIndexPage(
 //			@RequestBody(required = false) String body,
-			@RequestParam(name = "poster",required = false) Integer poster,
+			@RequestParam(name = "poster",required = false) String poster,
 			@RequestParam(name = "product",required = false) Integer product,
 			@RequestParam(name = "title",required = false) String title,
 			Model model) {
 		
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("memberId", poster);
+		jsonObject.put("memberId", articleService.getInputMemberId(poster));
 		jsonObject.put("productId", product);
 		jsonObject.put("articleTitle", title);
 
 		List<Integer> goodReviewCount = new ArrayList<Integer>();
 		List<Integer> badReviewCount = new ArrayList<Integer>();
 		List<Article> dynamicSelect = articleService.dynamicSelect(jsonObject.toString());
+		List<String> memberNameList = new ArrayList<String>();
+		List<String> productNameList = new ArrayList<String>();
+		List<Member> allMember = articleService.getAllMemberName();
+		List<Product> allProduct = articleService.getAllProductName();
+		
 		for(Article article:dynamicSelect) {
 			Integer goodCount = articleService.selectArticleGoodReviewCount(article.getArticleId());
 			goodReviewCount.add(goodCount);
 			Integer badCount = articleService.selectArticleBadReviewCount(article.getArticleId());
 			badReviewCount.add(badCount);
+			
+			String memberName = articleService.getMemberName(article.getFkMemberId());
+			memberNameList.add(memberName);
+			String productName = articleService.getProductName(article.getFkProductId());
+			productNameList.add(productName);
 		}
 		model.addAttribute("articleList",dynamicSelect);
 		model.addAttribute("goodReviewCount",goodReviewCount);
 		model.addAttribute("badReviewCount",badReviewCount);
+		model.addAttribute("memberNameList",memberNameList);
+		model.addAttribute("productNameList",productNameList);
+		model.addAttribute("allMember",allMember);
+		model.addAttribute("allProduct",allProduct);
 		
 		return "shoehorn/forum";
 	}
@@ -88,7 +123,9 @@ public class ArticleController {
 //	起始新增文章頁面------------------------------------------
 	
 	@GetMapping("/newArticle")
-	public String newArticle() {
+	public String newArticle(Model model) {
+		List<Product> allProduct = articleService.getAllProductName();
+		model.addAttribute("allProduct",allProduct);
 		return "shoehorn/newArticle";
 	}
 	
@@ -119,6 +156,21 @@ public class ArticleController {
 			Model model,
 			HttpSession session
 			) {
+		//---------------------------------
+//		List<comment> articleComments ;
+//		List<Dto> dtoList= new List<Dto>();
+//		for(Comment comment:articleComments) {
+//			Dto dto = new Dto();
+//			dto.setCommentId(comment.getId);
+//			dto.setCommentId(comment.getarticleId);
+//			dto.setCommentId(comment.memberId);
+//			MemberDao member = MemberDao.findById(memberId);
+//			dto.setCommentId(member.getName);
+//			dtoList.add(dto);
+//		}
+//		model.addAttribute("dtoList", dtoList);
+//		JSONObject.put("dtoList", dtoList);
+		//---------------------------------
 		
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("articleId", articleId);
@@ -128,6 +180,12 @@ public class ArticleController {
 		Article article = list.get(0);
 		
 		model.addAttribute("article", article);
+		
+		String memberName = articleService.getMemberName(article.getFkMemberId());
+		String productName = articleService.getProductName(article.getFkProductId());
+		
+		model.addAttribute("memberName", memberName);
+		model.addAttribute("productName", productName);
 		
 		
 //		確認是否登入、登入者為文章發布者才能修改
@@ -151,13 +209,52 @@ public class ArticleController {
 				model.addAttribute("review", review);
 			}
 			
-//			System.out.println(articleReview.getArticleReview());
 			
 			if (member.getMemberId()==article.getFkMemberId()) {
 //				同一人才能修改刪除
 				model.addAttribute("author", true);
 			}
 		}
+		
+		
+//		取得該文章的留言
+		List<ArticleComment> articleCommentList = articleService.selectArticleComment(new JSONObject().put("articleId", articleId).toString());
+		
+//		System.out.println(articleCommentList.size());
+		
+		model.addAttribute("articleCommentList",articleCommentList);
+		
+//		取得文章留言的讚、噓總數
+		List<Integer> goodReviewCount = new ArrayList<Integer>();
+		List<Integer> badReviewCount = new ArrayList<Integer>();
+		List<Boolean> cReview = new ArrayList<Boolean>();
+		List<String> memberNameList = new ArrayList<String>();
+
+		
+		for(ArticleComment articleComment:articleCommentList) {
+			Integer goodCount = articleService.selectArticleCommentGoodReviewCount(articleComment.getArticleCommentId());
+			goodReviewCount.add(goodCount);
+			Integer badCount = articleService.selectArticleCommentBadReviewCount(articleComment.getArticleCommentId());
+			badReviewCount.add(badCount);
+			
+			String mName = articleService.getMemberName(articleComment.getFkMemberId());
+			memberNameList.add(mName);
+			
+			if (member!=null) {
+				ArticleCommentReview selectArticleCommentReviewByMemberId = articleService.selectArticleCommentReviewByMemberId(member.getMemberId(),articleComment.getArticleCommentId());
+				
+				cReview.add(selectArticleCommentReviewByMemberId!=null?selectArticleCommentReviewByMemberId.getCommentReview():null);
+			}
+		}
+
+		
+		model.addAttribute("goodReviewCount",goodReviewCount);
+		model.addAttribute("badReviewCount",badReviewCount);
+		model.addAttribute("creview",cReview);
+		model.addAttribute("memberNameList",memberNameList);
+		
+//		取得文章留言的review
+
 		
 		return "shoehorn/article";
 		
@@ -176,7 +273,10 @@ public class ArticleController {
 		
 		Article article = list.get(0);
 		
+		String productName = articleService.getProductName(article.getFkProductId());
+		
 		model.addAttribute("article", article);
+		model.addAttribute("productName", productName);
 		
 		return "shoehorn/editArticle";
 	}
@@ -220,7 +320,7 @@ public class ArticleController {
 		return "redirect:/forum";
 	}
 	
-//	讚、噓-----------------------------------------
+//	文章 讚、噓-----------------------------------------
 	@PostMapping("/article/like")
 	@ResponseBody
 	public String like(@RequestBody String body) {
@@ -247,15 +347,107 @@ public class ArticleController {
 		return response.toString();
 	}
 	
+//	文章留言 讚、噓-----------------------------------------
+	@PostMapping("/articleComment/like")
+	@ResponseBody
+	public String clike(@RequestBody String body) {
+		
+		JSONObject jsonObject = new JSONObject(body);
+		
+		ArticleCommentReview commentReview = articleService.selectArticleCommentReviewByMemberId(jsonObject.getInt("memberId"), jsonObject.getInt("articleCommentId"));
+		
+		
+
+		Integer articleCommentReviewId = commentReview!=null?commentReview.getArticleCommentReviewId():null;
+		
+		jsonObject.put("articleCommentReviewId", articleCommentReviewId);
+		
+		articleService.updateArticleCommentReview(jsonObject.toString());
+		
+		ArticleCommentReview creview = articleService.selectArticleCommentReviewByMemberId(jsonObject.getInt("memberId"), jsonObject.getInt("articleCommentId"));
+		
+		JSONObject response = new JSONObject();
+		response.put("creview", creview.getCommentReview());
+		response.put("xxx", "xxx");
+		
+		return response.toString();
+	}
+	
+	
 //	新增文章留言---------------------------------------------
 	
+	@PostMapping("/newArticleComment")
+	public String newArticleComment(
+		@RequestParam(name = "articleId",required = false) Integer articleId,
+		@RequestParam(name = "poster",required = false) Integer poster,
+		@RequestParam(name = "product",required = false) Integer product,
+		@RequestParam(name = "content",required = false) String content) {
 	
-	
-	
+	JSONObject jsonObject = new JSONObject();
+	jsonObject.put("memberId", poster);
+	jsonObject.put("articleId", articleId);
+	jsonObject.put("productId", product);
+	jsonObject.put("content", content);
 
+	articleService.createArticleComment(jsonObject.toString());
+	
+	return "redirect:/article?articleId="+articleId;
+}
+	
+	
+//	進入修改文章留言頁面---------------------------------------------
+	
+	@GetMapping("/articleComment")
+	public String articleComment(@RequestParam(value = "articleCommentId")Integer articleCommentId,
+			Model model) {
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("articleCommentId", articleCommentId);
+		
+		List<ArticleComment> list = articleService.selectArticleComment(jsonObject.toString());
+		
+		ArticleComment articleComment = list.get(0);
+		
+		model.addAttribute("articleComment", articleComment);
+		
+		return "shoehorn/editArticleComment";
+	}
+	
+	
+//	修改文章留言
+	@PostMapping("/editComment")
+	public String editComment(
+			@RequestParam(name = "articleCommentId",required = false) Integer articleCommentId,
+			@RequestParam(name = "content",required = false) String content
+			) {
+		
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("articleCommentId", articleCommentId);
+		jsonObject.put("content", content);
+		
+		articleService.updateArticleComment(jsonObject.toString());
+		
+		return "redirect:/article?articleId="+articleService.selectArticleComment(jsonObject.toString()).get(0).getFkArticleId();
+	}
 
+//	刪除文章留言
 	
-	
+	@GetMapping("/deleteComment/{articleCommentId}")
+	public String deleteComment(@PathVariable(value = "articleCommentId")Integer articleCommentId) {
+		
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("articleCommentId", articleCommentId);
+		
+		List<ArticleComment> articleComment = articleService.selectArticleComment(jsonObject.toString());
+		
+		Integer articleId = articleComment.get(0).getFkArticleId();
+		
+		articleService.deleteArticleComment(jsonObject.toString());
+		
+		return "redirect:/article?articleId="+articleId;
+	}
 	
 	
 	

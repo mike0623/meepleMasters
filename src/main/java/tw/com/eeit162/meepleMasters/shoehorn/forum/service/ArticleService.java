@@ -11,6 +11,10 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
+import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
+import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
+import tw.com.eeit162.meepleMasters.jim.mall.model.dao.ProductDAO;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.Article;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.ArticleComment;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.ArticleCommentDao;
@@ -39,6 +43,10 @@ public class ArticleService {
 	private FaviroteArticleDao faviroteArticleDao;
 	@Autowired
 	private FollowArticleDao followArticleDao;
+	@Autowired
+	private MemberDao memberDao;
+	@Autowired
+	private ProductDAO productDAO;
 	
 //	-----Article-----
 	
@@ -311,6 +319,26 @@ public class ArticleService {
 
 	}
 	
+//	查詢文章留言評價ByMemberId
+	public ArticleCommentReview selectArticleCommentReviewByMemberId(Integer memberId,Integer articleCommentId) {
+		return articleCommentReviewDao.selectArticleCommentReviewByMemberId(memberId, articleCommentId);
+	}
+	
+	
+	
+//	查詢文章留言評價總數byArticleCommentId
+	public Integer selectArticleCommentGoodReviewCount(Integer articleCommentId) {
+		
+		return articleCommentReviewDao.selectArticleCommentGoodReviewCount(articleCommentId);
+		
+	}
+	
+	public Integer selectArticleCommentBadReviewCount(Integer articleCommentId) {
+		
+		return articleCommentReviewDao.selectArticleCommentBadReviewCount(articleCommentId);
+		
+	}
+	
 	
 //	-----FaviroteArticle-----
 	
@@ -397,6 +425,34 @@ public class ArticleService {
 		return followArticleDao.findByFkArticleId(jsonObject.getInt("articleId"));
 	}
 	
+//	取得memberName
+	public String getMemberName(Integer memberId) {
+		return memberDao.findById(memberId).get().getMemberName();
+	}
+	
+//	取得productName
+	public String getProductName(Integer producyId) {
+		return productDAO.findById(producyId).get().getProductName();
+	}
+	
+//	取得所有member
+	public List<Member> getAllMemberName() {
+		return memberDao.findAll();
+	}
+	
+//	取得所有product
+	public List<Product> getAllProductName() {
+		return productDAO.findAll();
+	}
+	
+	public Integer getInputMemberId(String name) {
+		
+		if (memberDao.findMemberByName(name).isEmpty()) {
+			return null;
+		}
+		
+		return memberDao.findMemberByName(name).get(0).getMemberId();
+	}
 }
 
 

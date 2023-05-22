@@ -10,6 +10,50 @@
 <meta charset="UTF-8">
 <title>${webName}</title>
 <link rel="stylesheet" type="text/css" href="${root}/css/index.css" />
+
+<style>
+
+	.articleBody{
+		width:60%;
+		margin:auto;
+		text-align:center;
+	}
+	
+
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  td {
+    padding: 5px;
+  }
+  label {
+    font-size: 25px;
+    display: inline-block;
+    text-align: right;
+    margin-right: 10px;
+  }
+  input[type="text"],
+  textarea {
+    font-size: 30px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .center-text {
+    text-align: center;
+  }
+  .display-value {
+    font-size: 25px;
+    vertical-align: middle;
+  }
+  button{
+  	font-size: 20px;
+  }
+
+</style>
+
+
 </head>
 <!-- 最上面那排bar -->
 <jsp:include page="../include/header.jsp" />
@@ -17,36 +61,36 @@
 	<div class="bodyContainer">
 
 		<!-- 顯示文章 -->
-		<div>
+		<div class="articleBody">
 
 
-			<form action="${root}/edit" method="post">
-
-				<input type="text" id="articleId" name="articleId" value="${article.articleId}" style="display: none;"> <br>
-
-				<label for="poster">Poster:</label> 
-				<input type="text" id="poster" name="poster" value="${article.fkMemberId}"> <br> 
-				
-				<label for="product">Product:</label>
-				<input type="text" id="product" name="product" value="${article.fkProductId}"> <br> 
-				
-				<label for="createdDate">CreatedDate:</label> 
-				<input type="text" id="createdDate" name="createdDate" value="${article.articleCreatedDate}"> <br>
-				
-				<label for="title">Title:</label> 
-				<input type="text" id="title" name="title" value="${article.articleTitle}"> <br>
-				
-				<label for="content">Content:</label> 
-				<textarea  id="editor" name="content">${article.articleContent}</textarea> <br>
-
-				<button type="submit">修改</button>
-
-			</form>
-
-
-
-
-
+<form action="${root}/edit" method="post">
+  <table>
+    <tr>
+      <td><label for="product">遊戲:</label></td>
+      <td class="display-value">${productName}</td>
+      <td><label for="createdDate">發文日期:</label></td>
+      <td class="display-value"><fmt:formatDate type="both" dateStyle="short" timeStyle="short"  
+value="${article.articleCreatedDate}" /></td>
+      <td><label for="title">標題:</label></td>
+      <td><input type="text" id="title" name="title" value="${article.articleTitle}"></td>
+    </tr>
+    <tr>
+      <td colspan="6" class="center-text">
+        <label for="content">內容編輯:</label>
+        <br>
+        <textarea id="editor" name="content">${article.articleContent}</textarea>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="6" style="text-align: center;">
+        <input type="text" id="articleId" name="articleId" value="${article.articleId}" style="display: none;">
+        <input type="text" id="poster" name="poster" value="${article.fkMemberId}" style="display: none;">
+        <button type="submit">修改</button>
+      </td>
+    </tr>
+  </table>
+</form>
 
 
 
