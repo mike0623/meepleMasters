@@ -27,7 +27,16 @@
 					<div class="adsContent">
 						挑戰德州撲克！<br />世界上最流行的公牌撲克，目標贏取彩池中的所有彩金！
 					</div>
-					<button class="button-19" role="button">開始遊玩</button>
+					<c:if test="${member == null}">
+					<form action="${root}/member/login">
+						<button class="button-19" role="button">開始遊玩</button>
+					</form>
+					</c:if>
+					<c:if test="${member != null}">
+					<form action="${root}/game/playGameLobby">
+						<button class="button-19" role="button">開始遊玩</button>
+					</form>
+					</c:if>
 				</div>
 			</div>
 
