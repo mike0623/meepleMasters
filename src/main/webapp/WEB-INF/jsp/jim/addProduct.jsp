@@ -109,13 +109,13 @@ prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
     <script>
       // 一鍵輸入測試資料
       $("#newTest").on("click", function () {
-        $("#productName").val("測試用商品");
+        $("#productName").val("測試用撲克牌");
         $("#productPrice").val("162");
-        $("#productDescription").val("說明商品的地方");
-        $("#productPlayTime").val("簡短普通耗時");
-        $("#productMaxPlayer").val("8");
-        $("#productMinPlayer").val("4");
-        $("#productDifficulty").val("簡單普通困難");
+        $("#productDescription").val("商品說明");
+        $("#productPlayTime").val("普通");
+        $("#productMaxPlayer").val("6");
+        $("#productMinPlayer").val("2");
+        $("#productDifficulty").val("普通");
       });
       // 顯示上傳圖片的預覽圖
       let productImg = $("#productImg");
