@@ -31,10 +31,10 @@ pageEncoding="UTF-8"%>
         height: 100px;
         vertical-align: middle;
       }
-      .text-center{
+      .text-center {
         font-size: 25px;
       }
-      .text-right{
+      .text-right {
         font-size: 25px;
       }
     </style>
@@ -126,11 +126,12 @@ pageEncoding="UTF-8"%>
                 </div>
               </div>
             </div>
-            <form action="${root}/shoppingCart/cartToOreder/${member.memberId}">
+            <form
+              action="${root}/shoppingCart/cartToOreder/${member.memberId}"
+              id="checkoutForm"
+            >
               <div class="float-right">
-                <button type="submit" class="btn btn-lg btn-primary mt-2">
-                  結帳
-                </button>
+                <button class="btn btn-lg btn-primary mt-2">成立訂單</button>
               </div>
             </form>
           </div>
@@ -219,6 +220,25 @@ pageEncoding="UTF-8"%>
           });
         }
       }
+      //送出表單前確認
+      document
+        .querySelector("#checkoutForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          Swal.fire({
+            title: "確定成立訂單",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "確定",
+            cancelButtonText: "取消",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.submit();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+              console.log("取消");
+            }
+          });
+        });
     </script>
   </body>
 </html>

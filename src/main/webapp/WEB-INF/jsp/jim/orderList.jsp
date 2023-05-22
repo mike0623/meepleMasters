@@ -71,7 +71,7 @@ prefix="c"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
       (function init() {
         let oldOrderStatus = "${oldOrderExist}";
         if (oldOrderStatus == "舊訂單存在") {
-          Swal.fire("有訂單尚未付款");
+          Swal.fire("您有訂單尚未付款");
         }
       })();
     </script>

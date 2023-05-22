@@ -79,8 +79,8 @@ prefix="c"%>
       }
 
       .btn2 {
-        background-color: #F3D18E;
-        color: #613E3B;
+        background-color: #f3d18e;
+        color: #613e3b;
         padding: 12px;
         margin: 10px 0;
         border: none;
@@ -194,7 +194,7 @@ prefix="c"%>
                         <option value="綠界">綠界</option>
                         <option value="LinePay">LinePay</option>
                       </select>
-                      <input type="submit" value="確定送出" class="btn2" />
+                      <input type="submit" value="送出" class="btn2" />
                     </div>
                   </div>
                 </div>
@@ -216,6 +216,24 @@ prefix="c"%>
           document.getElementById("orderForm").action = "${root}/order/linePay";
         }
       });
+
+      document
+        .querySelector("#orderForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          Swal.fire({
+            title: "確定結帳",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "確定",
+            cancelButtonText: "取消",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.submit();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+            }
+          });
+        });
     </script>
   </body>
 </html>
