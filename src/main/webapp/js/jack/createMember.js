@@ -9,6 +9,21 @@ const address = document.querySelector("#address")
 
 const inputs = [memberName, email, password, confirmPwd, birth, gender, tel, address];
 
+document.querySelector("#wrong").addEventListener("click", function () {
+  memberName.value = "jack",
+    email.value = "testmeeple@",
+    password.value = "1234",
+    confirmPwd.value = "eeit1622",
+    birth.value = '2002-05-30',
+    gender.value = "男",
+    tel.value = "091234567",
+    address.value = "台北市"
+
+});
+
+document.querySelector("#usedEmail").addEventListener("click", function () {
+    email.value = "BBB@gmail.com"
+});
 
 document.querySelector("#member").addEventListener("click", function () {
   memberName.value = "jack",

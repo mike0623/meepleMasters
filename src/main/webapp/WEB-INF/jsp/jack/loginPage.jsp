@@ -76,7 +76,7 @@
                         Member3
                       </button>
                       <button class="btn btn-outline-danger btn-sm" type="button" id="member4">
-                        未驗證
+                        新帳號
                       </button>
                       <div style="margin-top: 10px;">
                         <button class="btn btn-outline-secondary btn-sm" type="button" id="reset">

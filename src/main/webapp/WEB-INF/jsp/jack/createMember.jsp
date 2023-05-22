@@ -115,6 +115,12 @@
                       </div>
                     </div>
                   </form>
+                  <button class="btn btn-outline-primary btn-sm" type="button" id="wrong">
+                    錯誤格式
+                  </button>
+                  <button class="btn btn-outline-primary btn-sm" type="button" id="usedEmail">
+                    已註冊帳號
+                  </button>
                   <button class="btn btn-outline-primary btn-sm" type="button" id="member">
                     註冊測試
                   </button>

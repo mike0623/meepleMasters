@@ -25,10 +25,10 @@ document.querySelector("#member3").addEventListener("click", function () {
   password.value = "asd123123"
 });
 
-// member4按鈕
+// member4按鈕 新帳號
 document.querySelector("#member4").addEventListener("click", function () {
-  email.value = "FFF@gmail.com",
-  password.value = "asd123123"
+  email.value = "testmeeple@gmail.com",
+  password.value = "eeit1622"
 });
   
   // reset按鈕
