@@ -111,7 +111,7 @@ public class OrderController {
 
 		oService.setOrderStatus(member.getMemberId());
 
-		return "redirect:/order/orderList";
+		return "redirect:/order/orderList?memberId=" + member.getMemberId();
 	}
 
 	// 透過會員ID找到他的所有訂單
