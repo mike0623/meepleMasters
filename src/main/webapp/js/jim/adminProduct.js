@@ -17,13 +17,19 @@ function getProductList(page, count) {
       renderPageButton(response.data);
     });
 }
+
 function renderProduct(pList) {
   let outputString = "";
   for (let p of pList) {
+    const dateString = `${p.addedTime}`;
+    const date = new Date(dateString);
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const formattedDate = date.toLocaleString("zh-TW", options);
+
     outputString += "<tr>";
     outputString += `<td>${p.productName}</td>`;
     outputString += `<td>${p.productPrice}元</td>`;
-    outputString += `<td>${p.addedTime}</td>`;
+    outputString += "<td>" + formattedDate + "</td>";
     outputString += `<td>${p.productDescription}</td>`;
     outputString += `<td>${p.productPlayTime}</td>`;
     outputString += `<td>${p.productMinPlayer}~${p.productMaxPlayer}</td>`;

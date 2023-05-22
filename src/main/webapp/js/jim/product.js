@@ -13,7 +13,6 @@ function getProductList(page = 1, count = 6) {
       },
     })
     .then((response) => {
-      console.log(response);
       renderProduct(response.data.content);
       renderPageButton(response.data);
     });
@@ -26,6 +25,11 @@ function renderProduct(pList) {
   if (pList.length != 0) {
     outputString = "";
     for (let p of pList) {
+      const dateString = `${p.addedTime}`;
+      const date = new Date(dateString);
+      const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+      const formattedDate = date.toLocaleString("zh-TW", options);
+
       outputString += '<div class="col-4 d-flex align-items-stretch">';
       outputString += '<div class="card mb-3">';
       outputString += '<div class="pic">';
@@ -43,7 +47,7 @@ function renderProduct(pList) {
       outputString += '<div class="card-body">';
       outputString += `<h3 class="title">${p.productName}</h3>`;
       outputString += "<ul>";
-      outputString += `<li>${p.addedTime}</li>`;
+      outputString += "<li>" + formattedDate + "</li>";
       outputString += `<li>${p.productDescription}</li>`;
       outputString += `<li>${p.productPlayTime}</li>`;
       outputString += `<li>${p.productMinPlayer}~${p.productMaxPlayer}</li>`;
@@ -215,7 +219,6 @@ document.querySelector("#queryButton").addEventListener("click", function () {
   axios
     .post(`${root}/mall/multiConditionQuery`, requestBody)
     .then((response) => {
-      console.log(response);
       renderProduct(response.data.content);
       renderPageButton(response.data);
     })
