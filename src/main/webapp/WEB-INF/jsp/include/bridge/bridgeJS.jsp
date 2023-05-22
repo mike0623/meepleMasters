@@ -224,7 +224,7 @@
 				                    <td>隊伍</td>
 				                    <td>個人贏得墩數</td>
 				                    <td>熟練度增減</td>
-				                    <td>金幣增加</td>
+				                    <td>米寶幣增加</td>
 				                </tr>`+winTeanPlayerTr+` `+loseTeanPlayerTr+`
 				            </tbody>
 				        </table>

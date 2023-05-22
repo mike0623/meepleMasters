@@ -49,6 +49,12 @@ public class PagesController {
 	//跳轉到遊戲大廳
 	@GetMapping("/game/playGameLobby")
 	public String playGameLobby(HttpSession session,Model model) {
+		if(session.getAttribute("tableCode") != null) {
+			Member member = (Member)session.getAttribute("member");
+			System.out.println("進入遊戲大廳時"+member.getMemberName()+session.getAttribute("tableCode"));
+		}else {
+			System.out.println("沒有table喔");
+		}
 		Member member = (Member)session.getAttribute("member");
 		//增加我的最愛的modelAttr
 		FavoriteGameList favoriteGameList = DataInterface.getFaveriteGameByEmail(member.getMemberEmail());

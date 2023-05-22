@@ -190,7 +190,11 @@ public class GameRoomController {
 	//玩家離開房間
 	@GetMapping("/game/playerLeaveGame/{tableCode}/{memberEmail}")
 	public String playerLeaveGame(@PathVariable("tableCode") String tableCode,@PathVariable("memberEmail") String memberEmail,HttpSession session) {
-		session.removeAttribute("tableCode");
+		//如果離開房間的玩家是本人，才清session
+		Member myself = (Member)session.getAttribute("member");
+		if(memberEmail.equals(myself.getMemberEmail())) {
+			session.removeAttribute("tableCode");
+		}
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
 		game.removePlayer(memberEmail);
 		
@@ -258,6 +262,7 @@ public class GameRoomController {
 		//-----------------------------------------------------------------
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
 		session.setAttribute("tableCode", tableCode);
+		System.out.println("玩家: "+memberEmail+" 有進來建立table的session"+session.getAttribute("tableCode"));
 		if(game ==null) {
 			session.removeAttribute("tableCode");
 			return "redirect:/game/playGameLobby";
@@ -334,7 +339,7 @@ public class GameRoomController {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("action", "youHaveBeenKickOutOfTheRoom");
 		WebsocketUtil.sendMessageByUserEmail(memberEmail,jsonObject.toString());
-		
+
 		return "redirect:/game/playerLeaveGame/"+tableCode+"/"+memberEmail;
 	}
 	

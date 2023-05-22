@@ -240,9 +240,9 @@ ol, ul {
 		//踢出玩家
 		function kickPlayerOut(playerEmail,playerName){
 			axios.get("${root}/game/kickPlayerOut/${tableCode}/"+playerEmail).then(function(response){
-				//當有人離開時，ws會更改頁面，這邊就不再做一次
-				//$(".hasSeat."+playerName).remove();
-				//$(".players").append(`<div class="player freeSeat">自由位</div>`);
+// 				ws已通知已重新整理頁面
+// 				$(".hasSeat."+playerName).remove();
+// 				$(".players").append(`<div class="player freeSeat">自由位</div>`);
 			}).catch(function(error){
 				console.log("踢出玩家出錯啦",error);
 			}).finally(function(){

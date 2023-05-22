@@ -323,7 +323,7 @@
 						<td></td>
 						<td>原本分數</td>
 						<td>增減分數</td>
-						<td>增加遊戲幣</td>
+						<td>增加米寶幣</td>
 					</tr>
 					<tr>
 						<td>`+json.winner+`</td>

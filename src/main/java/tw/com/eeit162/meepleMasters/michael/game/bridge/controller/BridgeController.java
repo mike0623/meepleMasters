@@ -306,6 +306,7 @@ public class BridgeController {
 	public String giveUpGame(HttpSession session) {
 		Member member = (Member)session.getAttribute("member");
 		String tableCode = (String)session.getAttribute("tableCode");
+		System.out.println("放棄遊戲的: 玩家: "+member.getMemberName()+"目前遊戲桌 "+tableCode);
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
 		Bridge bridge = (Bridge)game;
 		
@@ -328,6 +329,7 @@ public class BridgeController {
 	public String forTwoPlayersfastForward(HttpSession session) {
 		String tableCode = (String)session.getAttribute("tableCode");
 		Member member = (Member)session.getAttribute("member");
+		System.out.println("快轉遊戲的: 玩家: "+member.getMemberName()+"目前遊戲桌 "+tableCode);
 		String memberEmail = member.getMemberEmail();
 		
 		Game game = GameRoomUtil.getGameByTableCode(tableCode);
