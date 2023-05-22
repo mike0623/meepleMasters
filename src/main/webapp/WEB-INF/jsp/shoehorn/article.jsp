@@ -165,10 +165,10 @@ value="${article.articleCreatedDate}" /></td>
 
 
 
-				<h2 class="thirdH2">新增文章留言</h2>
 				<!-- 顯示文章留言 -->
 				<div class="newArticleComment">
 				<c:if test="${member != null}">
+				<h2 class="thirdH2">新增文章留言</h2>
 					<form action="${root}/newArticleComment" method="post">
 						<input type="text" id="articleId" name="articleId"
 							value="${article.articleId}" style="display: none;"> <input
