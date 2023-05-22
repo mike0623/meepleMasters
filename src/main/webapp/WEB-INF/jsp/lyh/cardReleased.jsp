@@ -353,6 +353,7 @@
                                                 clearInterval(intervalId);
                                             }
                                         }).then((result) => {
+                                            console.log("???")
                                             if (result.isConfirmed) {
                                                 Swal.fire({
                                                     title: `確定要提前結標？`,
@@ -1055,9 +1056,26 @@
                                                 clearInterval(intervalId);
                                             }
                                         }).then((result) => {
+                                            console.log("???")
                                             if (result.isConfirmed) {
-                                                axios.post("${root}/released/stopAuction?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.purchasePrice)
-                                                window.location.href = "${root}/card/releasedList";
+                                                Swal.fire({
+                                                    title: `確定要提前結標？`,
+                                                    showCancelButton: true,
+                                                    confirmButtonText: '<i class="fa-regular fa-circle-check"></i> 確定',
+                                                    cancelButtonText: '<i class="fa-regular fa-circle-xmark"></i> 取消',
+                                                    confirmButtonColor: '#CA7159',
+                                                    cancelButtonColor: '#CBC0AA',
+                                                    customClass: 'confirmAlert',
+                                                    reverseButtons: true
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        axios.post("${root}/released/stopAuction?releasedId=" + res.data.releasedId + "&ownedId=" + res.data.ownedId + "&price=" + res.data.purchasePrice)
+
+                                                        $(".myCoin").empty();
+                                                        $(".myCoin").append(memberCoin);
+                                                        window.location.href = "${root}/card/releasedList"
+                                                    }
+                                                })
                                             }
                                         })
                                     }
