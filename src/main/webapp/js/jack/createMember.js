@@ -16,7 +16,7 @@ document.querySelector("#wrong").addEventListener("click", function () {
     confirmPwd.value = "eeit1622",
     birth.value = '2002-05-30',
     gender.value = "男",
-    tel.value = "091234567",
+    tel.value = "0912345678",
     address.value = "台北市"
 
 });
@@ -105,7 +105,7 @@ function formatPhoneNumber(phoneNumberString) {
 tel.addEventListener("blur", function () {
   tel.value = formatPhoneNumber(tel.value);
   if (!/^\d{4}-\d{3}-\d{3}$/.test(tel.value)) {
-    document.querySelector("#tel-error").innerText = "請輸入手機號碼"
+    document.querySelector("#tel-error").innerText = "請輸入正確手機號碼"
     tel.classList.add("is-invalid");
   }
 
