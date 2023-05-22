@@ -447,6 +447,11 @@ public class ArticleService {
 	
 	public Integer getInputMemberId(String name) {
 		
+		if (name=="") {
+			System.out.println("空的");
+			return null;
+		}
+		
 		if (memberDao.findMemberByName(name).isEmpty()) {
 			return null;
 		}

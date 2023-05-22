@@ -60,10 +60,10 @@ label {
 					
 					<label for="product">遊戲:</label> 
 					<select id="product" name="product">
+						<option value=""></option>
 						<c:forEach begin="0" end="${allProduct.size()-1}" step="1"	var="i">
 							<option value="${allProduct[i].productId}">${allProduct[i].productName}</option>
 						</c:forEach>
-						<option value=""></option>
 					</select>
 					
 					<label for="title">標題:</label> 

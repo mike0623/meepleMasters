@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tw.com.eeit162.meepleMasters.jack.model.bean.Member;
-import tw.com.eeit162.meepleMasters.jack.model.dao.MemberDao;
 import tw.com.eeit162.meepleMasters.jim.mall.model.bean.Product;
-import tw.com.eeit162.meepleMasters.lu.deskBooking.model.BookingDto;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.Article;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.ArticleComment;
 import tw.com.eeit162.meepleMasters.shoehorn.forum.model.ArticleCommentReview;
@@ -87,6 +85,7 @@ public class ArticleController {
 		
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("memberId", articleService.getInputMemberId(poster));
+		System.out.println("memberId: "+articleService.getInputMemberId(poster));
 		jsonObject.put("productId", product);
 		jsonObject.put("articleTitle", title);
 

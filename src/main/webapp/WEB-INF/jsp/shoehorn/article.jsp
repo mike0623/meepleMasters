@@ -141,12 +141,11 @@ value="${article.articleCreatedDate}" /></td>
 					<c:if test="${articleCommentList.size()>= 1}">
 						<c:forEach begin="0" end="${articleCommentList.size()-1}" step="1"
 							var="i">
-							<tr id="status${creview[i]}"
-								onclick="<c:if test='${member.memberId == articleCommentList[i].fkMemberId}'>location.href='${root}/articleComment?articleCommentId=${articleCommentList[i].articleCommentId}'</c:if>">
-								<td>${memberNameList[i]}</td>
-								<td>${articleCommentList[i].articleCommentContent}</td>
-								<td>${goodReviewCount[i]}</td>
-								<td>${badReviewCount[i]}</td>
+							<tr id="status${creview[i]}">
+								<td onclick="<c:if test='${member.memberId == articleCommentList[i].fkMemberId}'>location.href='${root}/articleComment?articleCommentId=${articleCommentList[i].articleCommentId}'</c:if>">${memberNameList[i]}</td>
+								<td onclick="<c:if test='${member.memberId == articleCommentList[i].fkMemberId}'>location.href='${root}/articleComment?articleCommentId=${articleCommentList[i].articleCommentId}'</c:if>">${articleCommentList[i].articleCommentContent}</td>
+								<td onclick="<c:if test='${member.memberId == articleCommentList[i].fkMemberId}'>location.href='${root}/articleComment?articleCommentId=${articleCommentList[i].articleCommentId}'</c:if>">${goodReviewCount[i]}</td>
+								<td onclick="<c:if test='${member.memberId == articleCommentList[i].fkMemberId}'>location.href='${root}/articleComment?articleCommentId=${articleCommentList[i].articleCommentId}'</c:if>">${badReviewCount[i]}</td>
 								<c:if test="${member != null}">
 									<td>
 										<button id="clike${articleCommentList[i].articleCommentId}"
